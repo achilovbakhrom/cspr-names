@@ -1,0 +1,197 @@
+{
+  "todotree": {
+    "tree": [
+      {
+        "key": 1674935954586,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: subdomains - test",
+          "id": 1674935954586,
+          "level": "danger",
+          "done": true,
+          "focus": false,
+          "end": 1677525596214
+        }
+      },
+      {
+        "key": 1677330428717,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: extend method - test",
+          "id": 1677330428717,
+          "level": "danger",
+          "done": true,
+          "start": 1677330428717,
+          "focus": false,
+          "end": 1677522773280
+        }
+      },
+      {
+        "key": 1677322629233,
+        "children": [],
+        "todo": {
+          "content": "PRICE ORACLE: dynamic pricing - test",
+          "id": 1677322629233,
+          "level": "danger",
+          "done": true,
+          "start": 1677322629233,
+          "focus": false,
+          "end": 1677330321796
+        }
+      },
+      {
+        "key": 1674935989826,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: Connect price oracle contract",
+          "id": 1674935989826,
+          "level": "danger",
+          "done": true,
+          "focus": false,
+          "end": 1677312246141
+        }
+      },
+      {
+        "key": 1677306124962,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: maintainer and authorities",
+          "id": 1677306124962,
+          "level": "danger",
+          "done": true,
+          "start": 1677306124962,
+          "focus": false,
+          "end": 1677312640643
+        }
+      },
+      {
+        "key": 1675148094208,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: implement extend method",
+          "id": 1675148094208,
+          "level": "danger",
+          "done": true,
+          "focus": false,
+          "end": 1677314404191
+        }
+      },
+      {
+        "key": 1674935967928,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: get domain list - test",
+          "id": 1674935967928,
+          "level": "danger",
+          "done": true,
+          "focus": false,
+          "end": 1677322577571
+        }
+      },
+      {
+        "key": 1675195445068,
+        "children": [],
+        "todo": {
+          "content": "PRICE ORACLE: price oracle - test",
+          "id": 1675195445068,
+          "level": "warning",
+          "done": true,
+          "focus": false,
+          "end": 1677306314384
+        }
+      },
+      {
+        "key": 1675678918121,
+        "children": [],
+        "todo": {
+          "content": "Change price type from u64 to u512",
+          "id": 1675678918121,
+          "level": "danger",
+          "done": true,
+          "focus": false,
+          "end": 1677306119602
+        }
+      },
+      {
+        "key": 1674935974973,
+        "children": [],
+        "todo": {
+          "content": "security - authorities for all Smartcontracts",
+          "id": 1674935974973,
+          "level": "secondary",
+          "done": true,
+          "focus": false,
+          "end": 1677306322992
+        }
+      },
+      {
+        "key": 1677523605910,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: set resolver address - test",
+          "id": 1677523605910,
+          "level": "danger",
+          "done": true,
+          "start": 1677523605910,
+          "focus": false,
+          "end": 1677523620925
+        }
+      },
+      {
+        "key": 1674936004334,
+        "children": [],
+        "todo": {
+          "content": "Plan how to implement NFT contract",
+          "id": 1674936004334,
+          "level": "secondary",
+          "done": false
+        }
+      },
+      {
+        "key": 1675148281216,
+        "children": [],
+        "todo": {
+          "content": "Payment part, Pricing policy",
+          "id": 1675148281216,
+          "level": "secondary",
+          "done": false
+        }
+      },
+      {
+        "key": 1677306153024,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: reserved names",
+          "id": 1677306153024,
+          "level": "secondary",
+          "done": false,
+          "start": 1677306153024
+        }
+      },
+      {
+        "key": 1677306201065,
+        "children": [],
+        "todo": {
+          "content": "MAIN CONTRACT: get and set data for domain name",
+          "id": 1677306201065,
+          "level": "secondary",
+          "done": false,
+          "start": 1677306201065
+        }
+      }
+    ],
+    "expandKeys": [
+      1674966703305
+    ],
+    "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
+    "add_mode": "bottom",
+    "virtual": false,
+    "showLine": true,
+    "playFontSize": 24,
+    "title": "common",
+    "autoSort": false,
+    "showEndTime": false,
+    "lang": "en",
+    "version": "1677525596246"
+  }
+}

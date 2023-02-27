@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "common",
+    "main/contract",
+    "main/tests",
+    "price-oracle/contract",
+    "nft/contract",
+    "tests"
+]
