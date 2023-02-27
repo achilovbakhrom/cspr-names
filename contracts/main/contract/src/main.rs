@@ -358,8 +358,7 @@ pub extern "C" fn register_sub_domain() {
 
 #[no_mangle]
 pub extern "C" fn remove_subdomain() {
-    let subdomain_name: String = runtime::get_named_arg(ARG_MAIN_SUBDOMAIN);    
-    // let resolver_address: String = runtime::get_named_arg(ARG_RESOLVER_ADDRESS);
+    let subdomain_name: String = runtime::get_named_arg(ARG_MAIN_SUBDOMAIN);
     let caller = runtime::get_caller();
     
     let (is_valid, domain_name) = is_sub_domain_name_valid(&subdomain_name);

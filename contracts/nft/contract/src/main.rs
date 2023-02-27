@@ -33,6 +33,25 @@ impl From<Error> for ApiError {
 }
 
 #[no_mangle]
+pub extern "C" fn mint() {}
+
+#[no_mangle]
+pub extern "C" fn transfer() {}
+
+#[no_mangle]
+pub extern "C" fn list() {}
+
+#[no_mangle]
+pub extern "C" fn unlist() {}
+
+#[no_mangle]
+pub extern "C" fn buy() {}
+
+#[no_mangle]
+pub extern "C" fn burn() {}
+
+
+#[no_mangle]
 pub extern "C" fn call() {
     // The key shouldn't already exist in the named keys.
     let missing_key = runtime::get_key(KEY_NAME);

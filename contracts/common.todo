@@ -2,6 +2,61 @@
   "todotree": {
     "tree": [
       {
+        "key": 1677525860657,
+        "children": [],
+        "todo": {
+          "content": "NFT CONTRACT: implement mint method",
+          "id": 1677525860657,
+          "level": "danger",
+          "done": false,
+          "start": 1677525860657
+        }
+      },
+      {
+        "key": 1677525886657,
+        "children": [],
+        "todo": {
+          "content": "NFT CONTRACT: implement transfer method",
+          "id": 1677525886657,
+          "level": "danger",
+          "done": false,
+          "start": 1677525886657
+        }
+      },
+      {
+        "key": 1677525898886,
+        "children": [],
+        "todo": {
+          "content": "NFT CONTRACT: implement list/unlist methods",
+          "id": 1677525898886,
+          "level": "warning",
+          "done": false,
+          "start": 1677525898886
+        }
+      },
+      {
+        "key": 1677525916028,
+        "children": [],
+        "todo": {
+          "content": "NFT CONTRACT: implement buy method",
+          "id": 1677525916028,
+          "level": "warning",
+          "done": false,
+          "start": 1677525916028
+        }
+      },
+      {
+        "key": 1677525941830,
+        "children": [],
+        "todo": {
+          "content": "NFT CONTRACT: implement burn method",
+          "id": 1677525941830,
+          "level": "warning",
+          "done": false,
+          "start": 1677525941830
+        }
+      },
+      {
         "key": 1674935954586,
         "children": [],
         "todo": {
@@ -144,7 +199,9 @@
           "content": "Plan how to implement NFT contract",
           "id": 1674936004334,
           "level": "secondary",
-          "done": false
+          "done": true,
+          "focus": false,
+          "end": 1677526459586
         }
       },
       {
@@ -153,7 +210,7 @@
         "todo": {
           "content": "Payment part, Pricing policy",
           "id": 1675148281216,
-          "level": "secondary",
+          "level": "success",
           "done": false
         }
       },
@@ -192,6 +249,6 @@
     "autoSort": false,
     "showEndTime": false,
     "lang": "en",
-    "version": "1677525596246"
+    "version": "1677526479771"
   }
 }
