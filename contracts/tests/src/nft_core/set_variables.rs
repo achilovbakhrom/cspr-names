@@ -37,7 +37,7 @@ fn only_installer_should_be_able_to_toggle_allow_minting() {
         .cloned()
         .and_then(Key::into_hash)
         .map(ContractHash::new)
-        .expect("failed to find nft-core contract");
+        .expect("failed to find nft_core-core contract");
 
     //Account other than installer account should not be able to change allow_minting
     // Red test

@@ -7,7 +7,6 @@ members = [
     "nft-core/contract",
     "nft-core/client/*",
     "nft-contract/contract",
-    "nft-contract/tests",
     "authorities/contract",
     "authorities/tests",
     "database/contract",

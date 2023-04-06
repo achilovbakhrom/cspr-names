@@ -7,7 +7,7 @@ use casper_engine_test_support::ExecuteRequestBuilder;
 use casper_execution_engine::core::engine_state::ExecuteRequest;
 use casper_types::{account::AccountHash, CLValue, ContractHash, RuntimeArgs};
 
-use crate::nft::utility::constants::{
+use crate::nft_core::utility::constants::{
     ARG_ALLOW_MINTING, ARG_BURN_MODE, ARG_COLLECTION_NAME, ARG_COLLECTION_SYMBOL,
     ARG_CONTRACT_WHITELIST, ARG_HOLDER_MODE, ARG_IDENTIFIER_MODE, ARG_JSON_SCHEMA,
     ARG_METADATA_MUTABILITY, ARG_MINTING_MODE, ARG_NAMED_KEY_CONVENTION, ARG_NFT_KIND,

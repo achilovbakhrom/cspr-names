@@ -928,16 +928,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nft-tests"
-version = "0.1.0"
-dependencies = [
- "casper-contract",
- "casper-engine-test-support",
- "casper-execution-engine",
- "casper-types",
-]
-
-[[package]]
 name = "num"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -8,6 +8,9 @@ mod price_oracle_tests;
 mod main_tests;
 
 #[cfg(test)]
-mod nft;
+mod nft_core;
+
+#[cfg(test)]
+mod nft_tests;
 
 mod utils;

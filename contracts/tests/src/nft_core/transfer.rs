@@ -51,7 +51,7 @@ fn should_dissallow_transfer_with_minter_or_assigned_ownership_mode() {
         .cloned()
         .and_then(Key::into_hash)
         .map(ContractHash::new)
-        .expect("failed to find nft-core contract");
+        .expect("failed to find nft_core-core contract");
 
     let token_owner = *DEFAULT_ACCOUNT_ADDR;
 
@@ -258,7 +258,7 @@ fn approve_token_for_transfer_should_add_entry_to_approved_dictionary() {
         .cloned()
         .and_then(Key::into_hash)
         .map(ContractHash::new)
-        .expect("failed to find nft-core contract");
+        .expect("failed to find nft_core-core contract");
 
     let nft_contract_key: Key = get_nft_contract_hash(&builder).into();
 
@@ -330,7 +330,7 @@ fn should_dissallow_approving_when_ownership_mode_is_minter_or_assigned() {
         .cloned()
         .and_then(Key::into_hash)
         .map(ContractHash::new)
-        .expect("failed to find nft-core contract");
+        .expect("failed to find nft_core-core contract");
 
     let nft_contract_key: Key = get_nft_contract_hash(&builder).into();
 
@@ -514,7 +514,7 @@ fn should_dissallow_same_operator_to_tranfer_token_twice() {
         .cloned()
         .and_then(Key::into_hash)
         .map(ContractHash::new)
-        .expect("failed to find nft-core contract");
+        .expect("failed to find nft_core-core contract");
 
     // mint token for DEFAULT_ACCOUNT_ADDR
     let token_owner = DEFAULT_ACCOUNT_PUBLIC_KEY.clone().to_account_hash();

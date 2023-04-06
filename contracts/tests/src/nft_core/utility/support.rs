@@ -1,4 +1,4 @@
-use crate::nft::utility::constants::{
+use crate::nft_core::utility::constants::{
     ARG_KEY_NAME, ARG_NFT_CONTRACT_HASH, HASH_KEY_NAME, INDEX_BY_HASH, MINTING_CONTRACT_NAME,
     PAGE_DICTIONARY_PREFIX, PAGE_SIZE,
 };
@@ -74,7 +74,7 @@ pub(crate) fn get_dictionary_value_from_key<T: CLTyped + FromBytes>(
 ) -> T {
     let seed_uref = *builder
         .query(None, *nft_contract_key, &[])
-        .expect("must have nft-core contract")
+        .expect("must have nft_core-core contract")
         .as_contract()
         .expect("must convert contract")
         .named_keys()
