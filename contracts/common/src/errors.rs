@@ -63,13 +63,43 @@ pub enum PriceOracleContractErrors {
     PriceCannotRemoveMaintainer = 48,
     PriceAuthorityHasAlreadyTaken = 49,
     PriceOnlyMaintainerHasAccess = 50,
-    PriceUserHasNoAccess = 51
+    PriceUserHasNoAccess = 51,
+    PriceSimpleOperationsIsNotSet = 52
 
 
 }
 
 impl From<PriceOracleContractErrors> for ApiError {
     fn from(e: PriceOracleContractErrors) -> Self {
+        ApiError::User(e as u16)
+    }
+}
+
+#[repr(u16)]
+#[derive(Clone, Copy)]
+pub enum DatabaseErrors {
+    DatabaseSubdomainMaxCountExceeded = 60,
+    DatabaseSubdomainAlreadyExists = 61,
+    DatabaseSubdomainDoesntExist = 62,
+    DatabaseDomainDoesntExist = 63,
+    DatabaseUnexpected = 64,
+
+}
+
+impl From<DatabaseErrors> for ApiError {
+    fn from(e: DatabaseErrors) -> Self {
+        ApiError::User(e as u16)
+    }
+}
+
+#[repr(u16)]
+#[derive(Clone, Copy)]
+pub enum NFTErrors {
+    NFTCoreHashIsNotSet = 80,
+}
+
+impl From<NFTErrors> for ApiError {
+    fn from(e: NFTErrors) -> Self {
         ApiError::User(e as u16)
     }
 }

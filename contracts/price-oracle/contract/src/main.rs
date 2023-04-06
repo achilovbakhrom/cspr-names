@@ -4,6 +4,9 @@
 #[cfg(not(target_arch = "wasm32"))]
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
 
+mod price_oracle_db;
+mod price_fetcher;
+
 extern crate alloc;
 
 use alloc::{
@@ -82,93 +85,82 @@ use common_lib::{
         },
     }
 };
+use common_lib::constants::{ENDPOINT_PO_PRICE_GET_SIMPLE_OPERATIONS, ENDPOINT_PO_PRICE_SET_SIMPLE_OPERATIONS, KEY_PO_SIMPLE_OPERATIONS};
+use common_lib::utils::response::{response_error, response_success};
+use crate::price_fetcher::PriceFetcher;
+use crate::price_oracle_db::PriceOracleDb;
 
 #[no_mangle]
 pub extern "C" fn set_price() {
-    let caller = runtime::get_caller();
-
-    let has_access = is_maintainer_or_has_authority(&caller);
-
-    if !has_access {
-        runtime::revert(CommonError::NoAuthority);
-    }    
-
+    // let caller = runtime::get_caller();
+    // let has_access = is_maintainer_or_has_authority(&caller);
+    // if !has_access {
+    //     revert(CommonError::NoAuthority);
+    // }
+    let mut db_instance = PriceOracleDb::instance();
     let price_type: PriceType = runtime::get_named_arg(ARG_PO_PRICE_TYPE);
-    store_value_for_key(KEY_PO_PRICE_TYPE, price_type);
-    
+
     match price_type {
         PriceType::Fixed => {
             let price: U512 = runtime::get_named_arg(ARG_PO_PRICE);
-            store_value_for_key(KEY_PO_PRICE, price);
+            db_instance.set_fixed_price(price);
         },
         PriceType::Dynamic => {
             let price: U512 = runtime::get_named_arg(ARG_PO_PRICE);
             let price_mid: Vec<U512> = runtime::get_named_arg(ARG_PO_PRICE_MID);
             let chars_count_mid: Vec<u64> = runtime::get_named_arg(ARG_PO_CHARS_COUNT_MID);
             if price_mid.len() != chars_count_mid.len() {
-                runtime::revert(PriceOracleContractErrors::PriceMidLengthAndMidCharsCountMismatch)
+                revert(PriceOracleContractErrors::PriceMidLengthAndMidCharsCountMismatch)
             }
             let price_more: U512 = runtime::get_named_arg(ARG_PO_PRICE_MORE);
 
-            store_value_for_key(KEY_PO_PRICE, price);
-            store_value_for_key(KEY_PO_CHARS_COUNT_MID, chars_count_mid);
-            store_value_for_key(KEY_PO_PRICE_MID, price_mid);
-            store_value_for_key(KEY_PO_PRICE_MORE, price_more);
+            db_instance.set_dynamic_price(price, price_mid, chars_count_mid, price_more);
         },
     }
 }
 
+#[no_mangle]
+pub extern "C" fn get_price_simple_operations() {
+    let price_fetcher = PriceFetcher::instance();
+    let price = price_fetcher.get_price_simple_operations();
+    if price.is_none() {
+        response_error(PriceOracleContractErrors::PriceSimpleOperationsIsNotSet);
+    }
+    response_success(price.unwrap(), "Error while getting value type");
+}
+
+#[no_mangle]
+pub extern "C" fn set_price_simple_operations() {
+    let price: U512 = runtime::get_named_arg(ARG_PO_PRICE);
+    let db_instance = PriceOracleDb::instance();
+    db_instance.set_simple_operations_price(price);
+}
 
 #[no_mangle]
 pub extern "C" fn get_price() {
 
     let price_type = get_stored_value_from_key::<PriceType>(KEY_PO_PRICE_TYPE);
     if price_type.is_none() {
-        runtime::revert(PriceOracleContractErrors::PriceTypeIsNotFound);
+        response_error(PriceOracleContractErrors::PriceTypeIsNotFound);
     }
+
+    let mut price_fetcher = PriceFetcher::instance();
 
     match price_type.unwrap() {
         PriceType::Fixed => {
-            let price = get_stored_value_from_key::<U512>(KEY_PO_PRICE);
+            let price = price_fetcher.get_fixed_price();
             if price.is_none() {
-                runtime::revert(PriceOracleContractErrors::PriceIsNotSet);
+                response_error(PriceOracleContractErrors::PriceIsNotSet);
             }
-            let price_result = CLValue::from_t(price.unwrap()).unwrap_or_revert();
-            runtime::ret(price_result)
+            response_success(price.unwrap(), "Error while getting value type");
         },
         PriceType::Dynamic => {
             let chars_count: u64 = runtime::get_named_arg(ARG_PO_PRICE_TYPE_CHARS_COUNT);
-
-            let chars_count_vec = get_stored_value_from_key::<Vec<u64>>(KEY_PO_CHARS_COUNT_MID)
-                .unwrap_or_revert_with(PriceOracleContractErrors::PriceForCharsCountNotFound);
-            
-            let first_item = &chars_count_vec.first().expect("Error while getting the first object of chars_count_vec");
-            let last_item = &chars_count_vec.last().expect("Error while getting the last object of chars_count_vec");
-
-            if *first_item > &chars_count {
-                let price = get_stored_value_from_key::<U512>(KEY_PO_PRICE)
-                    .unwrap_or_revert_with(PriceOracleContractErrors::PriceIsNotSet);
-                let price_result = CLValue::from_t(price).unwrap_or_revert();
-                runtime::ret(price_result)
-            } else if *last_item < &chars_count {
-                let price = get_stored_value_from_key::<U512>(KEY_PO_PRICE_MORE)
-                    .unwrap_or_revert_with(PriceOracleContractErrors::PriceMoreIsNotSet);
-                let price_result = CLValue::from_t(price).unwrap_or_revert();
-                runtime::ret(price_result)
-            } else {                
-                match chars_count_vec.clone().iter().position(|item| { item == &chars_count }) {
-                    Some(index) => {
-                        let price_mid = get_stored_value_from_key::<Vec<U512>>(KEY_PO_PRICE_MID)
-                            .unwrap_or_revert_with(PriceOracleContractErrors::PriceMidIsNotSet);                        
-                        let price = price_mid.get(index).expect("Error while getting price from price_mid by index");
-                        let price_result = CLValue::from_t(*price).unwrap_or_revert();
-                        runtime::ret(price_result)
-                    },
-                    None => {
-                        runtime::revert(PriceOracleContractErrors::PriceForCharsCountNotFound);
-                    }
-                }
+            let price = price_fetcher.get_price_dynamic(chars_count);
+            if price.is_none() {
+                response_error(PriceOracleContractErrors::PriceForCharsCountNotFound);
             }
+            response_success(price.unwrap(), "Error while getting value type");
         }
     }    
 }
@@ -259,6 +251,23 @@ pub extern "C" fn call() {
         EntryPointType::Contract
     ));
     entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_PO_PRICE_GET_SIMPLE_OPERATIONS,
+        vec![],
+        CLType::U512,
+        EntryPointAccess::Public,
+        EntryPointType::Contract
+    ));
+
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_PO_PRICE_SET_SIMPLE_OPERATIONS,
+        vec![
+            Parameter::new(ARG_PO_PRICE, U512::cl_type())
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract
+    ));
+    entrypoints.add_entry_point(EntryPoint::new(
         ENDPOINT_PO_REMOVE_AUTHORITY, 
         vec![
             Parameter::new(ARG_PO_AUTHORITY, AccountHash::cl_type())
@@ -289,6 +298,9 @@ pub extern "C" fn call() {
     
     let price_oracle_authorities = storage::new_uref(Vec::<AccountHash>::new());
     price_oralce_named_keys.insert(KEY_PO_AUTHORITIES.to_string(), price_oracle_authorities.into());
+
+    let price_oracle_price_simple_operations = storage::new_uref(U512::from(0u64));
+    price_oralce_named_keys.insert(KEY_PO_SIMPLE_OPERATIONS.to_string(), price_oracle_price_simple_operations.into());
 
     let (contract_hash, contract_version) = storage::new_contract(
         entrypoints,

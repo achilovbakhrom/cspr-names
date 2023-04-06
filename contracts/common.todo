@@ -220,7 +220,7 @@
         "todo": {
           "content": "MAIN CONTRACT: reserved names",
           "id": 1677306153024,
-          "level": "secondary",
+          "level": "default",
           "done": false,
           "start": 1677306153024
         }
@@ -231,7 +231,7 @@
         "todo": {
           "content": "MAIN CONTRACT: get and set data for domain name",
           "id": 1677306201065,
-          "level": "secondary",
+          "level": "default",
           "done": false,
           "start": 1677306201065
         }
@@ -249,6 +249,6 @@
     "autoSort": false,
     "showEndTime": false,
     "lang": "en",
-    "version": "1677526479771"
+    "version": "1677858869364"
   }
 }

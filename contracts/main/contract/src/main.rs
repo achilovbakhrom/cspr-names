@@ -48,8 +48,12 @@ use common_lib::{
         KEY_MAIN_CONTRACT_HASH,
         KEY_MAIN_CONTRACT_VERSION,
         ARG_MAIN_REGISTER_AMOUNT,
-        KEY_MAIN_PRICE_ORACLE_CONTRACT_HASH, ARG_MAIN_AUTHORITY,
-        ENTRYPOINT_MAIN_ADD_AUTHORITY, ENTRYPOINT_MAIN_REMOVE_AUTHORITY, ENTRYPOINT_MAIN_EXTEND
+        KEY_MAIN_PRICE_ORACLE_CONTRACT_HASH,
+        ARG_MAIN_AUTHORITY,
+        ENTRYPOINT_MAIN_ADD_AUTHORITY,
+        ENTRYPOINT_MAIN_REMOVE_AUTHORITY,
+        ENTRYPOINT_MAIN_EXTEND,
+        CSPR_HASH,
     },
     errors::{
         MainContractErrors, CommonError
@@ -95,11 +99,10 @@ use common_lib::constants::{
     ARG_MAIN_RESOLVER_ADDRESS,
     ARG_MAIN_SUBDOMAIN,
     ARG_MAIN_PRICE_ORACLE_CONTRACT_HASH,
-
-    KEY_MAIN_DICTIONARY_DOMAIN,
+    KEY_DATABASE_DICTIONARY_DOMAIN,
     KEY_MAIN_DICTIONARY_DOMAIN_METADATA,
-    KEY_MAIN_DICTIONARY_DOMAIN_LIST,
-    KEY_MAIN_DICTIONARY_SUBDOMAIN,
+    KEY_DATABASE_DICTIONARY_DOMAIN_LIST,
+    KEY_DATABASE_DICTIONARY_SUBDOMAIN,
     KEY_PO_CONTRACT_HASH,
 
     ENTRYPOINT_MAIN_GET_DOMAIN_LIST,
@@ -113,10 +116,6 @@ use common_lib::constants::{
     ENTRYPOINT_MAIN_SET_PRICE_ORACLE_CONTRACT_HASH,
 };
 
-const CSPR_HASH: [u8; 32] = [
-    0x53, 0xbb, 0xd6, 0xc8, 0xc1, 0xbd, 0xc5, 0xc6, 0x28, 0x27, 0x1c, 0x55, 0xa6, 0xac, 0x73, 0xa1,
-    0xe9, 0x7a, 0xfb, 0xb1, 0x4d, 0x4a, 0xeb, 0x3a, 0xdd, 0xb8, 0xb7, 0xb8, 0x0e, 0x4f, 0x45, 0x5a,
-];
 
 /**
  * Registers a new domain name
@@ -147,7 +146,7 @@ pub extern "C" fn register_domain() {
         runtime::revert(MainContractErrors::UserHasNoAccessToRegister);
     }
 
-    let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain);
+    let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
     
     if let Some(store_domain) = store_domain_optional {
         let actual_state = get_end_time_actual_state(Some(store_domain.end_time));
@@ -199,19 +198,19 @@ pub extern "C" fn register_domain() {
 
         let current_pagination_key = &format!("{}", &meta.page);
         let domain_list: Option<Vec<String>> = get_dictionary_value_from_key(
-            KEY_MAIN_DICTIONARY_DOMAIN_LIST,
+            KEY_DATABASE_DICTIONARY_DOMAIN_LIST,
             current_pagination_key
         );
         if let Some(mut dl) = domain_list {
             
             dl.push(domain.clone());
-            upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN_LIST, current_pagination_key, dl.clone());
+            upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN_LIST, current_pagination_key, dl.clone());
             
             
             if dl.len() == MAX_PAGE_SIZE as usize {
                 meta.page += 1;
                 upsert_dictionary_value_from_key(
-                    KEY_MAIN_DICTIONARY_DOMAIN_LIST, 
+                    KEY_DATABASE_DICTIONARY_DOMAIN_LIST,
                     &format!("{}", &meta.page),
                     Vec::<String>::new()
                 );
@@ -219,7 +218,7 @@ pub extern "C" fn register_domain() {
             meta.total_count += 1;
             store_value_for_key(KEY_MAIN_DICTIONARY_DOMAIN_METADATA, meta);
             
-            upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain, DomainName {
+            upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain, DomainName {
                 end_time,
                 name: domain.clone(),        
                 token_id,
@@ -253,7 +252,7 @@ pub extern "C" fn resolve_domain() {
     if !is_domain_name_valid(&domain_name) {
         runtime::revert(Error::InvalidDomainName);
     }
-    let store_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain_name);
+    let store_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain_name);
     if let Some(domain) = store_domain {
         // TODO: check expiration of the domain
         let result = CLValue::from_t(domain.resolver).expect("Error while create cl_value from resolver address");
@@ -279,14 +278,14 @@ pub extern "C" fn set_resolver_address_for_domain() {
     if !is_domain_name_valid(&domain_name) {
         runtime::revert(Error::InvalidDomainName);
     }
-    let found_domain_name_item: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN,&domain_name);
+    let found_domain_name_item: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain_name);
 
     if let Some(mut domain) = found_domain_name_item {
 
         if domain.owner == runtime::get_caller() {
             domain.resolver = resolver_address;
             let binding = domain.clone();
-            upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain_name, binding);
+            upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain_name, binding);
         } else {
             runtime::revert(MainContractErrors::InvalidOwner);
         }        
@@ -319,28 +318,26 @@ pub extern "C" fn register_sub_domain() {
     }
     
     if let Some (domain) = domain_name {
-        let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain);
+        let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
         if let Some(dm) = found_domain {
             if &dm.owner == &caller {
-                let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain);
+                let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain);
                 if let Some (mut sd) = subdomains {
                     if sd.len() < MAX_SUBDOMAIN_COUNT.into() {
                         
                         sd.push(SubdomainName {
                             name: subdomain_name,
-                            resolver: resolver_address,
-                            owner: caller.clone(),
+                            resolver: resolver_address
                         });
-                        upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain, sd);
+                        upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain, sd);
                     } else {
                         runtime::revert(MainContractErrors::SubdomainMaxCountExceeded);
                     }
                 } else {
-                    upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain, vec![
+                    upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain, vec![
                         SubdomainName {
                             name: subdomain_name,
-                            resolver: resolver_address,
-                            owner: caller.clone(),
+                            resolver: resolver_address
                         }
                     ]);
                 }
@@ -367,16 +364,16 @@ pub extern "C" fn remove_subdomain() {
         runtime::revert(MainContractErrors::InvalidSubdomain);
     }
     if let Some(domain) = domain_name {
-        let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain);
+        let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
 
         if let Some(dm) = found_domain {
             if &dm.owner == &caller {
-                let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain);
+                let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain);
                 if let Some (mut sd) = subdomains {
                     let pos = sd.iter().position(|x| &x.name == &subdomain_name).unwrap();
                     if pos >= 0 {
                         sd.remove(pos);
-                        upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain, sd);
+                        upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain, sd);
                     } else {
                         runtime::revert(MainContractErrors::SubdomainNotExists);
                     }
@@ -411,24 +408,23 @@ pub extern "C" fn set_resolver_address_for_subdomain() {
         runtime::revert(MainContractErrors::InvalidSubdomain);
     }
     if let Some (domain) = domain_name {
-        let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain);
+        let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
 
         if let Some(dm) = found_domain {
             if &dm.owner == &caller {
-                let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain);
+                let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain);
                 if let Some (sd) = subdomains {
                     let mapped = sd.iter().map(|x| {
                         if &x.name == &subdomain_name {
                             
                             return SubdomainName {
                                 name: x.name.to_string(),
-                                resolver: resolver_address,
-                                owner: caller,
+                                resolver: resolver_address
                             };                            
                         }
                         return (*x).clone();
                     }).collect::<Vec<SubdomainName>>();
-                    upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain, mapped);
+                    upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain, mapped);
                     
                 }
             } else {
@@ -444,7 +440,7 @@ pub extern "C" fn set_resolver_address_for_subdomain() {
 pub extern "C" fn get_sudomains_for_domain() {
     let domain_name: String = runtime::get_named_arg(ARG_MAIN_DOMAIN);
     if is_domain_name_valid(&domain_name) {
-        let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_SUBDOMAIN, &domain_name);
+        let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain_name);
         let result = CLValue::from_t(subdomains).expect("Error while converting subdomains to cl_value");
         runtime::ret(result);
     } else {
@@ -455,7 +451,7 @@ pub extern "C" fn get_sudomains_for_domain() {
 #[no_mangle]
 pub extern "C" fn get_domain_list() {
     let page: u8 = runtime::get_named_arg(ARG_MAIN_DOMAIN_PAGE);
-    let domains: Option<Vec<String>> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN_LIST, &format!("{}:{}", page, MAX_PAGE_SIZE));
+    let domains: Option<Vec<String>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN_LIST, &format!("{}:{}", page, MAX_PAGE_SIZE));
     if let Some(list) = domains {
         let result = CLValue::from_t(list).expect("error while converting domain list to cl_value");
         runtime::ret(result);
@@ -523,14 +519,14 @@ pub extern "C" fn extend() {
         runtime::revert(MainContractErrors::InvalidDomain);
     }
 
-    let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain);
+    let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
     if let Some(mut domain) = store_domain_optional {
         let result = is_extension_duration_correct(domain.clone().end_time, duration.into());
 
         if result {
             let binding = year_to_millis(duration);
             domain.end_time = domain.clone().end_time + binding;
-            upsert_dictionary_value_from_key(KEY_MAIN_DICTIONARY_DOMAIN, &domain.name, domain.clone());
+            upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain.name, domain.clone());
         } else {
             runtime::revert(MainContractErrors::InvalidDuration)
         }
@@ -564,11 +560,11 @@ pub extern "C" fn set_price_oracle_contract_hash() {
 
 #[no_mangle]
 pub extern "C" fn init() {
-    storage::new_dictionary(KEY_MAIN_DICTIONARY_DOMAIN).unwrap_or_revert();
-    storage::new_dictionary(KEY_MAIN_DICTIONARY_SUBDOMAIN).unwrap_or_revert();
+    storage::new_dictionary(KEY_DATABASE_DICTIONARY_DOMAIN).unwrap_or_revert();
+    storage::new_dictionary(KEY_DATABASE_DICTIONARY_SUBDOMAIN).unwrap_or_revert();
     storage::new_dictionary(KEY_MAIN_DICTIONARY_DOMAIN_METADATA).unwrap_or_revert();
-    storage::new_dictionary(KEY_MAIN_DICTIONARY_DOMAIN_LIST).unwrap_or_revert();
-    upsert_dictionary_value_from_key::<Vec<String>>(KEY_MAIN_DICTIONARY_DOMAIN_LIST, &format!("{}", 0), vec![]);
+    storage::new_dictionary(KEY_DATABASE_DICTIONARY_DOMAIN_LIST).unwrap_or_revert();
+    upsert_dictionary_value_from_key::<Vec<String>>(KEY_DATABASE_DICTIONARY_DOMAIN_LIST, &format!("{}", 0), vec![]);
     let metadata_uref = storage::new_uref(LocalMetadata {
         total_count: 0,
         page: 0,

@@ -4,7 +4,7 @@ use casper_engine_test_support::{
     ExecuteRequestBuilder,
     InMemoryWasmTestBuilder,
     DEFAULT_ACCOUNT_ADDR,
-    DEFAULT_RUN_GENESIS_REQUEST,    
+    DEFAULT_RUN_GENESIS_REQUEST,
 };
 // Custom Casper types that will be used within this test.
 use casper_types::{
@@ -17,7 +17,7 @@ use casper_types::{
     CLValue,
     CLType::Any,
     bytesrepr::ToBytes,
-    U512, 
+    U512,
     account::AccountHash,
     Key,
     ApiError
@@ -30,6 +30,7 @@ use common_lib::{
         KEY_PO_CONTRACT_HASH, ENDPOINT_PO_SET_PRICE, KEY_PO_PRICE, ENDPOINT_PO_ADD_AUTHORITY, ENDPOINT_PO_REMOVE_AUTHORITY,
     }
 };
+use common_lib::constants::{KEY_PO_CHARS_COUNT_MID, KEY_PO_PRICE_MID, KEY_PO_PRICE_MORE};
 
 use crate::utils::{
     fund_account,
@@ -47,13 +48,13 @@ struct PriceOracleContractContext {
 }
 
 impl PriceOracleContractContext {
-    
+
     pub fn deploy() -> Self {
         let alice_public_key: PublicKey =
             PublicKey::from(&SecretKey::ed25519_from_bytes([1u8; 32]).unwrap());
         let bob_public_key: PublicKey =
             PublicKey::from(&SecretKey::ed25519_from_bytes([2u8; 32]).unwrap());
-        
+
         let alice_account = AccountHash::from(&alice_public_key);
         let bob_account = AccountHash::from(&bob_public_key);
 
@@ -67,7 +68,7 @@ impl PriceOracleContractContext {
             .exec(fund_account(&bob_account))
             .expect_success()
             .commit();
-        
+
         let code = PathBuf::from(PRICE_ORACLE_CONTRACT_NAME_WASM);
 
         deploy(
@@ -78,20 +79,76 @@ impl PriceOracleContractContext {
             true,
             None,
         );
-        
+
         let contract_hash = query(
             &builder,
             Key::Account(alice_account),
             &[KEY_PO_CONTRACT_HASH.to_string()],
         );
 
-        Self { 
+        Self {
             builder,
             contract_hash,
             alice_account,
             bob_account,
             path_buf: code.clone()
         }
+    }
+
+    pub fn set_fixed_price(
+        &mut self,
+        amount: U512,
+        is_success: bool
+    ) {
+        let args = runtime_args! {
+            "arg_price_type" => PriceType::Fixed,
+            "arg_price" => amount,
+            "arg_price_mid" => Vec::<u64>::new(),
+            "arg_chars_count_mid" => Vec::<u64>::new(),
+            "arg_price_more" => 0u64
+        };
+
+        deploy(
+            &mut self.builder,
+            &self.alice_account,
+            &DeploySource::ByContractHash {
+                hash: self.contract_hash,
+                entry_point: ENDPOINT_PO_SET_PRICE.to_string(),
+            },
+            args,
+            is_success,
+            None
+        );
+
+    }
+
+    pub fn set_dynamic_price(
+        &mut self,
+        price: U512,
+        price_mid: Vec<U512>,
+        chars_count_mid: Vec<u64>,
+        price_more: U512,
+        is_success: bool
+    ) {
+        let args = runtime_args! {
+            "arg_price_type" => PriceType::Dynamic,
+            "arg_price" => price,
+            "arg_price_mid" => price_mid,
+            "arg_chars_count_mid" => chars_count_mid,
+            "arg_price_more" => price_more
+        };
+
+        deploy(
+            &mut self.builder,
+            &self.alice_account,
+            &DeploySource::ByContractHash {
+                hash: self.contract_hash,
+                entry_point: ENDPOINT_PO_SET_PRICE.to_string(),
+            },
+            args,
+            is_success,
+            None
+        );
     }
 
     pub fn set_price_correct_data(&mut self) -> bool {
@@ -101,7 +158,7 @@ impl PriceOracleContractContext {
             "arg_price" => U512::from(100),
             "arg_price_mid" => Vec::<u64>::new(),
             "arg_chars_count_mid" => Vec::<u64>::new(),
-            "arg_price_more" => 0u64    
+            "arg_price_more" => 0u64
         };
 
         deploy(
@@ -115,7 +172,7 @@ impl PriceOracleContractContext {
             true,
             None
         );
-        
+
         true
     }
 
@@ -125,7 +182,7 @@ impl PriceOracleContractContext {
             "arg_price" => U512::from(100),
             "arg_price_mid" => Vec::<u64>::new(),
             "arg_chars_count_mid" => Vec::<u64>::new(),
-            "arg_price_more" => 0u64    
+            "arg_price_more" => 0u64
         };
 
         deploy(
@@ -142,122 +199,90 @@ impl PriceOracleContractContext {
 
         false
     }
-    
+
     pub fn get_price(&mut self) -> U512 {
         let price: U512 = query(
-            &mut self.builder, 
-            self.contract_hash.into(), 
+            &mut self.builder,
+            self.contract_hash.into(),
             &[KEY_PO_PRICE.to_string()]
         );
         price
     }
 
-    pub fn add_bob_to_authority(&mut self) -> bool {
-        let args = runtime_args! {
-            "arg_authority" => self.bob_account
-        };
-        deploy(
+    pub fn get_price_mid(&mut self) -> Vec<U512> {
+        query(
             &mut self.builder,
-            &self.alice_account,
-            &DeploySource::ByContractHash {
-                hash: self.contract_hash,
-                entry_point: ENDPOINT_PO_ADD_AUTHORITY.to_string(),
-            },
-            args,
-            true, None
-        );
-        
-        true
+            self.contract_hash.into(),
+            &[KEY_PO_PRICE_MID.to_string()]
+        )
     }
 
-    pub fn remove_bob_from_authority(&mut self) -> bool {
-        let args = runtime_args! {
-            "arg_authority" => self.bob_account
-        };
-        deploy(
+    pub fn get_chars_count(&mut self) -> Vec<u64> {
+        query(
             &mut self.builder,
-            &self.alice_account,
-            &DeploySource::ByContractHash {
-                hash: self.contract_hash,
-                entry_point: ENDPOINT_PO_REMOVE_AUTHORITY.to_string(),
-            },
-            args,
-            true, None
-        );
-        
-        true
+            self.contract_hash.into(),
+            &[KEY_PO_CHARS_COUNT_MID.to_string()]
+        )
     }
 
-    pub fn try_to_set_price_with_bobs_account(&mut self) -> bool {
-        let args = runtime_args! {
-            "arg_price_type" => PriceType::Fixed,
-            "arg_price" => U512::from(101),
-            "arg_price_mid" => Vec::<u64>::new(),
-            "arg_chars_count_mid" => Vec::<u64>::new(),
-            "arg_price_more" => 0u64
-        };
-
-        deploy(
+    pub fn get_price_more(&mut self) -> U512 {
+        query(
             &mut self.builder,
-            &self.bob_account,
-            &DeploySource::ByContractHash {
-                hash: self.contract_hash,
-                entry_point: ENDPOINT_PO_SET_PRICE.to_string(),
-            },
-            args,
-            true,
-            None
-        );
-
-        true
+            self.contract_hash.into(),
+            &[KEY_PO_PRICE_MORE.to_string()]
+        )
     }
-
 
 }
 
-
-/**
- * SCENARIOS:
- * 
- * 1. Test with correct data
- * 2. Test with incorrect data
- * 3. Try to fix the request with incorrect data
- *   a. add authority
- *   b. remove authority
- */
+#[test]
+fn should_test_set_fixed_price() {
+    let mut context = PriceOracleContractContext::deploy();
+    context.set_fixed_price(U512::from(121_000), true);
+    let price = context.get_price();
+    assert_eq!(price, U512::from(121_000))
+}
 
 #[test]
-fn should_test_set_price() {
-    // deploy with Alice's account, so maintainer is Alice now
+fn should_test_set_dynamic_price_correct_data() {
     let mut context = PriceOracleContractContext::deploy();
-    
-    // Try to set price with Alice's account
-    let success_set_price_result = context.set_price_correct_data();
-    assert_eq!(success_set_price_result, true);
-    
+    context.set_dynamic_price(
+        U512::from(100_000),
+        vec![
+            U512::from(90_000),
+            U512::from(80_000),
+            U512::from(70_000),
+        ],
+        vec![3, 4, 5],
+        U512::from(60_000),
+        true
+    );
     let price = context.get_price();
-    assert_eq!(price, U512::from(100u64));
+    let price_mid = context.get_price_mid();
+    let chars_count = context.get_chars_count();
+    let price_more = context.get_price_more();
 
-    // Try to set price with Bob's account
-    let error_set_price_result = context.set_price_incorrect_data();
-    assert_eq!(error_set_price_result, false);
+    assert_eq!(price, U512::from(100_000));
+    assert_eq!(price_mid, vec![
+        U512::from(90_000),
+        U512::from(80_000),
+        U512::from(70_000),
+    ]);
+    assert_eq!(chars_count, vec![3, 4, 5]);
+    assert_eq!(price_more, U512::from(60_000));
+}
 
-    // Try to add Bob to the authorities table
-    let add_authority_result = context.add_bob_to_authority();
-    assert_eq!(add_authority_result, true);
-
-    // Change price with Bob's account
-    let set_data_bob_account_result = context.try_to_set_price_with_bobs_account();
-    assert_eq!(set_data_bob_account_result, true);
-
-    let price = context.get_price();
-    assert_eq!(price, U512::from(101u64));
-
-    // Try to remove Bob from the authorities table
-    let remove_bob_from_authority_result = context.remove_bob_from_authority();
-    assert_eq!(remove_bob_from_authority_result, true);
-
-    // Check  whether Bob's account has access to change the price
-    let error_set_price_result = context.set_price_incorrect_data();
-    assert_eq!(error_set_price_result, false);
+#[test]
+fn should_test_set_dynamic_price_incorrect_data() {
+    let mut context = PriceOracleContractContext::deploy();
+    context.set_dynamic_price(
+        U512::from(100_000),
+        vec![
+            U512::from(90_000),
+            U512::from(80_000),
+        ],
+        vec![3, 4, 5],
+        U512::from(60_000),
+        false
+    );
 }

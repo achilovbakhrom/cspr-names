@@ -3,6 +3,7 @@
 
 extern crate alloc;
 
+pub mod db;
 pub mod enums;
 pub mod errors;
 pub mod constants;

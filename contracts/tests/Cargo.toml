@@ -10,8 +10,15 @@ casper-contract = { version = "1.4.4", default-features = false, features = ["te
 casper-engine-test-support = { version = "2.1.0", features = ["test-support"] }
 casper-execution-engine = "=2.0.1"
 casper-types = "=1.5.0"
+hex = { version = "0.4.3", default-features = false }
 rand = "0.8.5"
 common-lib = { path = "../common", default-features = false }
+serde = { version = "1.0", default-features = false }
+serde_json = "1.0.81"
+once_cell = "1"
+blake2 = { version = "0.9.0", default-features = false }
+base16 = { version = "0.2", default-features = false }
+sha256 = "1.0.3"
 
 [lib]
 name = "tests"

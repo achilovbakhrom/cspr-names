@@ -25,14 +25,14 @@ use casper_engine_test_support::{
 };
 use casper_execution_engine::{
     storage::global_state::in_memory::InMemoryGlobalState,
-    core::engine_state::ExecuteRequest,    
+    core::engine_state::ExecuteRequest,
 };
 
 pub(crate) fn get_contract_hash_for_contract_name(
     builder: &WasmTestBuilder<InMemoryGlobalState>,
     contract_name: &str,
 ) -> ContractHash {
- 
+
     builder
         .get_expected_account(*DEFAULT_ACCOUNT_ADDR)
         .named_keys()
@@ -48,8 +48,8 @@ pub(crate) fn commit_request_with_expecting_success(
     builder: &mut WasmTestBuilder<InMemoryGlobalState>,
     request: ExecuteRequest
 ) {
-    
-    builder     
+
+    builder
         .exec(request)
         .commit()
         .expect_success();
@@ -181,14 +181,14 @@ pub fn deploy(
     } else {
         exec.expect_failure()
     }
-    .commit();
+        .commit();
 }
 
 pub fn query<T: FromBytes + CLTyped>(
     builder: &InMemoryWasmTestBuilder,
     base: Key,
     path: &[String],
-) -> T {    
+) -> T {
     builder
         .query(None, base, path)
         .expect("should be stored value.")
@@ -220,7 +220,7 @@ pub fn query_dictionary<T: FromBytes + CLTyped>(
     builder: &InMemoryWasmTestBuilder,
     base: URef,
     path: &str,
-) -> T {    
+) -> T {
     builder
         .query_dictionary_item(None,  base, path)
         .expect("should be stored dictionary value.")
