@@ -142,7 +142,8 @@ pub const ARG_NFT_TOKEN_OWNER: &str = "arg_nft_token_owner";
 
 
 // KEYS
-pub const KEY_NFT_CORE_CONTRACT_HASH: &str = "arg_nft_core_contract_hash";
+pub const KEY_NFT_CORE_CONTRACT_HASH: &str = "key_nft_core_contract_hash";
+pub const KEY_NFT_DICTIONARY_LISTING: &str = "key_nft_dictionary_listing";
 
 // ENDPOINTS
 pub const ENDPOINT_NFT_MINT: &str = "mint";

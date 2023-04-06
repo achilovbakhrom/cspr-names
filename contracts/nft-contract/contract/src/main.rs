@@ -5,6 +5,7 @@
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
 
 mod storage_db;
+mod listing_db;
 
 // We need to explicitly import the std alloc crate and `alloc::string::String` as we're in a
 // `no_std` environment.
@@ -19,6 +20,8 @@ use casper_contract::{
 use casper_types::{ApiError, ContractHash, Key, runtime_args};
 use common_lib::constants::{ARG_NFT_TOKEN_ID, ARG_NFT_TOKEN_OWNER, ENDPOINT_NFT_BURN, ENDPOINT_NFT_MINT, ENDPOINT_NFT_TRANSFER};
 use common_lib::errors::NFTErrors;
+use common_lib::utils::response::response_error;
+use crate::listing_db::ListingDb;
 use crate::storage_db::StorageDb;
 
 const ARG_TOKEN_OWNER: &str = "token_owner";
@@ -47,8 +50,6 @@ impl From<Error> for ApiError {
 
 #[no_mangle]
 pub extern "C" fn mint() {
-    // check caller, whether sc or not
-    // mint
     let token_owner = runtime::get_named_arg::<Key>(ARG_NFT_TOKEN_OWNER);
     let token_id: String = runtime::get_named_arg(ARG_NFT_TOKEN_ID);
     let nft_core_contract_hash: ContractHash = StorageDb::instance()
@@ -68,8 +69,6 @@ pub extern "C" fn mint() {
 
 #[no_mangle]
 pub extern "C" fn transfer() {
-    // check whether owner or not
-    // extract fee and transfer
     let nft_core_contract_hash: ContractHash = StorageDb::instance()
         .get_nft_core_contract_hash()
         .unwrap_or_revert_with(NFTErrors::NFTCoreHashIsNotSet);
@@ -93,8 +92,6 @@ pub extern "C" fn transfer() {
 
 #[no_mangle]
 pub extern "C" fn burn() {
-    // check whether owner or not
-    // burn
     let nft_core_contract_hash: ContractHash = StorageDb::instance()
         .get_nft_core_contract_hash()
         .unwrap_or_revert_with(NFTErrors::NFTCoreHashIsNotSet);
@@ -112,20 +109,31 @@ pub extern "C" fn burn() {
 
 #[no_mangle]
 pub extern "C" fn list() {
-    // check whether owner or not
-    // list
+    let token_id = runtime::get_named_arg::<String>(ARG_NFT_TOKEN_ID);
+    let mut instance = ListingDb::instance();
+    if !instance.is_listed(&token_id) {
+        instance.list(&token_id)
+    }
 }
 
 #[no_mangle]
 pub extern "C" fn un_list() {
-    // check whether owner or not
-    // unlist
+    let token_id = runtime::get_named_arg::<String>(ARG_NFT_TOKEN_ID);
+    let mut instance = ListingDb::instance();
+    if instance.is_listed(&token_id) {
+        instance.un_list(&token_id)
+    }
 }
 
 #[no_mangle]
 pub extern "C" fn buy() {
-    // check whether owner or not
-    // list
+    let token_id = runtime::get_named_arg::<String>(ARG_NFT_TOKEN_ID);
+    let mut instance = ListingDb::instance();
+    if !instance.is_listed(&token_id) {
+        response_error(NFTErrors::NFTIsNotListed)
+    }
+    // TODO: payment (2.5% - commission, 97.5% - to the owner)
+    // TODO: transfer NFT
 }
 
 #[no_mangle]

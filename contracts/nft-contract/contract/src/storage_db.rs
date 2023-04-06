@@ -23,4 +23,5 @@ impl StorageDb {
         self.store.get(KEY_NFT_CORE_CONTRACT_HASH)
     }
 
+
 }

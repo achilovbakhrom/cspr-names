@@ -96,6 +96,7 @@ impl From<DatabaseErrors> for ApiError {
 #[derive(Clone, Copy)]
 pub enum NFTErrors {
     NFTCoreHashIsNotSet = 80,
+    NFTIsNotListed = 81,
 }
 
 impl From<NFTErrors> for ApiError {
