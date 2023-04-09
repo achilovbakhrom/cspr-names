@@ -1,8 +1,4 @@
-use alloc::{
-    collections::BTreeMap,
-    string::{String, ToString},
-    vec::Vec,
-};
+use alloc::{collections::BTreeMap, format, string::{String, ToString}, vec::Vec};
 
 use serde::{Deserialize, Serialize};
 
@@ -185,7 +181,7 @@ pub(crate) struct MetadataCEP78 {
 }
 
 // Using a structure for the purposes of serialization formatting.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub(crate) struct CustomMetadata {
     attributes: BTreeMap<String, String>,
 }

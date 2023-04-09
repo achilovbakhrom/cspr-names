@@ -11,18 +11,39 @@ mod listing_db;
 // `no_std` environment.
 extern crate alloc;
 
-use alloc::string::String;
+use alloc::string::{String, ToString};
+use alloc::{format, vec};
 
 use casper_contract::{
     contract_api::{runtime, storage},
     unwrap_or_revert::UnwrapOrRevert,
 };
-use casper_types::{ApiError, ContractHash, Key, runtime_args};
-use common_lib::constants::{ARG_NFT_TOKEN_ID, ARG_NFT_TOKEN_OWNER, ENDPOINT_NFT_BURN, ENDPOINT_NFT_MINT, ENDPOINT_NFT_TRANSFER};
-use common_lib::errors::NFTErrors;
+use casper_types::{
+    ApiError,
+    CLType,
+    CLTyped,
+    ContractHash,
+    EntryPoint,
+    EntryPointAccess,
+    EntryPoints,
+    EntryPointType,
+    Key,
+    Parameter,
+    runtime_args
+};
+use casper_types::account::AccountHash;
+
+use casper_types::contracts::NamedKeys;
+use common_lib::constants::{ARG_NFT_CONTRACT_HASH, ARG_NFT_METADATA, ARG_NFT_TOKEN_OWNER, ENDPOINT_NFT_BURN, ENDPOINT_NFT_BUY, ENDPOINT_NFT_LIST, ENDPOINT_NFT_MINT, ENDPOINT_NFT_SET_NFT_CONTRACT_HASH, ENDPOINT_NFT_TRANSFER, ENDPOINT_NFT_UN_LIST, KEY_NFT_CONTRACT_ACCESS_UREF, KEY_NFT_CONTRACT_HASH, KEY_NFT_CONTRACT_PACKAGE_NAME, KEY_NFT_CONTRACT_VERSION};
+use common_lib::errors::{DatabaseErrors, NFTErrors};
 use common_lib::utils::response::response_error;
 use crate::listing_db::ListingDb;
 use crate::storage_db::StorageDb;
+use casper_types::RuntimeArgs;
+use common_lib::models::nft::Metadata;
+use common_lib::utils::helpers::get_metadata_schema;
+use serde_json::to_string;
+use common_lib::errors::DatabaseErrors::DatabaseUnexpected;
 
 const ARG_TOKEN_OWNER: &str = "token_owner";
 const ARG_TOKEN_META_DATA: &str = "token_meta_data";
@@ -50,18 +71,19 @@ impl From<Error> for ApiError {
 
 #[no_mangle]
 pub extern "C" fn mint() {
-    let token_owner = runtime::get_named_arg::<Key>(ARG_NFT_TOKEN_OWNER);
-    let token_id: String = runtime::get_named_arg(ARG_NFT_TOKEN_ID);
+    let token_owner = runtime::get_named_arg::<AccountHash>(ARG_NFT_TOKEN_OWNER);
+    let metadata = runtime::get_named_arg::<String>(ARG_NFT_METADATA);
     let nft_core_contract_hash: ContractHash = StorageDb::instance()
         .get_nft_core_contract_hash()
         .unwrap_or_revert_with(NFTErrors::NFTCoreHashIsNotSet);
-
+    runtime::print(&format!("test: {}, owner: {}", &metadata, &token_owner));
+    // let key = Key::Account()
     runtime::call_contract::<(String, Key, String)>(
         nft_core_contract_hash,
         ENDPOINT_NFT_MINT,
         runtime_args! {
-            ARG_TOKEN_OWNER => token_owner,
-            ARG_TOKEN_META_DATA => token_id,
+            ARG_TOKEN_OWNER => Key::Account(token_owner),
+            ARG_TOKEN_META_DATA => metadata,
         },
     );
 
@@ -109,27 +131,27 @@ pub extern "C" fn burn() {
 
 #[no_mangle]
 pub extern "C" fn list() {
-    let token_id = runtime::get_named_arg::<String>(ARG_NFT_TOKEN_ID);
+    let token_id = runtime::get_named_arg::<u64>(ARG_TOKEN_ID);
     let mut instance = ListingDb::instance();
-    if !instance.is_listed(&token_id) {
-        instance.list(&token_id)
+    if !instance.is_listed(token_id) {
+        instance.list(token_id)
     }
 }
 
 #[no_mangle]
 pub extern "C" fn un_list() {
-    let token_id = runtime::get_named_arg::<String>(ARG_NFT_TOKEN_ID);
+    let token_id = runtime::get_named_arg::<u64>(ARG_TOKEN_ID);
     let mut instance = ListingDb::instance();
-    if instance.is_listed(&token_id) {
-        instance.un_list(&token_id)
+    if instance.is_listed(token_id) {
+        instance.un_list(token_id)
     }
 }
 
 #[no_mangle]
 pub extern "C" fn buy() {
-    let token_id = runtime::get_named_arg::<String>(ARG_NFT_TOKEN_ID);
+    let token_id = runtime::get_named_arg::<u64>(ARG_TOKEN_ID);
     let mut instance = ListingDb::instance();
-    if !instance.is_listed(&token_id) {
+    if !instance.is_listed(token_id) {
         response_error(NFTErrors::NFTIsNotListed)
     }
     // TODO: payment (2.5% - commission, 97.5% - to the owner)
@@ -137,28 +159,123 @@ pub extern "C" fn buy() {
 }
 
 #[no_mangle]
+pub extern "C" fn set_nft_contract_hash() {
+    let contract_hash = runtime::get_named_arg::<ContractHash>(ARG_NFT_CONTRACT_HASH);
+    StorageDb::instance().set_nft_core_contract_hash(contract_hash);
+}
+
+/**
+* 1. mint
+* 2. transfer
+* 3. burn
+* 4. list
+* 5. un_list
+* 6. buy
+*/
+#[no_mangle]
 pub extern "C" fn call() {
-    // The key shouldn't already exist in the named keys.
-    let missing_key = runtime::get_key(KEY_NAME);
-    if missing_key.is_some() {
-        runtime::revert(Error::KeyAlreadyExists);
-    }
 
-    // This contract expects a single runtime argument to be provided.  The arg is named "message"
-    // and will be of type `String`.
-    let value: String = runtime::get_named_arg(RUNTIME_ARG_NAME);
+    let mut entrypoints = EntryPoints::new();
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_MINT,
+            vec![
+                Parameter::new(ARG_NFT_TOKEN_OWNER, Key::cl_type()),
+                Parameter::new(ARG_NFT_METADATA, String::cl_type())
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
 
-    // Store this value under a new unforgeable reference a.k.a `URef`.
-    let value_ref = storage::new_uref(value);
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_BURN,
+            vec![
+                Parameter::new(ARG_TOKEN_ID, u64::cl_type())
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
 
-    // Store the new `URef` as a named key with a name of `KEY_NAME`.
-    let key = Key::URef(value_ref);
-    runtime::put_key(KEY_NAME, key);
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_TRANSFER,
+            vec![
+                Parameter::new(ARG_TOKEN_ID, u64::cl_type()),
+                Parameter::new(ARG_SOURCE_KEY, Key::cl_type()),
+                Parameter::new(ARG_TARGET_KEY, Key::cl_type()),
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
 
-    // The key should now be able to be retrieved.  Note that if `get_key()` returns `None`, then
-    // `unwrap_or_revert()` will exit the process, returning `ApiError::None`.
-    let retrieved_key = runtime::get_key(KEY_NAME).unwrap_or_revert();
-    if retrieved_key != key {
-        runtime::revert(Error::KeyMismatch);
-    }
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_LIST,
+            vec![
+                Parameter::new(ARG_TOKEN_ID, u64::cl_type()),
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
+
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_UN_LIST,
+            vec![
+                Parameter::new(ARG_TOKEN_ID, u64::cl_type()),
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
+
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_BUY,
+            vec![
+                Parameter::new(ARG_TOKEN_ID, u64::cl_type()),
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
+
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_NFT_SET_NFT_CONTRACT_HASH,
+            vec![
+                Parameter::new(ARG_NFT_CONTRACT_HASH, ContractHash::cl_type()),
+            ],
+            CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
+
+    let mut nft_named_keys = NamedKeys::new();
+
+    let (contract_hash, version) = storage::new_contract(
+        entrypoints,
+        Some(nft_named_keys),
+        Some(KEY_NFT_CONTRACT_PACKAGE_NAME.to_string()),
+        Some(KEY_NFT_CONTRACT_ACCESS_UREF.to_string()),
+    );
+
+    let contract_hash_uref = storage::new_uref(contract_hash);
+    runtime::put_key(KEY_NFT_CONTRACT_HASH, contract_hash_uref.into());
+
+    let contract_version_uref = storage::new_uref(version);
+    runtime::put_key(KEY_NFT_CONTRACT_VERSION, contract_version_uref.into());
+
 }

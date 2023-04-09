@@ -21,11 +21,7 @@ use alloc::{
 };
 use core::convert::TryInto;
 
-use casper_types::{
-    contracts::NamedKeys, runtime_args, CLType, CLValue, ContractHash, ContractPackageHash,
-    EntryPoint, EntryPointAccess, EntryPointType, EntryPoints, Key, KeyTag, Parameter, RuntimeArgs,
-    Tagged,
-};
+use casper_types::{contracts::NamedKeys, runtime_args, CLType, CLValue, ContractHash, ContractPackageHash, EntryPoint, EntryPointAccess, EntryPointType, EntryPoints, Key, KeyTag, Parameter, RuntimeArgs, Tagged, ApiError};
 
 use casper_contract::{
     contract_api::{
@@ -485,6 +481,7 @@ pub extern "C" fn mint() {
     // who owns the NFT we are about to mint.()
     let ownership_mode = utils::get_ownership_mode().unwrap_or_revert();
     let caller = utils::get_verified_caller().unwrap_or_revert();
+    runtime::print(&format!("owner_mode: {}", ownership_mode as u8));
     let token_owner_key: Key =
         if let OwnershipMode::Assigned | OwnershipMode::Transferable = ownership_mode {
             runtime::get_named_arg(ARG_TOKEN_OWNER)
@@ -525,6 +522,8 @@ pub extern "C" fn mint() {
             TokenIdentifier::Hash(base16::encode_lower(&runtime::blake2b(&metadata)))
         }
     };
+
+    runtime::print(&format!("core meta: {}, owner", metadata.to_string()));
 
     utils::upsert_dictionary_value_from_key(
         TOKEN_OWNERS,
@@ -568,7 +567,6 @@ pub extern "C" fn mint() {
         NFTCoreError::InvalidTotalTokenSupply,
     );
     storage::write(number_of_minted_tokens_uref, minted_tokens_count + 1u64);
-
     if let OwnerReverseLookupMode::Complete = utils::get_reporting_mode() {
         if (NFTIdentifierMode::Hash == identifier_mode)
             && utils::should_migrate_token_hashes(token_owner_key)

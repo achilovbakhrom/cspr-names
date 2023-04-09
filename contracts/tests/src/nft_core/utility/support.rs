@@ -72,6 +72,7 @@ pub(crate) fn get_dictionary_value_from_key<T: CLTyped + FromBytes>(
     dictionary_name: &str,
     dictionary_key: &str,
 ) -> T {
+    println!("dictkey: {}:{}", dictionary_name, dictionary_key);
     let seed_uref = *builder
         .query(None, *nft_contract_key, &[])
         .expect("must have nft_core-core contract")
@@ -241,6 +242,7 @@ pub(crate) fn get_token_page_by_hash(
 ) -> Vec<bool> {
     let token_number: u64 =
         get_dictionary_value_from_key(builder, nft_contract_key, INDEX_BY_HASH, &token_hash);
+    println!("token number: {}", token_number);
     get_token_page_by_id(builder, nft_contract_key, token_owner_key, token_number)
 }
 

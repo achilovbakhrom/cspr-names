@@ -1,5 +1,53 @@
 // Common usage constants
 
+use alloc::collections::BTreeMap;
+use alloc::string::{String, ToString};
+
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct MetadataSchemaProperty {
+    name: String,
+    description: String,
+    required: bool,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct CustomMetadataSchema {
+    properties: BTreeMap<String, MetadataSchemaProperty>,
+}
+
+pub fn get_custom_metadata_schema() -> CustomMetadataSchema {
+    let mut properties = BTreeMap::new();
+    properties.insert(
+        "name".to_string(),
+        MetadataSchemaProperty {
+            name: "name".to_string(),
+            description: "The name of domain name.".to_string(),
+            required: true,
+        },
+    );
+    properties.insert(
+        "symbol".to_string(),
+        MetadataSchemaProperty {
+            name: "symbol".to_string(),
+            description: "The symbol of the token.".to_string(),
+            required: true,
+        },
+    );
+
+    properties.insert(
+        "token_id".to_string(),
+        MetadataSchemaProperty {
+            name: "token_id".to_string(),
+            description: "Calculated id of the domain name.".to_string(),
+            required: true,
+        },
+    );
+    CustomMetadataSchema { properties }
+}
+
+
 pub const CSPR_HASH: [u8; 32] = [
     0xe0, 0x23, 0xb6, 0xc3, 0x8b, 0x8b, 0xcb, 0xf1, 0xcd, 0x48, 0xc7, 0xac, 0x35, 0xb0, 0xb2, 0x44,
     0x62, 0xfa, 0x8b, 0x66, 0x3b, 0x16, 0x63, 0x07, 0xd8, 0x80, 0xfa, 0xf2, 0x27, 0x1f, 0x67, 0xa6,
@@ -136,7 +184,7 @@ pub const ENDPOINT_DATABASE_INIT: &str = "init";
 
 // ARGS
 pub const ARG_NFT_DOMAIN_NAME: &str = "arg_nft_domain_name";
-pub const ARG_NFT_TOKEN_ID: &str = "arg_nft_token_id";
+pub const ARG_NFT_METADATA: &str = "arg_nft_metadata";
 pub const ARG_NFT_CONTRACT_HASH: &str = "arg_nft_contract_hash";
 pub const ARG_NFT_TOKEN_OWNER: &str = "arg_nft_token_owner";
 
@@ -144,6 +192,10 @@ pub const ARG_NFT_TOKEN_OWNER: &str = "arg_nft_token_owner";
 // KEYS
 pub const KEY_NFT_CORE_CONTRACT_HASH: &str = "key_nft_core_contract_hash";
 pub const KEY_NFT_DICTIONARY_LISTING: &str = "key_nft_dictionary_listing";
+pub const KEY_NFT_CONTRACT_PACKAGE_NAME: &str = "key_nft_contract_package_name";
+pub const KEY_NFT_CONTRACT_ACCESS_UREF: &str = "key_nft_contract_access_uref";
+pub const KEY_NFT_CONTRACT_VERSION: &str = "key_nft_contract_version";
+pub const KEY_NFT_CONTRACT_HASH: &str = "key_nft_contract_hash";
 
 // ENDPOINTS
 pub const ENDPOINT_NFT_MINT: &str = "mint";
@@ -151,3 +203,8 @@ pub const ENDPOINT_NFT_TRANSFER: &str = "transfer";
 pub const ENDPOINT_NFT_BURN: &str = "burn";
 pub const ENDPOINT_NFT_METADATA: &str = "metadata";
 pub const ENDPOINT_NFT_REGISTER_OWNER: &str = "register_owner";
+pub const ENDPOINT_NFT_LIST: &str = "list";
+pub const ENDPOINT_NFT_UN_LIST: &str = "un_list";
+pub const ENDPOINT_NFT_BUY: &str = "buy";
+pub const ENDPOINT_NFT_SET_NFT_CONTRACT_HASH: &str = "set_nft_contract_hash";
+

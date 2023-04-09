@@ -64,6 +64,7 @@ pub enum NFTHolderMode {
 }
 
 #[repr(u8)]
+#[derive(Debug)]
 pub enum MintingMode {
     /// The ability to mint NFTs is restricted to the installing account only.
     Installer = 0,
@@ -208,6 +209,13 @@ impl InstallerRequestBuilder {
         }
     }
 
+    pub(crate) fn with_named_key_convention_mode(mut self, named_key: NamedKeyConventionMode) -> Self {
+        self.named_key_convention = CLValue::from_t(
+            named_key as u8
+        ).unwrap();
+        self
+    }
+
     pub(crate) fn with_account_hash(mut self, account_hash: AccountHash) -> Self {
         self.account_hash = account_hash;
         self
@@ -313,6 +321,11 @@ impl InstallerRequestBuilder {
 
     pub(crate) fn with_reporting_mode(mut self, reporting_mode: OwnerReverseLookupMode) -> Self {
         self.reporting_mode = CLValue::from_t(reporting_mode as u8).unwrap();
+        self
+    }
+
+    pub(crate) fn with_nft_kind(mut self, nft_kind: NFTKind) -> Self {
+        self.nft_kind = CLValue::from_t(nft_kind as u8).unwrap();
         self
     }
 

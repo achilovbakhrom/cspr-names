@@ -29,4 +29,4 @@ mod upgrade;
 
 // A collection of helper methods and constants.
 #[cfg(test)]
-mod utility;
+pub mod utility;

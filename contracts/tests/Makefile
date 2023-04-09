@@ -16,7 +16,7 @@ build-database-contract:
 	wasm-strip ../target/wasm32-unknown-unknown/release/database-contract.wasm 2>/dev/null | true
 	cp ../target/wasm32-unknown-unknown/release/database-contract.wasm wasm
 
-build-nft-contract:
+build-nft-core-contract:
 	cd ../nft-core/contract && cargo build --release --target wasm32-unknown-unknown
 	cd ../nft-core/client/mint_session && cargo build --release --target wasm32-unknown-unknown
 	cd ../nft-core/client/balance_of_session && cargo build --release --target wasm32-unknown-unknown
@@ -39,9 +39,15 @@ build-nft-contract:
 	cp ../target/wasm32-unknown-unknown/release/transfer_call.wasm wasm
 	cp ../target/wasm32-unknown-unknown/release/updated_receipts.wasm wasm
 
+build-nft-contract:
+	cd ../nft-contract/contract && cargo build --release --target wasm32-unknown-unknown
+	wasm-strip ../target/wasm32-unknown-unknown/release/nft-contract.wasm
+	cp ../target/wasm32-unknown-unknown/release/nft-contract.wasm wasm
+
 test:
 	mkdir -p wasm
 	make build-main-contract
+	make build-nft-core-contract
 	make build-nft-contract
 	make build-price-oracle-contract
 	make build-database-contract
