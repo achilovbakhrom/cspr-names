@@ -162,7 +162,7 @@ pub const KEY_DATABASE_CONTRACT_PACKAGE_NAME: &str = "key_database_contract_pack
 pub const KEY_DATABASE_CONTRACT_ACCESS_UREF: &str = "key_database_contract_access_uref";
 pub const KEY_DATABASE_CONTRACT_VERSION: &str = "key_database_contract_version";
 pub const KEY_DATABASE_CONTRACT_HASH: &str = "key_database_contract_hash";
-
+pub const KEY_DATABASE_DICTIONARY_OWNER_DOMAIN_LIST: &str = "key_database_dictionary_owner_domain_list";
 
 // ENDPOINTS
 pub const ENDPOINT_DATABASE_SAVE_DOMAIN_NAME: &str = "save_domain_name";
@@ -179,8 +179,8 @@ pub const ENDPOINT_DATABASE_GET_TOTALS: &str = "get_totals";
 pub const ENDPOINT_DATABASE_GET_DOMAIN: &str = "get_domain";
 pub const ENDPOINT_DATABASE_GET_SUBDOMAIN: &str = "get_subdomain";
 pub const ENDPOINT_DATABASE_INIT: &str = "init";
-
-// ******* Database Contract constants **********
+pub const ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER: &str = "get_domain_list_for_owner";
+// ******* NFT Contract constants **********
 
 // ARGS
 pub const ARG_NFT_DOMAIN_NAME: &str = "arg_nft_domain_name";

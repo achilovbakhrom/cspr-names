@@ -35,7 +35,7 @@ use common_lib::{
     models::DomainName,
     constants::{ ARG_DATABASE_DOMAIN_NAME }
 };
-use common_lib::constants::{ARG_DATABASE_EXPIRATION_DATE, ARG_DATABASE_OWNER, ARG_DATABASE_PAGE, ARG_DATABASE_RESOLVER, ARG_DATABASE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_GET_DOMAIN, ENDPOINT_DATABASE_GET_DOMAIN_LIST, ENDPOINT_DATABASE_GET_SUBDOMAIN, ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST, ENDPOINT_DATABASE_GET_TOTALS, ENDPOINT_DATABASE_INIT, ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME, ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_SAVE_DOMAIN_NAME, ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION, ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP, ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER, ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER, KEY_DATABASE_CONTRACT_ACCESS_UREF, KEY_DATABASE_CONTRACT_HASH, KEY_DATABASE_CONTRACT_PACKAGE_NAME, KEY_DATABASE_CONTRACT_VERSION, KEY_DATABASE_TOTALS_DOMAIN_COUNT, KEY_DATABASE_TOTALS_SUBDOMAIN_COUNT, KEY_MAINTAINER};
+use common_lib::constants::{ARG_DATABASE_EXPIRATION_DATE, ARG_DATABASE_OWNER, ARG_DATABASE_PAGE, ARG_DATABASE_RESOLVER, ARG_DATABASE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_GET_DOMAIN, ENDPOINT_DATABASE_GET_DOMAIN_LIST, ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER, ENDPOINT_DATABASE_GET_SUBDOMAIN, ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST, ENDPOINT_DATABASE_GET_TOTALS, ENDPOINT_DATABASE_INIT, ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME, ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_SAVE_DOMAIN_NAME, ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION, ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP, ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER, ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER, KEY_DATABASE_CONTRACT_ACCESS_UREF, KEY_DATABASE_CONTRACT_HASH, KEY_DATABASE_CONTRACT_PACKAGE_NAME, KEY_DATABASE_CONTRACT_VERSION, KEY_DATABASE_TOTALS_DOMAIN_COUNT, KEY_DATABASE_TOTALS_SUBDOMAIN_COUNT, KEY_MAINTAINER};
 use common_lib::errors::DatabaseErrors;
 use common_lib::models::SubdomainName;
 use common_lib::utils::response::{response_error, response_success};
@@ -47,6 +47,7 @@ use store::{
     subdomain_map::SubdomainMap,
     subdomain_list::SubdomainList,
 };
+use crate::store::owner_domain_list::OwnerDomainList;
 use crate::store::state::TotalState;
 
 #[no_mangle]
@@ -60,6 +61,11 @@ pub extern "C" fn save_domain_name() {
         Err(e) => return response_error(e),
     };
     DomainPaginationMap::instance().map(&domain_name.name, page);
+
+    OwnerDomainList::instance().add_domain_name(
+        domain_name.owner,
+        &domain_name.name
+    );
     TotalState::instance().increment_domains_count();
 }
 
@@ -78,7 +84,9 @@ pub extern "C" fn save_subdomain_name() {
 #[no_mangle]
 pub extern "C" fn remove_domain_name() {
     let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-    DomainMap::instance().remove(&domain_name);
+    let domain_map = DomainMap::instance();
+    let domain = domain_map.get(&domain_name).expect("Domain is not found");
+    domain_map.remove(&domain_name);
 
     let domain_pagination_map = DomainPaginationMap::instance();
     let page_binding = &domain_pagination_map.get_page(&domain_name);
@@ -100,6 +108,11 @@ pub extern "C" fn remove_domain_name() {
             .unwrap_or_revert_with(DatabaseErrors::DatabaseUnexpected);
     });
 
+    OwnerDomainList::instance()
+        .remove_domain_name(
+            domain.owner,
+            &domain_name
+        );
     let total_state = TotalState::instance();
     total_state.decrement_domains_count();
     let count = subdomains.len() as u64;
@@ -163,6 +176,17 @@ pub extern "C" fn set_subdomain_resolver() {
 }
 
 #[no_mangle]
+pub extern "C" fn get_domain_list_for_owner() {
+    let owner: AccountHash = runtime::get_named_arg(ARG_DATABASE_OWNER);
+    let domain_list = OwnerDomainList::instance().get_domain_list(owner);
+    response_success(
+        domain_list,
+        "Error while converting CL_Value"
+    );
+}
+
+
+#[no_mangle]
 pub extern "C" fn get_domain_list() {
     let page: u64 = runtime::get_named_arg(ARG_DATABASE_PAGE);
     let domains = DomainList::instance().get_domain_list(page.to_string().as_ref());
@@ -201,6 +225,7 @@ pub extern "C" fn init() {
     DomainList::initialize();
     DomainMap::initialize();
     DomainPaginationMap::initialize();
+    OwnerDomainList::initialize();
     SubdomainList::initialize();
     SubdomainMap::initialize();
 }
@@ -322,6 +347,18 @@ pub extern "C" fn call() {
                 Parameter::new(ARG_DATABASE_RESOLVER, AccountHash::cl_type()),
             ],
             CLType::Unit,
+            EntryPointAccess::Public,
+            EntryPointType::Contract
+        )
+    );
+
+    entrypoints.add_entry_point(
+        EntryPoint::new(
+            ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER,
+            vec![
+                Parameter::new(ARG_DATABASE_OWNER, AccountHash::cl_type()),
+            ],
+            CLType::Any,
             EntryPointAccess::Public,
             EntryPointType::Contract
         )
