@@ -5,5 +5,6 @@ pub use local_metadata::LocalMetadata;
 
 pub mod domain_name;
 pub mod nft;
+pub mod price;
 pub mod subdomain_name;
 pub mod local_metadata;

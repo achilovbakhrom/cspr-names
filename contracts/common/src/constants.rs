@@ -115,6 +115,7 @@ pub const ENDPOINT_PO_ADD_AUTHORITY: &str = "add_authority";
 pub const ENDPOINT_PO_REMOVE_AUTHORITY: &str = "remove_authority";
 pub const ENDPOINT_PO_PRICE_GET_SIMPLE_OPERATIONS: &str = "get_price_simple_operations";
 pub const ENDPOINT_PO_PRICE_SET_SIMPLE_OPERATIONS: &str = "set_price_simple_operations";
+pub const ENDPOINT_PO_INIT: &str = "init";
 
 // ARGS
 pub const ARG_PO_PRICE_TYPE: &str = "arg_price_type";
@@ -124,6 +125,7 @@ pub const ARG_PO_PRICE_MID: &str = "arg_price_mid";
 pub const ARG_PO_PRICE_MORE: &str = "arg_price_more";
 pub const ARG_PO_PRICE_TYPE_CHARS_COUNT: &str = "arg_price_type_chars_count";
 pub const ARG_PO_AUTHORITY: &str = "arg_authority";
+pub const ARG_PO_EXTENSION: &str = "arg_price_oracle_extension";
 
 // KEYS
 pub const KEY_PO_MAINTAINER: &str = "key_price_oracle_maintainer";
@@ -138,6 +140,7 @@ pub const KEY_PO_CHARS_COUNT_MID: &str = "key_storage_chars_count_mid";
 pub const KEY_PO_PRICE_MORE: &str = "key_storage_price_more";
 pub const KEY_PO_CONTRACT_PACKAGE_NAME: &str = "key_price_oracle_contract_package_name";
 pub const KEY_PO_CONTRACT_ACCESS_UREF: &str = "key_price_oracle_contract_access_uref";
+pub const KEY_PO_PRICES: &str = "key_price_oracle_prices";
 
 // ******* Database Contract constants **********
 // ARGS

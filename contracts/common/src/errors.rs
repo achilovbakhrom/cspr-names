@@ -64,8 +64,8 @@ pub enum PriceOracleContractErrors {
     PriceAuthorityHasAlreadyTaken = 49,
     PriceOnlyMaintainerHasAccess = 50,
     PriceUserHasNoAccess = 51,
-    PriceSimpleOperationsIsNotSet = 52
-
+    PriceSimpleOperationsIsNotSet = 52,
+    PricePriceIsNotSetForExtension = 53
 
 }
 
