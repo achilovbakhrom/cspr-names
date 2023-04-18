@@ -900,6 +900,8 @@ fn should_prevent_transfer_to_unregistered_owner() {
     )
     .build();
 
+
+
     builder.exec(transfer_request).expect_failure();
 
     let error = builder.get_error().expect("must have error");

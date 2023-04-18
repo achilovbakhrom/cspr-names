@@ -629,7 +629,7 @@ pub(crate) fn migrate_token_hashes(token_owner: Key) {
 // DO not use this function unless absolutely necessary.
 pub(crate) fn get_owned_token_ids_by_token_number() -> Vec<TokenIdentifier> {
     let token_owner: Key = get_verified_caller().unwrap_or_revert();
-
+    runtime::print(&format!("opeart 2 k: {}", IDENTIFIER_MODE));
     let identifier_mode: NFTIdentifierMode = get_stored_value_with_user_errors::<u8>(
         IDENTIFIER_MODE,
         NFTCoreError::MissingIdentifierMode,
@@ -643,13 +643,15 @@ pub(crate) fn get_owned_token_ids_by_token_number() -> Vec<TokenIdentifier> {
         NFTCoreError::MissingNumberOfMintedTokens,
         NFTCoreError::InvalidNumberOfMintedTokens,
     );
+    runtime::print(&format!("opeart 2 key current_number_of_minted_tokens {}", current_number_of_minted_tokens));
 
     let mut token_identifiers: Vec<TokenIdentifier> = vec![];
 
-    for token_number in 0..=current_number_of_minted_tokens {
+    for token_number in 0..current_number_of_minted_tokens {
         let token_identifier = match identifier_mode {
             NFTIdentifierMode::Ordinal => TokenIdentifier::new_index(token_number),
             NFTIdentifierMode::Hash => {
+                runtime::print(&format!("opeart 2 kkk: {}", &token_number.to_string()));
                 let token_hash = get_dictionary_value_from_key::<String>(
                     HASH_BY_INDEX,
                     &token_number.to_string(),

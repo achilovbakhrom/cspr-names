@@ -540,6 +540,7 @@ pub extern "C" fn mint() {
         &token_identifier.get_dictionary_item_key(),
         metadata,
     );
+    runtime::print(&format!("core meta 2"));
 
     let owned_tokens_item_key = utils::get_owned_tokens_dictionary_item_key(token_owner_key);
 
@@ -547,6 +548,7 @@ pub extern "C" fn mint() {
         // Update the forward and reverse trackers
         utils::insert_hash_id_lookups(minted_tokens_count, token_identifier.clone());
     }
+    runtime::print(&format!("core meta 3"));
 
     //Increment the count of owned tokens.
     let updated_token_count =
@@ -560,6 +562,8 @@ pub extern "C" fn mint() {
         updated_token_count,
     );
 
+    runtime::print(&format!("core meta 4"));
+
     // Increment number_of_minted_tokens by one
     let number_of_minted_tokens_uref = utils::get_uref(
         NUMBER_OF_MINTED_TOKENS,
@@ -567,7 +571,10 @@ pub extern "C" fn mint() {
         NFTCoreError::InvalidTotalTokenSupply,
     );
     storage::write(number_of_minted_tokens_uref, minted_tokens_count + 1u64);
+    let mode = utils::get_reporting_mode();
+    runtime::print(&format!("core meta 5, {:?}", mode as u8));
     if let OwnerReverseLookupMode::Complete = utils::get_reporting_mode() {
+        runtime::print(&format!("core meta 6"));
         if (NFTIdentifierMode::Hash == identifier_mode)
             && utils::should_migrate_token_hashes(token_owner_key)
         {
@@ -585,7 +592,7 @@ pub extern "C" fn mint() {
             NFTCoreError::MissingPageTableURef,
             NFTCoreError::InvalidPageTableURef,
         );
-
+        runtime::print(&format!("core meta 7"));
         // Update the individual page record.
         let page_uref = utils::get_uref(
             &format!("{}{}", PAGE_DICTIONARY_PREFIX, page_table_entry),
@@ -805,6 +812,7 @@ pub extern "C" fn set_approval_for_all() {
         NFTCoreError::InvalidOperator,
     )
     .unwrap_or_revert();
+    runtime::print(&format!("opeart: {:?}", &operator));
 
     let operator_uref = utils::get_uref(
         OPERATOR,
@@ -812,10 +820,12 @@ pub extern "C" fn set_approval_for_all() {
         NFTCoreError::InvalidStorageUref,
     );
 
+    runtime::print(&format!("opeart 2"));
     let owned_tokens = match utils::get_reporting_mode() {
         OwnerReverseLookupMode::NoLookUp => utils::get_owned_token_ids_by_token_number(),
         OwnerReverseLookupMode::Complete => utils::get_owned_token_ids_by_page(),
     };
+    runtime::print(&format!("opeart 3"));
 
     // Depending on approve_all we either approve all or disapprove all.
     for token_id in owned_tokens {
@@ -848,8 +858,11 @@ pub extern "C" fn transfer() {
     .try_into()
     .unwrap_or_revert();
 
+    runtime::print(&format!("identifier_mode: {}", identifier_mode as u8));
+
     let token_identifier = utils::get_token_identifier_from_runtime_args(&identifier_mode);
 
+    runtime::print(&format!("token_identifier: {:?}", &123));
     // We assume we cannot transfer burnt tokens
     if utils::is_token_burned(&token_identifier) {
         runtime::revert(NFTCoreError::PreviouslyBurntToken)
@@ -885,6 +898,7 @@ pub extern "C" fn transfer() {
         Some(None) | None => false,
     };
 
+    runtime::print(&format!("caller: {}, owner: {}, isapproved: {}", &caller, &token_owner_key, is_approved));
     // Revert if caller is not owner and not approved.
     if caller != token_owner_key && !is_approved {
         runtime::revert(NFTCoreError::InvalidTokenOwner);

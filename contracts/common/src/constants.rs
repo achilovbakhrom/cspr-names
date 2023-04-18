@@ -90,6 +90,7 @@ pub const KEY_MAIN_CONTRACT_HASH: &str = "key_main_contract_hash";
 pub const KEY_MAIN_CONTRACT_PACKAGE_NAME: &str = "key_main_contract_package_name";
 pub const KEY_MAIN_CONTRACT_ACCESS_UREF: &str = "key_main_contract_access_uref";
 pub const KEY_MAIN_PRICE_ORACLE_CONTRACT_HASH: &str = "key_main_price_oracle_contract_hash";
+pub const KEY_MAIN_ALLOWED_EXTENSIONS: &str = "key_main_allowed_extensions";
 
 // ENDPOINTS
 pub const ENTRYPOINT_MAIN_REGISTER_DOMAIN: &str = "register_domain";
@@ -183,6 +184,7 @@ pub const ENDPOINT_DATABASE_GET_DOMAIN: &str = "get_domain";
 pub const ENDPOINT_DATABASE_GET_SUBDOMAIN: &str = "get_subdomain";
 pub const ENDPOINT_DATABASE_INIT: &str = "init";
 pub const ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER: &str = "get_domain_list_for_owner";
+
 // ******* NFT Contract constants **********
 
 // ARGS
@@ -191,7 +193,6 @@ pub const ARG_NFT_METADATA: &str = "arg_nft_metadata";
 pub const ARG_NFT_CONTRACT_HASH: &str = "arg_nft_contract_hash";
 pub const ARG_NFT_TOKEN_OWNER: &str = "arg_nft_token_owner";
 
-
 // KEYS
 pub const KEY_NFT_CORE_CONTRACT_HASH: &str = "key_nft_core_contract_hash";
 pub const KEY_NFT_DICTIONARY_LISTING: &str = "key_nft_dictionary_listing";
@@ -199,6 +200,9 @@ pub const KEY_NFT_CONTRACT_PACKAGE_NAME: &str = "key_nft_contract_package_name";
 pub const KEY_NFT_CONTRACT_ACCESS_UREF: &str = "key_nft_contract_access_uref";
 pub const KEY_NFT_CONTRACT_VERSION: &str = "key_nft_contract_version";
 pub const KEY_NFT_CONTRACT_HASH: &str = "key_nft_contract_hash";
+pub const KEY_NFT_CONTRACT_HASH_NV: &str = "key_nft_contract_hash_nv";
+pub const KEY_NFT_CONTRACT_OWNER: &str = "key_nft_contract_owner";
+pub const KEY_NFT_OPERATORS: &str = "key_nft_operators";
 
 // ENDPOINTS
 pub const ENDPOINT_NFT_MINT: &str = "mint";
@@ -210,4 +214,26 @@ pub const ENDPOINT_NFT_LIST: &str = "list";
 pub const ENDPOINT_NFT_UN_LIST: &str = "un_list";
 pub const ENDPOINT_NFT_BUY: &str = "buy";
 pub const ENDPOINT_NFT_SET_NFT_CONTRACT_HASH: &str = "set_nft_contract_hash";
+pub const ENDPOINT_NFT_APPROVE: &str = "approve";
+pub const ENDPOINT_NFT_SET_CURRENT_CONTRACT_HASH: &str = "set_current_contract_hash";
+pub const ENDPOINT_SET_APPROVAL_FOR_ALL: &str = "set_approval_for_all";
+pub const ENDPOINT_NFT_INITIALIZE: &str = "init";
 
+// ******* Authorities **********
+
+// ARGS
+pub const ARG_AUTHORITY_MUTATION_TYPE: &str = "arg_authority_mutation_type";
+pub const ARG_AUTHORITY_CONTRACT_HASH: &str = "arg_authority_contract_hash";
+pub const ARG_AUTHORITY_AUTHORITY_LIST: &str = "arg_authority_authority_list";
+
+
+// KEYS
+pub const KEY_AUTHORITY_AUTHORITIES: &str = "key_authority_authorities";
+pub const KEY_AUTHORITY_CONTRACTS: &str = "key_authority_contracts";
+
+// ENDPOINTS
+
+pub const ENDPOINT_AUTHORITY_SET_AUTHORITY: &str = "set_authority";
+pub const ENDPOINT_AUTHORITY_GET_AUTHORITY: &str = "get_authority";
+pub const ENDPOINT_AUTHORITY_SET_CONTRACT: &str = "set_contract";
+pub const ENDPOINT_AUTHORITY_GET_CONTRACT: &str = "get_contract";

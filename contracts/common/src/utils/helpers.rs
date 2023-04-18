@@ -7,7 +7,7 @@ pub fn is_array_contain<T: PartialEq>(arr: &[T], item: &T) -> bool {
     found.is_some()
 }
 
-pub fn get_metadata_schema(name: &str, token_id: &str) -> alloc::string::String {
+pub fn get_metadata_schema(name: &str, token_id: &str) -> String {
     let meta_value = json!({
         "name": name,
         "symbol": "symbol",
@@ -20,3 +20,4 @@ pub fn get_metadata_schema(name: &str, token_id: &str) -> alloc::string::String 
 pub fn concat(str1: &str, str2: &str, connector: &str) -> String {
     format!("{}{}{}", str1, connector, str2)
 }
+

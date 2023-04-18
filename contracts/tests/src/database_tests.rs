@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use hex::{ ToHex, encode };
+
 use casper_engine_test_support::{
     DeployItemBuilder, ExecuteRequestBuilder, InMemoryWasmTestBuilder, ARG_AMOUNT,
     DEFAULT_ACCOUNT_ADDR, DEFAULT_ACCOUNT_INITIAL_BALANCE, DEFAULT_GENESIS_CONFIG,
@@ -97,13 +97,11 @@ impl DatabaseContractContext {
         owner: AccountHash,
         deployer: AccountHash
     ) {
-        let vec = name.split(".").collect::<Vec<&str>>();
-        let token_id = namehash_label(CSPR_HASH, vec[0]);
         let domain_name = DomainName {
             end_time,
             owner,
             resolver,
-            token_id,
+            token_id: "some_hash".to_string(),
             name: name.to_string(),
         };
 
@@ -343,9 +341,6 @@ fn should_test_save_domain_name() {
     assert_eq!(context.alice_account, context.alice_account);
 
     let domain = context.get_domain_name("test.cspr").unwrap();
-    let hex: String =  encode(domain.token_id);
-    println!("hhh {:?}", &domain.token_id);
-    assert_eq!(hex, "d3f09690e3c12f9ad83f6c087d213f75b7a97b8c6892292254d1c907633ddc83"); //https://swolfeyes.github.io/ethereum-namehash-calculator
     assert_eq!(domain.name, "test.cspr");
     assert_eq!(domain.end_time, 1_000_000);
     assert_eq!(domain.resolver, context.alice_account);

@@ -6,7 +6,8 @@ pub enum CommonError {
     UnexpectedKeyVariant = 1,
     MissingStorageUref = 2,
     InvalidStorageUref = 3,
-    NoAuthority = 4
+    NoAuthority = 4,
+    ItemNotFound = 5,
 }
 
 impl From<CommonError> for ApiError {
@@ -19,7 +20,7 @@ impl From<CommonError> for ApiError {
 #[repr(u16)]
 #[derive(Clone, Copy)]
 pub enum MainContractErrors {
-    InvalidDomain = 21,
+    InvalidName = 21,
     DomainAlreadyExists = 22,
     InvalidDuration = 23,
     PriceDiscrepancy = 24,
@@ -40,6 +41,10 @@ pub enum MainContractErrors {
     AuthorityHasAlreadyTaken = 39,
     CannotRemoveMaintainer = 40,
     UserHasNoAccess = 41,
+    InvalidCreator = 42,
+    InvalidExtension = 43,
+    ExtensionListIsNotSet = 44,
+    MaintainerIsNotSet = 45
     
 }
 
@@ -97,6 +102,7 @@ impl From<DatabaseErrors> for ApiError {
 pub enum NFTErrors {
     NFTCoreHashIsNotSet = 80,
     NFTIsNotListed = 81,
+    NFTContractHashIsNotSet = 82,
 }
 
 impl From<NFTErrors> for ApiError {

@@ -4,6 +4,10 @@
 #[cfg(not(target_arch = "wasm32"))]
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
 
+mod local_db;
+mod names_validator;
+mod utils;
+
 // We need to explicitly import the std alloc crate and `alloc::string::String` as we're in a
 // `no_std` environment.
 extern crate alloc;
@@ -13,7 +17,11 @@ use core::hash::Hash;
 use alloc::{
     vec,
     vec::Vec,
-    string::{String, ToString}, format,
+    string::{
+        String,
+        ToString
+    },
+    format,
 };
 
 use common_lib::{
@@ -115,6 +123,9 @@ use common_lib::constants::{
     ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN,
     ENTRYPOINT_MAIN_SET_PRICE_ORACLE_CONTRACT_HASH,
 };
+use common_lib::utils::response::response_error;
+use crate::local_db::LocalDb;
+use crate::names_validator::NamesValidator;
 
 
 /**
@@ -123,8 +134,10 @@ use common_lib::constants::{
  * 
  * 1. Check validity of the domain name
  * 2. Get Price from PriceOracle and check payment amount
- * 3. Create NFT for the domain name
- * 4. Store domain in store
+ * 3. Payment process
+ * 4. Create NFT for the domain name
+ * 5. Store domain in store
+ * 6. Retrieve domain name URef from database
  */
 #[no_mangle]
 pub extern "C" fn register_domain() {
@@ -134,17 +147,28 @@ pub extern "C" fn register_domain() {
     let resolver_address: AccountHash = runtime::get_named_arg(ARG_MAIN_RESOLVER_ADDRESS);
     let amount: U512 = runtime::get_named_arg(ARG_MAIN_REGISTER_AMOUNT);
 
-    let caller = runtime::get_caller();
-    
-    if !is_domain_name_valid(&domain) {
-        runtime::revert(MainContractErrors::InvalidDomain);
+    let extensions = LocalDb::instance().get_allowed_extensions();
+    if extensions.is_none() {
+        response_error(MainContractErrors::ExtensionListIsNotSet);
     }
-    
-    let chars_count = get_domain_name_chars_count(&domain);
-    
-    if chars_count <= 3 && !is_maintainer_or_has_authority(&caller) {
-        runtime::revert(MainContractErrors::UserHasNoAccessToRegister);
-    }
+
+    let maintainer: AccountHash = match get_stored_value_from_key(KEY_MAIN_MAINTAINER) {
+        Some(res) => res,
+        None => return response_error(MainContractErrors::MaintainerIsNotSet),
+    };
+
+    let validator = NamesValidator::instance(
+        extensions.unwrap(),
+        vec![maintainer]
+    );
+
+    let model = match validator.validate_name(domain.to_string()) {
+        Ok(res) => res,
+        Err(e) => return response_error(e),
+    };
+
+    let chars_count = model.get_name_len();
+
 
     let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
     
@@ -185,7 +209,7 @@ pub extern "C" fn register_domain() {
     let splitted = binding.split('.').collect::<Vec<&str>>();
     let label = splitted.first().expect("Error while getting first element of split!").to_string();
 
-    let token_id = namehash_label(CSPR_HASH, &label);
+    // let token_id = namehash_label(CSPR_HASH, &label);
 
     let caller = runtime::get_caller();
 
@@ -221,7 +245,7 @@ pub extern "C" fn register_domain() {
             upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain, DomainName {
                 end_time,
                 name: domain.clone(),        
-                token_id,
+                token_id: "some_hash".to_string(),
                 owner: caller,
                 resolver: resolver_address,
             });
@@ -444,7 +468,7 @@ pub extern "C" fn get_sudomains_for_domain() {
         let result = CLValue::from_t(subdomains).expect("Error while converting subdomains to cl_value");
         runtime::ret(result);
     } else {
-        runtime::revert(MainContractErrors::InvalidDomain);
+        runtime::revert(MainContractErrors::InvalidName);
     }
 }
 
@@ -516,7 +540,7 @@ pub extern "C" fn extend() {
     let duration: u8 = runtime::get_named_arg(ARG_MAIN_DURATION);
     
     if !is_domain_name_valid(&domain) {
-        runtime::revert(MainContractErrors::InvalidDomain);
+        runtime::revert(MainContractErrors::InvalidName);
     }
 
     let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
