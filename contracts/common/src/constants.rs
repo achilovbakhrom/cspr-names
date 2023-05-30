@@ -53,6 +53,8 @@ pub const CSPR_HASH: [u8; 32] = [
     0x62, 0xfa, 0x8b, 0x66, 0x3b, 0x16, 0x63, 0x07, 0xd8, 0x80, 0xfa, 0xf2, 0x27, 0x1f, 0x67, 0xa6,
 ];
 
+pub const MAX_DOMAIN_NAME_COUNT_PER_DATABASE: u16 = 10_000;
+
 pub(crate) const GRACE_PERIOD: u64 = 1000 * 60 * 60 * 24 * 90;
 pub(crate) const EXTENSION: &str = "cspr";
 pub const YEAR_IN_MILLIS: u64 = 1000 * 60 * 60 * 24 * 365;
@@ -78,6 +80,7 @@ pub const ARG_MAIN_DOMAIN_PAGE: &str = "arg_domain_page";
 pub const ARG_MAIN_PRICE_ORACLE_CONTRACT_HASH: &str = "arg_price_oracle_contract_hash";
 pub const ARG_MAIN_REGISTER_AMOUNT: &str = "arg_amount";
 pub const ARG_MAIN_AUTHORITY: &str = "arg_authority";
+pub const ARG_MAIN_CUSTOMER_PURSE: &str = "arg_main_customer_purse";
 
 // KEYS
 pub const KEY_MAIN_MAINTAINER: &str = "key_main_maintainer";
@@ -91,6 +94,10 @@ pub const KEY_MAIN_CONTRACT_PACKAGE_NAME: &str = "key_main_contract_package_name
 pub const KEY_MAIN_CONTRACT_ACCESS_UREF: &str = "key_main_contract_access_uref";
 pub const KEY_MAIN_PRICE_ORACLE_CONTRACT_HASH: &str = "key_main_price_oracle_contract_hash";
 pub const KEY_MAIN_ALLOWED_EXTENSIONS: &str = "key_main_allowed_extensions";
+pub const KEY_MAIN_DATABASE_CONTRACT_HASH_MAP: &str = "key_main_database_contract_hash_map";
+pub const KEY_MAIN_NAME_CONTRACT_HASH: &str = "key_main_name_contract_hash";
+pub const KEY_MAIN_MAINTAINER_PURSE: &str = "key_main_maintainer_purse";
+pub const KEY_MAIN_AUTHORITIES_CONTRACT_HASH: &str = "key_main_authorities_contract_hash";
 
 // ENDPOINTS
 pub const ENTRYPOINT_MAIN_REGISTER_DOMAIN: &str = "register_domain";
@@ -101,7 +108,7 @@ pub const ENTRYPOINT_MAIN_REMOVE_SUBDOMAIN: &str = "remove_subdomain";
 pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN: &str = "set_resolver_address_for_subdomain";
 pub const ENTRYPOINT_MAIN_GET_SUBDOMAINS_FOR_DOMAIN: &str = "get_sudomains_for_domain";
 pub const ENTRYPOINT_MAIN_GET_DOMAIN_LIST: &str = "get_domain_list";
-pub const ENTRYPOINT_MAIN_SET_PRICE_ORACLE_CONTRACT_HASH: &str = "set_price_oracle_contract_hash";
+pub const ENTRYPOINT_MAIN_SET_AUTHORITIES_CONTRACT_HASH: &str = "set_authorities_contract_hash";
 pub const ENTRYPOINT_MAIN_INIT: &str = "init";
 pub const ENTRYPOINT_MAIN_ADD_AUTHORITY: &str = "add_authority";
 pub const ENTRYPOINT_MAIN_REMOVE_AUTHORITY: &str = "remove_authority";
@@ -144,6 +151,7 @@ pub const KEY_PO_CONTRACT_ACCESS_UREF: &str = "key_price_oracle_contract_access_
 pub const KEY_PO_PRICES: &str = "key_price_oracle_prices";
 
 // ******* Database Contract constants **********
+
 // ARGS
 pub const ARG_DATABASE_DOMAIN_NAME: &str = "arg_database_domain_name";
 pub const ARG_DATABASE_SUBDOMAIN_NAME: &str = "arg_database_subdomain_name";
@@ -225,15 +233,23 @@ pub const ENDPOINT_NFT_INITIALIZE: &str = "init";
 pub const ARG_AUTHORITY_MUTATION_TYPE: &str = "arg_authority_mutation_type";
 pub const ARG_AUTHORITY_CONTRACT_HASH: &str = "arg_authority_contract_hash";
 pub const ARG_AUTHORITY_AUTHORITY_LIST: &str = "arg_authority_authority_list";
-
+pub const ARG_AUTHORITY_EXTENSION: &str = "arg_authority_extension";
+pub const ARG_AUTHORITY_CONTRACT_TYPE: &str = "arg_authority_contract_type";
 
 // KEYS
 pub const KEY_AUTHORITY_AUTHORITIES: &str = "key_authority_authorities";
 pub const KEY_AUTHORITY_CONTRACTS: &str = "key_authority_contracts";
+pub const KEY_AUTHORITY_CONTRACT_DB: &str = "key_authority_contract_db";
+pub const KEY_AUTHORITY_MAINTAINER: &str = "key_authority_maintainer";
+pub const KEY_AUTHORITY_CONTRACT_PACKAGE_NAME: &str = "key_authority_contract_package_name";
+pub const KEY_AUTHORITY_CONTRACT_ACCESS_UREF: &str = "key_authority_contract_access_uref";
+pub const KEY_AUTHORITY_CONTRACT_HASH: &str = "key_authority_contract_hash";
+pub const KEY_AUTHORITY_CONTRACT_VERSION: &str = "key_authority_contract_version";
 
 // ENDPOINTS
-
 pub const ENDPOINT_AUTHORITY_SET_AUTHORITY: &str = "set_authority";
 pub const ENDPOINT_AUTHORITY_GET_AUTHORITY: &str = "get_authority";
+pub const ENDPOINT_AUTHORITY_REMOVE_AUTHORITY: &str = "remove_authority";
 pub const ENDPOINT_AUTHORITY_SET_CONTRACT: &str = "set_contract";
 pub const ENDPOINT_AUTHORITY_GET_CONTRACT: &str = "get_contract";
+pub const ENDPOINT_AUTHORITY_REMOVE_CONTRACT: &str = "remove_contract";

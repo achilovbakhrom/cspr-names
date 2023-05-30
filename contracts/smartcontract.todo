@@ -1,0 +1,162 @@
+{
+  "todotree": {
+    "tree": [
+      {
+        "key": 1682884443606,
+        "children": [],
+        "todo": {
+          "content": "1. Register Domain",
+          "id": 1682884443606,
+          "level": "danger",
+          "done": false,
+          "start": 1682884443607
+        }
+      },
+      {
+        "key": 1682884462120,
+        "children": [],
+        "todo": {
+          "content": "2. Resolve Domain",
+          "id": 1682884462120,
+          "level": "danger",
+          "done": false,
+          "start": 1682884462120
+        }
+      },
+      {
+        "key": 1682884475898,
+        "children": [],
+        "todo": {
+          "content": "3. Set resolver address for Domain",
+          "id": 1682884475898,
+          "level": "danger",
+          "done": false,
+          "start": 1682884475898
+        }
+      },
+      {
+        "key": 1682884488470,
+        "children": [],
+        "todo": {
+          "content": "4. Register Subdomain",
+          "id": 1682884488470,
+          "level": "danger",
+          "done": false,
+          "start": 1682884488470
+        }
+      },
+      {
+        "key": 1682884500256,
+        "children": [],
+        "todo": {
+          "content": "5. Remove Subdomain",
+          "id": 1682884500256,
+          "level": "danger",
+          "done": false,
+          "start": 1682884500256
+        }
+      },
+      {
+        "key": 1682884509045,
+        "children": [],
+        "todo": {
+          "content": "6. Set resolver address for subdomain",
+          "id": 1682884509045,
+          "level": "danger",
+          "done": false,
+          "start": 1682884509045
+        }
+      },
+      {
+        "key": 1682884521726,
+        "children": [],
+        "todo": {
+          "content": "7. Get subdomain list for domain",
+          "id": 1682884521726,
+          "level": "danger",
+          "done": false,
+          "start": 1682884521726
+        }
+      },
+      {
+        "key": 1682884536722,
+        "children": [],
+        "todo": {
+          "content": "8. Get domain list by page",
+          "id": 1682884536722,
+          "level": "danger",
+          "done": false,
+          "start": 1682884536722
+        }
+      },
+      {
+        "key": 1682884544319,
+        "children": [],
+        "todo": {
+          "content": "9. Transfer domain",
+          "id": 1682884544319,
+          "level": "danger",
+          "done": false,
+          "start": 1682884544319
+        }
+      },
+      {
+        "key": 1682884559237,
+        "children": [],
+        "todo": {
+          "content": "10. List domain",
+          "id": 1682884559237,
+          "level": "danger",
+          "done": false,
+          "start": 1682884559237
+        }
+      },
+      {
+        "key": 1682884565226,
+        "children": [],
+        "todo": {
+          "content": "11. Unlist domain",
+          "id": 1682884565226,
+          "level": "danger",
+          "done": false,
+          "start": 1682884565226
+        }
+      },
+      {
+        "key": 1682884571097,
+        "children": [],
+        "todo": {
+          "content": "12. Buy domain",
+          "id": 1682884571097,
+          "level": "danger",
+          "done": false,
+          "start": 1682884571098
+        }
+      },
+      {
+        "key": 1682884577938,
+        "children": [],
+        "todo": {
+          "content": "13. Burn domain",
+          "id": 1682884577938,
+          "level": "danger",
+          "done": false,
+          "start": 1682884577938
+        }
+      }
+    ],
+    "expandKeys": [
+      1674966703305
+    ],
+    "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
+    "add_mode": "bottom",
+    "virtual": false,
+    "showLine": true,
+    "playFontSize": 24,
+    "title": "common",
+    "autoSort": false,
+    "showEndTime": false,
+    "lang": "en",
+    "version": "1682884714519"
+  }
+}

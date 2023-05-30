@@ -8,6 +8,7 @@ pub enum CommonError {
     InvalidStorageUref = 3,
     NoAuthority = 4,
     ItemNotFound = 5,
+    NoContractHashWasFoundInAuthoritiesContract = 6,
 }
 
 impl From<CommonError> for ApiError {
@@ -44,8 +45,11 @@ pub enum MainContractErrors {
     InvalidCreator = 42,
     InvalidExtension = 43,
     ExtensionListIsNotSet = 44,
-    MaintainerIsNotSet = 45
-    
+    MaintainerIsNotSet = 45,
+    DatabaseFulfilledOrIsNotSet = 46,
+    MaintainerPurseIsNotSet = 47,
+    InsufficientCustomerBalance = 48,
+    AuthoritiesContractHashIsNotSet = 49
 }
 
 impl From<MainContractErrors> for ApiError {
@@ -88,11 +92,23 @@ pub enum DatabaseErrors {
     DatabaseSubdomainDoesntExist = 62,
     DatabaseDomainDoesntExist = 63,
     DatabaseUnexpected = 64,
-
 }
 
 impl From<DatabaseErrors> for ApiError {
     fn from(e: DatabaseErrors) -> Self {
+        ApiError::User(e as u16)
+    }
+}
+
+#[repr(u16)]
+#[derive(Clone, Copy)]
+pub enum AuthorityErrors {
+    AuthorityInvalidCaller = 100,
+    AuthorityMaintainerIsNotSet = 101
+}
+
+impl From<AuthorityErrors> for ApiError {
+    fn from(e: AuthorityErrors) -> Self {
         ApiError::User(e as u16)
     }
 }

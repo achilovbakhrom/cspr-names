@@ -14,41 +14,38 @@ use alloc::vec;
 use core::u64;
 
 use casper_contract::{
-    contract_api::{
-        runtime,
-        storage
-    },
+    contract_api::{runtime, storage},
     unwrap_or_revert::UnwrapOrRevert,
-};
-use casper_types::{
-    CLType,
-    CLTyped,
-    EntryPoint,
-    EntryPointAccess,
-    EntryPoints,
-    EntryPointType,
-    Parameter
 };
 use casper_types::account::AccountHash;
 use casper_types::contracts::NamedKeys;
-use common_lib::{
-    models::DomainName,
-    constants::{ ARG_DATABASE_DOMAIN_NAME }
+use casper_types::{
+    CLType, CLTyped, EntryPoint, EntryPointAccess, EntryPointType, EntryPoints, Parameter,
 };
-use common_lib::constants::{ARG_DATABASE_EXPIRATION_DATE, ARG_DATABASE_OWNER, ARG_DATABASE_PAGE, ARG_DATABASE_RESOLVER, ARG_DATABASE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_GET_DOMAIN, ENDPOINT_DATABASE_GET_DOMAIN_LIST, ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER, ENDPOINT_DATABASE_GET_SUBDOMAIN, ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST, ENDPOINT_DATABASE_GET_TOTALS, ENDPOINT_DATABASE_INIT, ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME, ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_SAVE_DOMAIN_NAME, ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION, ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP, ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER, ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER, KEY_DATABASE_CONTRACT_ACCESS_UREF, KEY_DATABASE_CONTRACT_HASH, KEY_DATABASE_CONTRACT_PACKAGE_NAME, KEY_DATABASE_CONTRACT_VERSION, KEY_DATABASE_TOTALS_DOMAIN_COUNT, KEY_DATABASE_TOTALS_SUBDOMAIN_COUNT, KEY_MAINTAINER};
+use common_lib::constants::{
+    ARG_DATABASE_EXPIRATION_DATE, ARG_DATABASE_OWNER, ARG_DATABASE_PAGE, ARG_DATABASE_RESOLVER,
+    ARG_DATABASE_SUBDOMAIN_NAME, ENDPOINT_DATABASE_GET_DOMAIN, ENDPOINT_DATABASE_GET_DOMAIN_LIST,
+    ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER, ENDPOINT_DATABASE_GET_SUBDOMAIN,
+    ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST, ENDPOINT_DATABASE_GET_TOTALS, ENDPOINT_DATABASE_INIT,
+    ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME, ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME,
+    ENDPOINT_DATABASE_SAVE_DOMAIN_NAME, ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME,
+    ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION, ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP,
+    ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER, ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER,
+    KEY_DATABASE_CONTRACT_ACCESS_UREF, KEY_DATABASE_CONTRACT_HASH,
+    KEY_DATABASE_CONTRACT_PACKAGE_NAME, KEY_DATABASE_CONTRACT_VERSION,
+    KEY_DATABASE_TOTALS_DOMAIN_COUNT, KEY_DATABASE_TOTALS_SUBDOMAIN_COUNT, KEY_MAINTAINER,
+};
 use common_lib::errors::DatabaseErrors;
 use common_lib::models::SubdomainName;
 use common_lib::utils::response::{response_error, response_success};
+use common_lib::{constants::ARG_DATABASE_DOMAIN_NAME, models::DomainName};
 
-use store::{
-    domain_map::DomainMap,
-    domain_list::DomainList,
-    domain_pagination_map::DomainPaginationMap,
-    subdomain_map::SubdomainMap,
-    subdomain_list::SubdomainList,
-};
 use crate::store::owner_domain_list::OwnerDomainList;
 use crate::store::state::TotalState;
+use store::{
+    domain_list::DomainList, domain_map::DomainMap, domain_pagination_map::DomainPaginationMap,
+    subdomain_list::SubdomainList, subdomain_map::SubdomainMap,
+};
 
 #[no_mangle]
 pub extern "C" fn save_domain_name() {
@@ -62,10 +59,7 @@ pub extern "C" fn save_domain_name() {
     };
     DomainPaginationMap::instance().map(&domain_name.name, page);
 
-    OwnerDomainList::instance().add_domain_name(
-        domain_name.owner,
-        &domain_name.name
-    );
+    OwnerDomainList::instance().add_domain_name(domain_name.owner, &domain_name.name);
     TotalState::instance().increment_domains_count();
 }
 
@@ -75,7 +69,7 @@ pub extern "C" fn save_subdomain_name() {
     let subdomain_name: SubdomainName = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
     SubdomainMap::instance().save(subdomain_name.clone());
     match SubdomainList::instance().add(&domain_name, &subdomain_name) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     };
     TotalState::instance().increment_subdomains_count();
@@ -95,10 +89,10 @@ pub extern "C" fn remove_domain_name() {
         Err(e) => return response_error(*e),
     };
     match DomainList::instance().remove(&domain_name, *page) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     };
-    let _ =&domain_pagination_map.remove(&domain_name);
+    let _ = &domain_pagination_map.remove(&domain_name);
     let subdomain_list = SubdomainList::instance();
     let subdomains = &subdomain_list.get_subdomains(&domain_name);
     subdomains.iter().for_each(|x| {
@@ -108,11 +102,7 @@ pub extern "C" fn remove_domain_name() {
             .unwrap_or_revert_with(DatabaseErrors::DatabaseUnexpected);
     });
 
-    OwnerDomainList::instance()
-        .remove_domain_name(
-            domain.owner,
-            &domain_name
-        );
+    OwnerDomainList::instance().remove_domain_name(domain.owner, &domain_name);
     let total_state = TotalState::instance();
     total_state.decrement_domains_count();
     let count = subdomains.len() as u64;
@@ -125,7 +115,7 @@ pub extern "C" fn remove_subdomain_name() {
     let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
     SubdomainMap::instance().remove(&subdomain_name);
     match SubdomainList::instance().remove(&domain_name, &subdomain_name) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     }
     TotalState::instance().decrement_subdomains_count();
@@ -137,7 +127,7 @@ pub extern "C" fn set_domain_ownership() {
     let subdomain_name: AccountHash = runtime::get_named_arg(ARG_DATABASE_OWNER);
 
     match DomainMap::instance().update_owner(&domain_name, subdomain_name) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     }
 }
@@ -148,7 +138,7 @@ pub extern "C" fn set_domain_expiration() {
     let expiration_date: u64 = runtime::get_named_arg(ARG_DATABASE_EXPIRATION_DATE);
 
     match DomainMap::instance().update_expiration_date(&domain_name, expiration_date) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     }
 }
@@ -159,7 +149,7 @@ pub extern "C" fn set_domain_resolver() {
     let resolver: AccountHash = runtime::get_named_arg(ARG_DATABASE_RESOLVER);
 
     match DomainMap::instance().update_resolver_address(&domain_name, resolver) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     }
 }
@@ -170,7 +160,7 @@ pub extern "C" fn set_subdomain_resolver() {
     let resolver: AccountHash = runtime::get_named_arg(ARG_DATABASE_RESOLVER);
 
     match SubdomainMap::instance().update_resolver(&subdomain_name, resolver) {
-        Ok(()) => {},
+        Ok(()) => {}
         Err(e) => response_error(e),
     }
 }
@@ -179,12 +169,8 @@ pub extern "C" fn set_subdomain_resolver() {
 pub extern "C" fn get_domain_list_for_owner() {
     let owner: AccountHash = runtime::get_named_arg(ARG_DATABASE_OWNER);
     let domain_list = OwnerDomainList::instance().get_domain_list(owner);
-    response_success(
-        domain_list,
-        "Error while converting CL_Value"
-    );
+    response_success(domain_list, "Error while converting CL_Value");
 }
-
 
 #[no_mangle]
 pub extern "C" fn get_domain_list() {
@@ -250,187 +236,149 @@ pub extern "C" fn init() {
 pub extern "C" fn call() {
     let mut entrypoints = EntryPoints::new();
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_SAVE_DOMAIN_NAME,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, DomainName::cl_type())
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_SAVE_DOMAIN_NAME,
+        vec![Parameter::new(
+            ARG_DATABASE_DOMAIN_NAME,
+            DomainName::cl_type(),
+        )],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-                Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, SubdomainName::cl_type())
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME,
+        vec![
+            Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
+            Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, SubdomainName::cl_type()),
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type())
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME,
+        vec![Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type())],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-                Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, String::cl_type())
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME,
+        vec![
+            Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
+            Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, String::cl_type()),
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-                Parameter::new(ARG_DATABASE_OWNER, AccountHash::cl_type()),
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP,
+        vec![
+            Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
+            Parameter::new(ARG_DATABASE_OWNER, AccountHash::cl_type()),
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-                Parameter::new(ARG_DATABASE_EXPIRATION_DATE, u64::cl_type()),
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION,
+        vec![
+            Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
+            Parameter::new(ARG_DATABASE_EXPIRATION_DATE, u64::cl_type()),
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-                Parameter::new(ARG_DATABASE_RESOLVER, AccountHash::cl_type()),
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER,
+        vec![
+            Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
+            Parameter::new(ARG_DATABASE_RESOLVER, AccountHash::cl_type()),
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER,
-            vec![
-                Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, String::cl_type()),
-                Parameter::new(ARG_DATABASE_RESOLVER, AccountHash::cl_type()),
-            ],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER,
+        vec![
+            Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, String::cl_type()),
+            Parameter::new(ARG_DATABASE_RESOLVER, AccountHash::cl_type()),
+        ],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER,
-            vec![
-                Parameter::new(ARG_DATABASE_OWNER, AccountHash::cl_type()),
-            ],
-            CLType::Any,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER,
+        vec![Parameter::new(ARG_DATABASE_OWNER, AccountHash::cl_type())],
+        CLType::Any,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_GET_DOMAIN_LIST,
-            vec![
-                Parameter::new(ARG_DATABASE_PAGE, u64::cl_type()),
-            ],
-            CLType::Any,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_GET_DOMAIN_LIST,
+        vec![Parameter::new(ARG_DATABASE_PAGE, u64::cl_type())],
+        CLType::Any,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-            ],
-            CLType::Any,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST,
+        vec![Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type())],
+        CLType::Any,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_GET_TOTALS,
-            vec![],
-            CLType::Any,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_GET_TOTALS,
+        vec![],
+        CLType::Any,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_GET_DOMAIN,
-            vec![
-                Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type()),
-            ],
-            CLType::Any,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_GET_DOMAIN,
+        vec![Parameter::new(ARG_DATABASE_DOMAIN_NAME, String::cl_type())],
+        CLType::Any,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_GET_SUBDOMAIN,
-            vec![
-                Parameter::new(ARG_DATABASE_SUBDOMAIN_NAME, String::cl_type()),
-            ],
-            CLType::Any,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_GET_SUBDOMAIN,
+        vec![Parameter::new(
+            ARG_DATABASE_SUBDOMAIN_NAME,
+            String::cl_type(),
+        )],
+        CLType::Any,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
-    entrypoints.add_entry_point(
-        EntryPoint::new(
-            ENDPOINT_DATABASE_INIT,
-            vec![],
-            CLType::Unit,
-            EntryPointAccess::Public,
-            EntryPointType::Contract
-        )
-    );
+    entrypoints.add_entry_point(EntryPoint::new(
+        ENDPOINT_DATABASE_INIT,
+        vec![],
+        CLType::Unit,
+        EntryPointAccess::Public,
+        EntryPointType::Contract,
+    ));
 
     let mut database_named_keys = NamedKeys::new();
     let maintainer_uref = storage::new_uref(runtime::get_caller());
@@ -439,13 +387,13 @@ pub extern "C" fn call() {
     let domains_count_uref = storage::new_uref(0);
     database_named_keys.insert(
         KEY_DATABASE_TOTALS_DOMAIN_COUNT.to_string(),
-        domains_count_uref.into()
+        domains_count_uref.into(),
     );
 
     let subdomains_count_uref = storage::new_uref(0);
     database_named_keys.insert(
         KEY_DATABASE_TOTALS_SUBDOMAIN_COUNT.to_string(),
-        subdomains_count_uref.into()
+        subdomains_count_uref.into(),
     );
 
     let (contract_hash, version) = storage::new_contract(
@@ -460,5 +408,4 @@ pub extern "C" fn call() {
 
     let contract_version_uref = storage::new_uref(version);
     runtime::put_key(KEY_DATABASE_CONTRACT_VERSION, contract_version_uref.into());
-
 }

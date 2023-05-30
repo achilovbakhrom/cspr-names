@@ -48,9 +48,9 @@ impl NamesValidator {
 }
 
 pub struct NamesModel {
-    extension: String,
-    name: String,
-    sub_name: Option<String>
+    pub extension: String,
+    pub name: String,
+    pub sub_name: Option<String>
 }
 
 impl From<String> for NamesModel {

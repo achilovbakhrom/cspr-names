@@ -1,21 +1,18 @@
-use alloc::format;
-use core::convert::TryInto;
-use casper_types::{bytesrepr::{FromBytes, ToBytes}, CLTyped, runtime_args, URef};
 use super::traits::Storable;
 use casper_contract::{
-    contract_api::{
-        storage,
-        runtime
-    },
+    contract_api::{runtime, storage},
     unwrap_or_revert::UnwrapOrRevert,
+};
+use casper_types::{
+    bytesrepr::{FromBytes, ToBytes},
+    CLTyped, URef,
 };
 
 pub struct Dictionary {
-    u_ref: URef
+    u_ref: URef,
 }
 
 impl Storable for Dictionary {
-
     fn get<T: CLTyped + FromBytes>(&self, key: &str) -> Option<T> {
         storage::dictionary_get(self.u_ref, key)
             .unwrap_or_revert()
@@ -37,9 +34,7 @@ impl Dictionary {
         let key = runtime::get_key(name).unwrap_or_revert();
         let u_ref = *key.as_uref().unwrap_or_revert();
 
-        Dictionary {
-            u_ref
-        }
+        Dictionary { u_ref }
     }
 }
 

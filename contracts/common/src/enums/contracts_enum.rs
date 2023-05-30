@@ -7,7 +7,7 @@ use casper_types::{
 
 #[derive(Clone, Copy)]
 #[repr(u8)]
-pub enum Contracts {
+pub enum ContractKind {
     Database = 0,
     Main = 1,
     NFT = 2,
@@ -17,28 +17,28 @@ pub enum Contracts {
 }
 
 
-impl FromBytes for Contracts {
+impl FromBytes for ContractKind {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), casper_types::bytesrepr::Error> {
         let value = u8::from_bytes(bytes).expect("Error while unwrapping &[u8] to u8");
         match value.0 {
-            0 => Ok((Contracts::Database, value.1)),
-            1 => Ok((Contracts::Main, value.1)),
-            2 => Ok((Contracts::NFT, value.1)),
-            3 => Ok((Contracts::NFTCore, value.1)),
-            4 => Ok((Contracts::PriceOracle, value.1)),
-            5 => Ok((Contracts::Authorities, value.1)),
+            0 => Ok((ContractKind::Database, value.1)),
+            1 => Ok((ContractKind::Main, value.1)),
+            2 => Ok((ContractKind::NFT, value.1)),
+            3 => Ok((ContractKind::NFTCore, value.1)),
+            4 => Ok((ContractKind::PriceOracle, value.1)),
+            5 => Ok((ContractKind::Authorities, value.1)),
             _ => Err(casper_types::bytesrepr::Error::OutOfMemory)
         }
     }
 }
 
-impl CLTyped for Contracts {
+impl CLTyped for ContractKind {
     fn cl_type() -> casper_types::CLType {
         u8::cl_type()
     }
 }
 
-impl ToBytes for Contracts {
+impl ToBytes for ContractKind {
     fn to_bytes(&self) -> Result<Vec<u8>, casper_types::bytesrepr::Error> {
         Ok(vec![*self as u8])
     }

@@ -867,6 +867,7 @@ dependencies = [
 name = "main"
 version = "0.1.0"
 dependencies = [
+ "base16",
  "casper-contract",
  "casper-serde-json-wasm",
  "casper-types",
