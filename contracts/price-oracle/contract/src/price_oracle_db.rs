@@ -62,7 +62,7 @@ impl PriceOracleDb {
         chars_count_mid: Vec<u64>,
         price_more: U512,
     ) {
-`        let mut price_obj = Price::default();
+        let mut price_obj = Price::default();
         price_obj.price_type = PriceType::Dynamic;
         price_obj.price = price;
         let price_by_count = price_mid

@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract = { version = "1.4.4", features = ["test-support"] }
-casper-types = "1.5.0"
+casper-contract = { version = "3.0.0", features = ["test-support"] }
+casper-types = "3.0.0"
 common-lib = { path = "../../common", default-features = false }
 serde = { version = "1.0.80", default-features = false }
 serde_json = { version = "1.0.59", default-features = false }

@@ -10,5 +10,7 @@ members = [
     "authorities/contract",
     "authorities/tests",
     "database/contract",
+    "registry/contract",
+    "registry/tests",
     "tests"
 ]

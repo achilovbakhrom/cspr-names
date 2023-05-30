@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract = "1.4.4"
-casper-types = "1.5.0"
+casper-contract = "3.0.0"
+casper-types = "3.0.0"
 serde = { version = "1", features = ["derive", "alloc"], default-features = false }
 casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std"}
 common-lib = { path = "../../common", default-features = false }
