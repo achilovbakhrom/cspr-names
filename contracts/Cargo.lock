@@ -1588,6 +1588,7 @@ version = "0.1.0"
 dependencies = [
  "casper-contract 3.0.0",
  "casper-types 3.0.0",
+ "common-lib",
 ]
 
 [[package]]

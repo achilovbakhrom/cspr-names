@@ -4,6 +4,9 @@
 #[cfg(not(target_arch = "wasm32"))]
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
 
+mod domain_contract_hash_map;
+mod operators_db;
+
 // We need to explicitly import the std alloc crate and `alloc::string::String` as we're in a
 // `no_std` environment.
 extern crate alloc;
@@ -11,10 +14,28 @@ extern crate alloc;
 use alloc::string::String;
 
 use casper_contract::{
-    contract_api::{runtime, storage},
+    contract_api::{
+        self,
+        runtime::{self},
+        storage,
+    },
     unwrap_or_revert::UnwrapOrRevert,
 };
-use casper_types::{ApiError, Key};
+use casper_types::{account::AccountHash, ApiError, ContractHash, Key};
+use common_lib::{
+    constants::{
+        ARG_REGISTRY_DATABASE_CONTRACT_HASH, ARG_REGISTRY_DOMAIN_NAME,
+        ARG_REGISTRY_NFT_CONTRACT_HASH, KEY_REGISTRY_MAINTAINER,
+    },
+    errors::{CommonError, RegistryErrors},
+    models::registry_contract_hash_pair::RegistryContractHashPair,
+    utils::{
+        response::{response_error, response_success},
+        storage::get_stored_value_from_key,
+    },
+};
+
+use crate::{domain_contract_hash_map::DomainContractHashMap, operators_db::OperatorsDb};
 
 const KEY_NAME: &str = "my-key-name";
 const RUNTIME_ARG_NAME: &str = "message";
@@ -32,9 +53,38 @@ impl From<Error> for ApiError {
     }
 }
 
-pub extern "C" fn map_domain_name_to_contract_hash() {}
+pub extern "C" fn map_domain_name_to_contract_hash() {
+    let domain_name: String = runtime::get_named_arg(ARG_REGISTRY_DOMAIN_NAME);
+    let database_contract_hash: ContractHash =
+        runtime::get_named_arg(ARG_REGISTRY_DATABASE_CONTRACT_HASH);
+    let nft_contract_hash: ContractHash = runtime::get_named_arg(ARG_REGISTRY_NFT_CONTRACT_HASH);
 
-pub extern "C" fn get_contract_hash_for_domain_name() {}
+    const maintainer: AccountHash = match get_stored_value_from_key(KEY_REGISTRY_MAINTAINER) {
+        Some(res) => res,
+        None => return response_error(RegistryErrors::MaintainerIsNotSet),
+    };
+
+    if runtime::get_caller() != maintainer {
+        return response_error(CommonError::InvalidMaintainer);
+    }
+
+    let registry_object = RegistryContractHashPair {
+        db_contract_hash: database_contract_hash,
+        nft_contract_hash,
+    };
+
+    DomainContractHashMap::instance()
+        .map_domain_name_to_contract_hash(domain_name.clone(), registry_object);
+}
+
+pub extern "C" fn get_contract_hash_for_domain_name() {
+    let domain_name: String = runtime::get_named_arg(ARG_REGISTRY_DOMAIN_NAME);
+
+    match DomainContractHashMap::instance().get_contract_hash_for_domain_name(domain_name) {
+        Some(res) => response_success(res, "Error while converting CL_Typed value"),
+        None => response_error(RegistryErrors::RegistryObjectNotFound),
+    }
+}
 
 pub extern "C" fn set_contract_hash_list() {}
 

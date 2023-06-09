@@ -5,7 +5,7 @@
    Arguments: <br>
     - **arg_registry_domain_name** - The domain name required for mapping
     - **arg_registry_database_contract_hash** - Database Contract Hash
-    - **arg_nft_contract_hash** - NFT Contract Hash
+    - **arg_registry_nft_contract_hash** - NFT Contract Hash
   
    Return value: <br />
     - **void;** <br /><br />

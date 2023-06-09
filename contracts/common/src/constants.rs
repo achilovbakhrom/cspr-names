@@ -47,7 +47,6 @@ pub fn get_custom_metadata_schema() -> CustomMetadataSchema {
     CustomMetadataSchema { properties }
 }
 
-
 pub const CSPR_HASH: [u8; 32] = [
     0xe0, 0x23, 0xb6, 0xc3, 0x8b, 0x8b, 0xcb, 0xf1, 0xcd, 0x48, 0xc7, 0xac, 0x35, 0xb0, 0xb2, 0x44,
     0x62, 0xfa, 0x8b, 0x66, 0x3b, 0x16, 0x63, 0x07, 0xd8, 0x80, 0xfa, 0xf2, 0x27, 0x1f, 0x67, 0xa6,
@@ -105,7 +104,8 @@ pub const ENTRYPOINT_MAIN_RESOLVE_DOMAIN: &str = "resolve_domain";
 pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_DOMAIN: &str = "set_resolver_address_for_domain";
 pub const ENTRYPOINT_MAIN_REGISTER_SUB_DOMAIN: &str = "register_sub_domain";
 pub const ENTRYPOINT_MAIN_REMOVE_SUBDOMAIN: &str = "remove_subdomain";
-pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN: &str = "set_resolver_address_for_subdomain";
+pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN: &str =
+    "set_resolver_address_for_subdomain";
 pub const ENTRYPOINT_MAIN_GET_SUBDOMAINS_FOR_DOMAIN: &str = "get_sudomains_for_domain";
 pub const ENTRYPOINT_MAIN_GET_DOMAIN_LIST: &str = "get_domain_list";
 pub const ENTRYPOINT_MAIN_SET_AUTHORITIES_CONTRACT_HASH: &str = "set_authorities_contract_hash";
@@ -174,7 +174,8 @@ pub const KEY_DATABASE_CONTRACT_PACKAGE_NAME: &str = "key_database_contract_pack
 pub const KEY_DATABASE_CONTRACT_ACCESS_UREF: &str = "key_database_contract_access_uref";
 pub const KEY_DATABASE_CONTRACT_VERSION: &str = "key_database_contract_version";
 pub const KEY_DATABASE_CONTRACT_HASH: &str = "key_database_contract_hash";
-pub const KEY_DATABASE_DICTIONARY_OWNER_DOMAIN_LIST: &str = "key_database_dictionary_owner_domain_list";
+pub const KEY_DATABASE_DICTIONARY_OWNER_DOMAIN_LIST: &str =
+    "key_database_dictionary_owner_domain_list";
 
 // ENDPOINTS
 pub const ENDPOINT_DATABASE_SAVE_DOMAIN_NAME: &str = "save_domain_name";
@@ -253,3 +254,16 @@ pub const ENDPOINT_AUTHORITY_REMOVE_AUTHORITY: &str = "remove_authority";
 pub const ENDPOINT_AUTHORITY_SET_CONTRACT: &str = "set_contract";
 pub const ENDPOINT_AUTHORITY_GET_CONTRACT: &str = "get_contract";
 pub const ENDPOINT_AUTHORITY_REMOVE_CONTRACT: &str = "remove_contract";
+
+// <-- Registry -->
+
+// Args
+pub const ARG_REGISTRY_DOMAIN_NAME: &str = "arg_registry_domain_name";
+pub const ARG_REGISTRY_DATABASE_CONTRACT_HASH: &str = "arg_registry_database_contract_hash";
+pub const ARG_REGISTRY_NFT_CONTRACT_HASH: &str = "arg_registry_nft_contract_hash";
+pub const ARG_REGISTRY_CONTRACT_HASH_LIST: &str = "arg_registry_contract_hash_list";
+
+// Keys
+pub const KEY_REGISTRY_OPERATORS: &str = "key_registry_operators";
+pub const KEY_REGISTRY_MAINTAINER: &str = "key_registry_maintainer";
+pub const KEY_REGISTRY_DOMAIN_CONTRACT_HASH: &str = "key_registry_domain_contract_hash";
