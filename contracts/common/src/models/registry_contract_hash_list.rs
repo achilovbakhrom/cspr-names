@@ -8,9 +8,9 @@ use crate::enums::contracts_enum::ContractKind;
 
 #[derive(Clone)]
 pub struct RegistryContractHashList {
-    contract_type: ContractKind,
-    contract_hash_list: Vec<ContractHash>,
-    attr_key: String,
+    pub contract_type: ContractKind,
+    pub contract_hash_list: Vec<ContractHash>,
+    pub attr_key: Option<String>,
 }
 
 impl ToBytes for RegistryContractHashList {
@@ -34,7 +34,7 @@ impl FromBytes for RegistryContractHashList {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), casper_types::bytesrepr::Error> {
         let (contract_type, remainder) = ContractKind::from_bytes(bytes)?;
         let (contract_hash_list, remainder) = Vec::<ContractHash>::from_bytes(remainder)?;
-        let (attr_key, remainder) = String::from_bytes(remainder)?;
+        let (attr_key, remainder) = Option<String>::from_bytes(remainder)?;
 
         let result = Self {
             contract_type,

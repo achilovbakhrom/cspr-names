@@ -9,4 +9,5 @@ pub mod nft;
 pub mod price;
 pub mod registry_contract_hash_list;
 pub mod registry_contract_hash_pair;
+pub mod registry_pointer;
 pub mod subdomain_name;

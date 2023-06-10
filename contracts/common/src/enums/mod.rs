@@ -1,3 +1,4 @@
+pub mod caller_verification_type;
 pub mod contracts_enum;
 pub mod domain_name_actual_state;
 pub mod main_contract;

@@ -262,8 +262,13 @@ pub const ARG_REGISTRY_DOMAIN_NAME: &str = "arg_registry_domain_name";
 pub const ARG_REGISTRY_DATABASE_CONTRACT_HASH: &str = "arg_registry_database_contract_hash";
 pub const ARG_REGISTRY_NFT_CONTRACT_HASH: &str = "arg_registry_nft_contract_hash";
 pub const ARG_REGISTRY_CONTRACT_HASH_LIST: &str = "arg_registry_contract_hash_list";
+pub const ARG_REGISTRY_CONTRACT_KIND: &str = "arg_registry_contract_kind";
+pub const ARG_REGISTRY_CONTRACT_HASH: &str = "arg_registry_contract_hash";
+pub const ARG_REGISTRY_ATTR_KEY: &str = "arg_registry_contract_key";
+pub const ARG_REGISTRY_OPERATOR: &str = "arg_registry_operator";
 
 // Keys
 pub const KEY_REGISTRY_OPERATORS: &str = "key_registry_operators";
 pub const KEY_REGISTRY_MAINTAINER: &str = "key_registry_maintainer";
 pub const KEY_REGISTRY_DOMAIN_CONTRACT_HASH: &str = "key_registry_domain_contract_hash";
+pub const KEY_REGISTRY_WHITELIST_CONTRACT_HASH: &str = "key_registry_whitelist_contract_hash";

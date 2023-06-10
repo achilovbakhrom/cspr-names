@@ -9,7 +9,10 @@ pub enum CommonError {
     NoAuthority = 4,
     ItemNotFound = 5,
     NoContractHashWasFoundInAuthoritiesContract = 6,
-    InvalidMaintainer = 7
+    InvalidMaintainer = 7,
+    InvalidCaller = 8,
+    InvalidKey = 9,
+    UnknowError = 10,
 }
 
 impl From<CommonError> for ApiError {
@@ -133,6 +136,10 @@ pub enum RegistryErrors {
     OperatorDoesntExist = 201,
     MaintainerIsNotSet = 202,
     RegistryObjectNotFound = 203,
+    InvalidContractHash = 204,
+    ContractHashCountExceeded = 205,
+    ContractHashNotFouond = 206,
+    InvalidCaller = 207,
 }
 
 impl From<RegistryErrors> for ApiError {
