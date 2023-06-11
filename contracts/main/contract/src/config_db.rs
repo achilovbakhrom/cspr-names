@@ -5,17 +5,16 @@ use casper_contract::unwrap_or_revert::UnwrapOrRevert;
 use common_lib::constants::KEY_MAIN_ALLOWED_EXTENSIONS;
 use common_lib::db::store::Store;
 use common_lib::db::traits::Storable;
-use common_lib::errors::{MainContractErrors};
+use common_lib::errors::MainContractErrors;
 
-pub struct LocalDb {
-    store: Store
+pub struct ConfigDb {
+    store: Store,
 }
 
-impl LocalDb {
-
+impl ConfigDb {
     pub fn instance() -> Self {
         Self {
-            store: Store::instance()
+            store: Store::instance(),
         }
     }
 
@@ -42,5 +41,4 @@ impl LocalDb {
         extensions.remove(pos);
         self.set_allowed_extensions(extensions)
     }
-
 }

@@ -47,7 +47,7 @@ pub enum MainContractErrors {
     UserHasNoAccess = 41,
     InvalidCreator = 42,
     InvalidExtension = 43,
-    ExtensionListIsNotSet = 44,
+    AllowedExtensionsIsNotSet = 44,
     MaintainerIsNotSet = 45,
     DatabaseFulfilledOrIsNotSet = 46,
     MaintainerPurseIsNotSet = 47,

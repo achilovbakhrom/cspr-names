@@ -4,7 +4,7 @@
 #[cfg(not(target_arch = "wasm32"))]
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
 
-mod local_db;
+mod config_db;
 mod name_contract_hash_db;
 mod names_validator;
 mod utils;
@@ -77,7 +77,7 @@ use casper_types::{
 };
 use common_lib::constants::{ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER, ENDPOINT_NFT_MINT};
 
-use crate::local_db::LocalDb;
+use crate::config_db::ConfigDb;
 use crate::name_contract_hash_db::NameContractHashDb;
 use crate::names_validator::NamesValidator;
 use common_lib::utils::authority::get_contract_hash_from_authority_contract;
@@ -106,9 +106,9 @@ pub extern "C" fn register_domain() {
     let amount: U512 = runtime::get_named_arg(ARG_MAIN_REGISTER_AMOUNT);
     let customer_purse: URef = runtime::get_named_arg(ARG_MAIN_CUSTOMER_PURSE);
 
-    let extensions = LocalDb::instance().get_allowed_extensions();
+    let extensions = ConfigDb::instance().get_allowed_extensions();
     if extensions.is_none() {
-        response_error(MainContractErrors::ExtensionListIsNotSet);
+        return response_error(MainContractErrors::AllowedExtensionsIsNotSet);
     }
 
     let maintainer: AccountHash = match get_stored_value_from_key(KEY_MAIN_MAINTAINER) {
