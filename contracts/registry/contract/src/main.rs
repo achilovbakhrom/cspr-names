@@ -4,6 +4,7 @@
 #[cfg(not(target_arch = "wasm32"))]
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
 
+mod contract_operators_db;
 mod domain_contract_hash_map;
 mod max_value_db;
 mod operators_db;
@@ -20,7 +21,6 @@ use alloc::vec::Vec;
 
 use casper_contract::{
     contract_api::{
-        self,
         runtime::{self},
         storage,
     },
@@ -30,7 +30,8 @@ use casper_types::{account::AccountHash, ApiError, ContractHash, Key, KeyTag, Ta
 use common_lib::{
     constants::{
         ARG_REGISTRY_ATTR_KEY, ARG_REGISTRY_CONTRACT_HASH, ARG_REGISTRY_CONTRACT_HASH_LIST,
-        ARG_REGISTRY_CONTRACT_KIND, ARG_REGISTRY_DATABASE_CONTRACT_HASH, ARG_REGISTRY_DOMAIN_NAME,
+        ARG_REGISTRY_CONTRACT_HASH_OPERATOR, ARG_REGISTRY_CONTRACT_KIND,
+        ARG_REGISTRY_DATABASE_CONTRACT_HASH, ARG_REGISTRY_DOMAIN_NAME,
         ARG_REGISTRY_NFT_CONTRACT_HASH, ARG_REGISTRY_OPERATOR, KEY_REGISTRY_MAINTAINER,
     },
     enums::{caller_verification_type::CallerVerificationType, contracts_enum::ContractKind},
@@ -45,27 +46,12 @@ use common_lib::{
         storage::get_stored_value_from_key,
     },
 };
+use contract_operators_db::ContractOperatorsDb;
 use max_value_db::MaxValueDb;
 use pointer_db::PointStore;
 use registry_whitelist_db::RegistryWhitelistStore;
 
 use crate::{domain_contract_hash_map::DomainContractHashMap, operators_db::OperatorsDb};
-
-const KEY_NAME: &str = "my-key-name";
-const RUNTIME_ARG_NAME: &str = "message";
-
-/// An error enum which can be converted to a `u16` so it can be returned as an `ApiError::User`.
-#[repr(u16)]
-enum Error {
-    KeyAlreadyExists = 0,
-    KeyMismatch = 1,
-}
-
-impl From<Error> for ApiError {
-    fn from(error: Error) -> Self {
-        ApiError::User(error as u16)
-    }
-}
 
 pub extern "C" fn map_domain_name_to_contract_hash() {
     let domain_name: String = runtime::get_named_arg(ARG_REGISTRY_DOMAIN_NAME);
@@ -275,6 +261,37 @@ pub extern "C" fn add_operator() {
     instance.save_operator(account_hash)
 }
 
+pub extern "C" fn set_operators_for_contract_hash() {
+    let contract_hash: ContractHash = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH);
+    let operators: Vec<Key> = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH_OPERATOR);
+
+    let instance = ContractOperatorsDb::instance();
+
+    operators.iter().for_each(|item| {
+        instance.add_operator(contract_hash, *item);
+    })
+}
+
+pub extern "C" fn remove_operators_from_contract_hash() {
+    let contract_hash: ContractHash = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH);
+    let operators: Vec<Key> = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH_OPERATOR);
+
+    let instance = ContractOperatorsDb::instance();
+
+    operators.iter().for_each(|item| {
+        instance.remove_operator(contract_hash, *item);
+    })
+}
+
+pub extern "C" fn has_operator_for_contract_hash() {
+    let contract_hash: ContractHash = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH);
+    let operator: Key = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH_OPERATOR);
+
+    let instance = ContractOperatorsDb::instance();
+    let is_operator: bool = instance.contract_has_operator(contract_hash, operator);
+    response_success(is_operator, "Error while converting to CL_Type value");
+}
+
 pub extern "C" fn remove_operator() {
     let account_hash: AccountHash = runtime::get_named_arg(ARG_REGISTRY_OPERATOR);
     let instance = OperatorsDb::instance();
@@ -296,28 +313,4 @@ pub extern "C" fn remove_operator() {
 }
 
 #[no_mangle]
-pub extern "C" fn call() {
-    // The key shouldn't already exist in the named keys.
-    let missing_key = runtime::get_key(KEY_NAME);
-    if missing_key.is_some() {
-        runtime::revert(Error::KeyAlreadyExists);
-    }
-
-    // This contract expects a single runtime argument to be provided.  The arg is named "message"
-    // and will be of type `String`.
-    let value: String = runtime::get_named_arg(RUNTIME_ARG_NAME);
-
-    // Store this value under a new unforgeable reference a.k.a `URef`.
-    let value_ref = storage::new_uref(value);
-
-    // Store the new `URef` as a named key with a name of `KEY_NAME`.
-    let key = Key::URef(value_ref);
-    runtime::put_key(KEY_NAME, key);
-
-    // The key should now be able to be retrieved.  Note that if `get_key()` returns `None`, then
-    // `unwrap_or_revert()` will exit the process, returning `ApiError::None`.
-    let retrieved_key = runtime::get_key(KEY_NAME).unwrap_or_revert();
-    if retrieved_key != key {
-        runtime::revert(Error::KeyMismatch);
-    }
-}
+pub extern "C" fn call() {}

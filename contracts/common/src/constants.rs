@@ -266,9 +266,29 @@ pub const ARG_REGISTRY_CONTRACT_KIND: &str = "arg_registry_contract_kind";
 pub const ARG_REGISTRY_CONTRACT_HASH: &str = "arg_registry_contract_hash";
 pub const ARG_REGISTRY_ATTR_KEY: &str = "arg_registry_contract_key";
 pub const ARG_REGISTRY_OPERATOR: &str = "arg_registry_operator";
+pub const ARG_REGISTRY_CONTRACT_HASH_OPERATOR: &str = "arg_registry_contract_hash_operator";
 
 // Keys
 pub const KEY_REGISTRY_OPERATORS: &str = "key_registry_operators";
 pub const KEY_REGISTRY_MAINTAINER: &str = "key_registry_maintainer";
 pub const KEY_REGISTRY_DOMAIN_CONTRACT_HASH: &str = "key_registry_domain_contract_hash";
 pub const KEY_REGISTRY_WHITELIST_CONTRACT_HASH: &str = "key_registry_whitelist_contract_hash";
+pub const KEY_REGISTRY_CONTRACT_OPERATORS: &str = "key_registry_contract_operators";
+
+// Endpoints
+pub const ENDPOINT_REGISTRY_MAP_DOMAIN_NAME_TO_CONTRACT_HASH: &str =
+    "map_domain_name_to_contract_hash";
+pub const ENDPOINT_REGISTRY_GET_CONTRACT_HASH_FOR_DOMAIN_NAME: &str =
+    "get_contract_hash_for_domain_name";
+pub const ENDPOINT_REGISTRY_SET_CONTRACT_HASH_LIST: &str = "set_contract_hash_list";
+pub const ENDPOINT_REGISTRY_REMOVE_CONTRACT_HASH_LIST: &str = "remove_contract_hash_list";
+pub const ENDPOINT_REGISTRY_GET_CONTRACT: &str = "get_contract";
+pub const ENDPOINT_REGISTRY_INCREMENT_COUNT_OF_CONTRACT: &str = "increment_count_of_contract";
+pub const ENDPOINT_REGISTRY_DECREMENT_COUNT_OF_CONTRACT: &str = "decrement_count_of_contract";
+pub const ENDPOINT_REGISTRY_ADD_OPERATOR: &str = "add_operator";
+pub const ENDPOINT_REGISTRY_REMOVE_OPERATOR: &str = "remove_operator";
+pub const ENDPOINT_REGISTRY_SET_OPERATORS_FOR_CONTRACT_HASH: &str =
+    "set_operators_for_contract_hash";
+pub const ENDPOINT_REGISTRY_REMOVE_OPERATORS_FROM_CONTRACT_HASH: &str =
+    "remove_operators_from_contract_hash";
+pub const ENDPOINT_REGISTRY_HAS_OPERATOR_FOR_CONTRACT_HASH: &str = "has_operator_for_contract_hash";
