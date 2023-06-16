@@ -97,6 +97,7 @@ pub const KEY_MAIN_DATABASE_CONTRACT_HASH_MAP: &str = "key_main_database_contrac
 pub const KEY_MAIN_NAME_CONTRACT_HASH: &str = "key_main_name_contract_hash";
 pub const KEY_MAIN_MAINTAINER_PURSE: &str = "key_main_maintainer_purse";
 pub const KEY_MAIN_AUTHORITIES_CONTRACT_HASH: &str = "key_main_authorities_contract_hash";
+pub const KEY_MAIN_REGISTRY_CONTRACT_HASH: &str = "key_main_registry_contract_hash";
 
 // ENDPOINTS
 pub const ENTRYPOINT_MAIN_REGISTER_DOMAIN: &str = "register_domain";
@@ -264,6 +265,7 @@ pub const ARG_REGISTRY_NFT_CONTRACT_HASH: &str = "arg_registry_nft_contract_hash
 pub const ARG_REGISTRY_CONTRACT_HASH_LIST: &str = "arg_registry_contract_hash_list";
 pub const ARG_REGISTRY_CONTRACT_KIND: &str = "arg_registry_contract_kind";
 pub const ARG_REGISTRY_CONTRACT_HASH: &str = "arg_registry_contract_hash";
+pub const ARG_REGISTRY_OPERATOR_TYPE: &str = "arg_registry_operator_type";
 pub const ARG_REGISTRY_ATTR_KEY: &str = "arg_registry_contract_key";
 pub const ARG_REGISTRY_OPERATOR: &str = "arg_registry_operator";
 pub const ARG_REGISTRY_CONTRACT_HASH_OPERATOR: &str = "arg_registry_contract_hash_operator";

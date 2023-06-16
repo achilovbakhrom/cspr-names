@@ -32,7 +32,8 @@ use common_lib::{
         ARG_REGISTRY_ATTR_KEY, ARG_REGISTRY_CONTRACT_HASH, ARG_REGISTRY_CONTRACT_HASH_LIST,
         ARG_REGISTRY_CONTRACT_HASH_OPERATOR, ARG_REGISTRY_CONTRACT_KIND,
         ARG_REGISTRY_DATABASE_CONTRACT_HASH, ARG_REGISTRY_DOMAIN_NAME,
-        ARG_REGISTRY_NFT_CONTRACT_HASH, ARG_REGISTRY_OPERATOR, KEY_REGISTRY_MAINTAINER,
+        ARG_REGISTRY_NFT_CONTRACT_HASH, ARG_REGISTRY_OPERATOR, ARG_REGISTRY_OPERATOR_TYPE,
+        KEY_REGISTRY_MAINTAINER,
     },
     enums::{caller_verification_type::CallerVerificationType, contracts_enum::ContractKind},
     errors::{CommonError, RegistryErrors},
@@ -290,6 +291,15 @@ pub extern "C" fn has_operator_for_contract_hash() {
     let instance = ContractOperatorsDb::instance();
     let is_operator: bool = instance.contract_has_operator(contract_hash, operator);
     response_success(is_operator, "Error while converting to CL_Type value");
+}
+
+pub extern "C" fn get_operators_for_contract_hash() {
+    let contract_hash: ContractHash = runtime::get_named_arg(ARG_REGISTRY_CONTRACT_HASH);
+    let operator_type: CallerVerificationType = runtime::get_named_arg(ARG_REGISTRY_OPERATOR_TYPE);
+
+    let instance = ContractOperatorsDb::instance();
+    let operators = instance.get_operators(contract_hash, tag);
+    response_success(operators, "Error while converting to CL_Type value")
 }
 
 pub extern "C" fn remove_operator() {

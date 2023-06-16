@@ -2,7 +2,7 @@ use alloc::{
     string::ToString,
     vec::{self, Vec},
 };
-use casper_types::{ContractHash, Key};
+use casper_types::{ContractHash, Key, KeyTag};
 use common_lib::{
     constants::KEY_REGISTRY_CONTRACT_OPERATORS,
     db::{dictionary::Dictionary, traits::Storable},
@@ -74,5 +74,22 @@ impl ContractOperatorsDb {
         let pos_option = list.iter().position(|k| k == key);
 
         pos_option.is_some()
+    }
+
+    pub fn get_operators(&self, contract_hash: ContractHash, tag: Option<KeyTag>) -> Vec<Key> {
+        match self.store.get(&contract_hash.to_string()) {
+            Some(res) => {
+                if let Some(t) = tag {
+                    res.iter().filter(|x| x.tag() == t)
+                } else {
+                    res
+                }
+            }
+            None => {
+                let res = Vec::<Key>::new();
+                self.store.set(&contract_hash.to_string(), res);
+                res
+            }
+        }
     }
 }

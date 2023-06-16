@@ -2,7 +2,8 @@ use alloc::string::String;
 use alloc::vec;
 use alloc::vec::Vec;
 use casper_contract::unwrap_or_revert::UnwrapOrRevert;
-use common_lib::constants::KEY_MAIN_ALLOWED_EXTENSIONS;
+use casper_types::ContractHash;
+use common_lib::constants::{KEY_MAIN_ALLOWED_EXTENSIONS, KEY_MAIN_REGISTRY_CONTRACT_HASH};
 use common_lib::db::store::Store;
 use common_lib::db::traits::Storable;
 use common_lib::errors::MainContractErrors;
@@ -40,5 +41,14 @@ impl ConfigDb {
             .unwrap_or_revert_with(MainContractErrors::InvalidExtension);
         extensions.remove(pos);
         self.set_allowed_extensions(extensions)
+    }
+
+    pub fn set_registry_contract_hash(&self, contract_hash: ContractHash) {
+        self.store
+            .set(KEY_MAIN_REGISTRY_CONTRACT_HASH, contract_hash);
+    }
+
+    pub fn get_registry_contract_hash(&self) -> Option<ContractHash> {
+        self.store.get(KEY_MAIN_REGISTRY_CONTRACT_HASH)
     }
 }

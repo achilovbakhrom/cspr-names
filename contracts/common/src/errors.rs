@@ -47,12 +47,13 @@ pub enum MainContractErrors {
     UserHasNoAccess = 41,
     InvalidCreator = 42,
     InvalidExtension = 43,
-    AllowedExtensionsIsNotSet = 44,
-    MaintainerIsNotSet = 45,
-    DatabaseFulfilledOrIsNotSet = 46,
-    MaintainerPurseIsNotSet = 47,
+    AllowedExtensionsNotConfigured = 44,
+    MaintainerNotConfigured = 45,
+    DatabaseFulfilledOrNotConfigured = 46,
+    MaintainerPurseNotConfigured = 47,
     InsufficientCustomerBalance = 48,
-    AuthoritiesContractHashIsNotSet = 49,
+    AuthoritiesContractHashNotConfigured = 49,
+    RegistryContractHashNotConfigured = 50,
 }
 
 impl From<MainContractErrors> for ApiError {
