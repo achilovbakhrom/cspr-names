@@ -17,8 +17,6 @@ use alloc::{ format, string::{ String, ToString }, vec, vec::Vec };
 
 use common_lib::{
 	constants::{
-		ARG_AUTHORITY_CONTRACT_TYPE,
-		ARG_AUTHORITY_EXTENSION,
 		ARG_DATABASE_DOMAIN_NAME,
 		ARG_DATABASE_RESOLVER,
 		ARG_MAIN_AUTHORITY,
@@ -33,7 +31,6 @@ use common_lib::{
 		ARG_NFT_METADATA,
 		ARG_NFT_TOKEN_OWNER,
 		ARG_PO_PRICE_TYPE_CHARS_COUNT,
-		ENDPOINT_AUTHORITY_GET_CONTRACT,
 		ENDPOINT_DATABASE_GET_DOMAIN,
 		ENDPOINT_DATABASE_SAVE_DOMAIN_NAME,
 		ENDPOINT_PO_GET_PRICE,
@@ -66,22 +63,43 @@ use common_lib::{
 		ARG_REGISTRY_CONTRACT_HASH,
 		ARG_REGISTRY_OPERATOR_TYPE,
 	},
-	enums::{ contracts_enum::ContractKind, domain_name_actual_state::DomainNameActualState, main_contract::Error, caller_verification_type::CallerVerificationType },
+	enums::{
+		contracts_enum::ContractKind,
+		domain_name_actual_state::DomainNameActualState,
+		main_contract::Error,
+		caller_verification_type::CallerVerificationType,
+	},
 	errors::{ CommonError, MainContractErrors },
 	models::{ DomainName, LocalMetadata, SubdomainName },
 	utils::{
-		authority::{ has_authority, is_maintainer },
-		domain_name::{ calculate_domain_name_end_date, get_end_time_actual_state, is_domain_name_valid, is_extension_duration_correct, is_sub_domain_name_valid, year_to_millis },
-		storage::{ get_dictionary_value_from_key, get_stored_value_from_key, store_value_for_key, upsert_dictionary_value_from_key },
+		registry::{ has_authority, is_maintainer },
+		domain_name::{
+			calculate_domain_name_end_date,
+			get_end_time_actual_state,
+			is_domain_name_valid,
+			is_extension_duration_correct,
+			is_sub_domain_name_valid,
+			year_to_millis,
+		},
+		storage::{
+			get_dictionary_value_from_key,
+			get_stored_value_from_key,
+			store_value_for_key,
+			upsert_dictionary_value_from_key,
+		},
 	},
 };
 
 use casper_contract::contract_api::runtime::call_contract;
-use casper_contract::contract_api::system::{ create_purse, get_purse_balance, transfer_from_purse_to_purse };
+use casper_contract::contract_api::system::{
+	create_purse,
+	get_purse_balance,
+	transfer_from_purse_to_purse,
+};
 use casper_contract::{ contract_api::{ runtime, storage }, unwrap_or_revert::UnwrapOrRevert };
-use casper_serde_json_wasm::to_string;
+
 use casper_types::{
-	account::{ Account, AccountHash },
+	account::{ AccountHash },
 	contracts::NamedKeys,
 	runtime_args,
 	CLType,
@@ -103,7 +121,7 @@ use common_lib::constants::{ ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER, ENDPOINT_NFT
 use crate::config_db::ConfigDb;
 use crate::name_contract_hash_db::NameContractHashDb;
 use crate::names_validator::NamesValidator;
-use common_lib::utils::authority::get_contract_hash_from_authority_contract;
+use common_lib::utils::registry::get_contract_hash_from_authority_contract;
 use common_lib::utils::response::{ response_error, response_success };
 
 /**
@@ -143,7 +161,9 @@ pub extern "C" fn register_domain() {
 
 	let config_db_instance = ConfigDb::instance();
 
-	let registry_hash: Key = &config_db_instance.get_registry_contract_hash().unwrap_or_revert_with(MainContractErrors::RegistryContractHashNotConfigured).into();
+	let registry_hash = config_db_instance
+		.get_registry_contract_hash()
+		.unwrap_or_revert_with(MainContractErrors::RegistryContractHashNotConfigured);
 
 	let operators_key: Vec<Key> = runtime::call_contract(
 		registry_hash,
@@ -156,12 +176,14 @@ pub extern "C" fn register_domain() {
 
 	let mut operators = operators_key
 		.iter()
-		.map(|item| item.into_account().unwrap_or_revert_with(NFTCoreError::FailedToConvertToAccountHash))
+		.map(|item|
+			item.into_account().unwrap_or_revert_with(CommonError::FailedToConvertToAccountHash)
+		)
 		.collect::<Vec<AccountHash>>();
 	operators.push(maintainer);
 
 	// Validation
-	let validator = NamesValidator::instance(extensions.unwrap(), operators);
+	let validator = NamesValidator::instance(extensions.unwrap(), true);
 
 	let model = match validator.validate_name(domain.to_string()) {
 		Ok(res) => res,
@@ -178,9 +200,13 @@ pub extern "C" fn register_domain() {
 	let db_contract_hash = NameContractHashDb::instance().get_contract_hash_for_domain_name(&domain);
 
 	if let Some(hash) = db_contract_hash {
-		let store_domain_optional: Option<DomainName> = call_contract(hash, ENDPOINT_DATABASE_GET_DOMAIN, runtime_args! {
+		let store_domain_optional: Option<DomainName> = call_contract(
+			hash,
+			ENDPOINT_DATABASE_GET_DOMAIN,
+			runtime_args! {
                 ARG_DATABASE_DOMAIN_NAME => domain.to_string()
-            });
+            }
+		);
 
 		if let Some(store_domain) = store_domain_optional {
 			let actual_state = get_end_time_actual_state(Some(store_domain.end_time));
@@ -197,14 +223,22 @@ pub extern "C" fn register_domain() {
 	}
 
 	// Checking with price oracle
-	let authorities_hash: Option<ContractHash> = get_stored_value_from_key(KEY_MAIN_AUTHORITIES_CONTRACT_HASH);
+	let authorities_hash: Option<ContractHash> = get_stored_value_from_key(
+		KEY_MAIN_AUTHORITIES_CONTRACT_HASH
+	);
 	if authorities_hash.is_none() {
 		return response_error(MainContractErrors::AuthoritiesContractHashNotConfigured);
 	}
 
 	let chars_count = model.get_name_len();
 
-	let price_oracle_contract_hash: ContractHash = match get_contract_hash_from_authority_contract(authorities_hash.unwrap(), ContractKind::PriceOracle, None) {
+	let price_oracle_contract_hash: ContractHash = match
+		get_contract_hash_from_authority_contract(
+			authorities_hash.unwrap(),
+			ContractKind::PriceOracle,
+			None
+		)
+	{
 		Ok(res) =>
 			match res {
 				Some(res) => res,
@@ -217,9 +251,13 @@ pub extern "C" fn register_domain() {
 		}
 	};
 
-	let price: U512 = runtime::call_contract(price_oracle_contract_hash, ENDPOINT_PO_GET_PRICE, runtime_args! {
+	let price: U512 = runtime::call_contract(
+		price_oracle_contract_hash,
+		ENDPOINT_PO_GET_PRICE,
+		runtime_args! {
             ARG_PO_PRICE_TYPE_CHARS_COUNT => chars_count as u64
-        });
+        }
+	);
 
 	// Checking for duration
 	if U512::from(duration) * price != amount {
@@ -227,7 +265,9 @@ pub extern "C" fn register_domain() {
 	}
 
 	// Payment process
-	let purse: URef = get_stored_value_from_key(KEY_MAIN_MAINTAINER_PURSE).unwrap_or_revert_with(MainContractErrors::MaintainerPurseNotConfigured);
+	let purse: URef = get_stored_value_from_key(KEY_MAIN_MAINTAINER_PURSE).unwrap_or_revert_with(
+		MainContractErrors::MaintainerPurseNotConfigured
+	);
 
 	let balance = get_purse_balance(customer_purse).unwrap_or_revert();
 
@@ -237,7 +277,9 @@ pub extern "C" fn register_domain() {
 	transfer_from_purse_to_purse(customer_purse, purse, amount, None).unwrap_or_revert();
 
 	// Mint NFT
-	let nft_contract_hash = match get_contract_hash_from_authority_contract(authorities_hash.unwrap(), ContractKind::NFT, None) {
+	let nft_contract_hash = match
+		get_contract_hash_from_authority_contract(authorities_hash.unwrap(), ContractKind::NFT, None)
+	{
 		Ok(res) =>
 			match res {
 				Some(res) => res,
@@ -252,16 +294,26 @@ pub extern "C" fn register_domain() {
 
 	let token_id = base16::encode_lower(&runtime::blake2b(&domain));
 
-	runtime::call_contract::<()>(nft_contract_hash, ENDPOINT_NFT_MINT, runtime_args! {
+	runtime::call_contract::<()>(
+		nft_contract_hash,
+		ENDPOINT_NFT_MINT,
+		runtime_args! {
             ARG_NFT_TOKEN_OWNER => runtime::get_caller(),
             ARG_NFT_METADATA => token_id,
-        });
+        }
+	);
 
 	// Save to database
 	let end_time = calculate_domain_name_end_date(duration);
 	let caller = runtime::get_caller();
 
-	let db_contract_hash = match get_contract_hash_from_authority_contract(authorities_hash.unwrap(), ContractKind::Database, Some(model.extension)) {
+	let db_contract_hash = match
+		get_contract_hash_from_authority_contract(
+			authorities_hash.unwrap(),
+			ContractKind::Database,
+			Some(model.extension)
+		)
+	{
 		Ok(hash) =>
 			match hash {
 				Some(res) => res,
@@ -282,9 +334,13 @@ pub extern "C" fn register_domain() {
 		resolver: resolver_address,
 	};
 
-	runtime::call_contract::<()>(db_contract_hash, ENDPOINT_DATABASE_SAVE_DOMAIN_NAME, runtime_args! {
+	runtime::call_contract::<()>(
+		db_contract_hash,
+		ENDPOINT_DATABASE_SAVE_DOMAIN_NAME,
+		runtime_args! {
             ARG_DATABASE_DOMAIN_NAME => saving_domain_name.clone()
-        });
+        }
+	);
 	// Save to name_contract_hash_map
 	NameContractHashDb::instance().set_contract_hash_for_domain_name(&domain, db_contract_hash);
 
@@ -310,21 +366,29 @@ pub extern "C" fn resolve_domain() {
 		runtime::revert(Error::InvalidDomainName);
 	}
 
-	let db_contract_hash = match NameContractHashDb::instance().get_contract_hash_for_domain_name(&domain_name) {
+	let db_contract_hash = match
+		NameContractHashDb::instance().get_contract_hash_for_domain_name(&domain_name)
+	{
 		Some(res) => res,
 		None => {
 			return response_error(MainContractErrors::DomainNotExists);
 		}
 	};
 
-	let db_domain_name = call_contract::<Option<DomainName>>(db_contract_hash, ENDPOINT_DATABASE_GET_DOMAIN, runtime_args! {
+	let db_domain_name = call_contract::<Option<DomainName>>(
+		db_contract_hash,
+		ENDPOINT_DATABASE_GET_DOMAIN,
+		runtime_args! {
             ARG_DATABASE_DOMAIN_NAME => domain_name
-        });
+        }
+	);
 
 	if let Some(domain) = db_domain_name {
 		match get_end_time_actual_state(Some(domain.end_time)) {
 			DomainNameActualState::Available => { runtime::revert(MainContractErrors::DomainNotExists) }
-			DomainNameActualState::GracePeriod => { runtime::revert(MainContractErrors::DomainNameIsInGracePeriod) }
+			DomainNameActualState::GracePeriod => {
+				runtime::revert(MainContractErrors::DomainNameIsInGracePeriod)
+			}
 			DomainNameActualState::Busy => {
 				response_success(domain.resolver, "Error while create cl_value from resolver address");
 			}
@@ -351,21 +415,29 @@ pub extern "C" fn set_resolver_address_for_domain() {
 		runtime::revert(Error::InvalidDomainName);
 	}
 
-	let db_contract_hash = match NameContractHashDb::instance().get_contract_hash_for_domain_name(&domain_name) {
+	let db_contract_hash = match
+		NameContractHashDb::instance().get_contract_hash_for_domain_name(&domain_name)
+	{
 		Some(res) => res,
 		None => {
 			return response_error(MainContractErrors::DomainNotExists);
 		}
 	};
 
-	let db_domain_name = call_contract::<Option<DomainName>>(db_contract_hash.clone(), ENDPOINT_DATABASE_GET_DOMAIN, runtime_args! {
+	let db_domain_name = call_contract::<Option<DomainName>>(
+		db_contract_hash.clone(),
+		ENDPOINT_DATABASE_GET_DOMAIN,
+		runtime_args! {
             ARG_DATABASE_DOMAIN_NAME => domain_name
-        });
+        }
+	);
 
 	if let Some(domain) = db_domain_name {
 		match get_end_time_actual_state(Some(domain.end_time)) {
 			DomainNameActualState::Available => { runtime::revert(MainContractErrors::DomainNotExists) }
-			DomainNameActualState::GracePeriod => { runtime::revert(MainContractErrors::DomainNameIsInGracePeriod) }
+			DomainNameActualState::GracePeriod => {
+				runtime::revert(MainContractErrors::DomainNameIsInGracePeriod)
+			}
 			DomainNameActualState::Busy => {
 				if domain.owner == runtime::get_caller() {
 					call_contract::<()>(
@@ -408,10 +480,16 @@ pub extern "C" fn register_sub_domain() {
 	}
 
 	if let Some(domain) = domain_name {
-		let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
+		let found_domain: Option<DomainName> = get_dictionary_value_from_key(
+			KEY_DATABASE_DICTIONARY_DOMAIN,
+			&domain
+		);
 		if let Some(dm) = found_domain {
 			if dm.owner == caller {
-				let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain);
+				let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(
+					KEY_DATABASE_DICTIONARY_SUBDOMAIN,
+					&domain
+				);
 				if let Some(mut sd) = subdomains {
 					if sd.len() < MAX_SUBDOMAIN_COUNT.into() {
 						sd.push(SubdomainName {
@@ -454,11 +532,17 @@ pub extern "C" fn remove_subdomain() {
 		runtime::revert(MainContractErrors::InvalidSubdomain);
 	}
 	if let Some(domain) = domain_name {
-		let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
+		let found_domain: Option<DomainName> = get_dictionary_value_from_key(
+			KEY_DATABASE_DICTIONARY_DOMAIN,
+			&domain
+		);
 
 		if let Some(dm) = found_domain {
 			if dm.owner == caller {
-				let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain);
+				let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(
+					KEY_DATABASE_DICTIONARY_SUBDOMAIN,
+					&domain
+				);
 				if let Some(mut sd) = subdomains {
 					let pos = sd
 						.iter()
@@ -495,11 +579,17 @@ pub extern "C" fn set_resolver_address_for_subdomain() {
 		runtime::revert(MainContractErrors::InvalidSubdomain);
 	}
 	if let Some(domain) = domain_name {
-		let found_domain: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
+		let found_domain: Option<DomainName> = get_dictionary_value_from_key(
+			KEY_DATABASE_DICTIONARY_DOMAIN,
+			&domain
+		);
 
 		if let Some(dm) = found_domain {
 			if dm.owner == caller {
-				let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain);
+				let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(
+					KEY_DATABASE_DICTIONARY_SUBDOMAIN,
+					&domain
+				);
 				if let Some(sd) = subdomains {
 					let mapped = sd
 						.iter()
@@ -528,8 +618,13 @@ pub extern "C" fn set_resolver_address_for_subdomain() {
 pub extern "C" fn get_sudomains_for_domain() {
 	let domain_name: String = runtime::get_named_arg(ARG_MAIN_DOMAIN);
 	if is_domain_name_valid(&domain_name) {
-		let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_SUBDOMAIN, &domain_name);
-		let result = CLValue::from_t(subdomains).expect("Error while converting subdomains to cl_value");
+		let subdomains: Option<Vec<SubdomainName>> = get_dictionary_value_from_key(
+			KEY_DATABASE_DICTIONARY_SUBDOMAIN,
+			&domain_name
+		);
+		let result = CLValue::from_t(subdomains).expect(
+			"Error while converting subdomains to cl_value"
+		);
 		runtime::ret(result);
 	} else {
 		runtime::revert(MainContractErrors::InvalidName);
@@ -539,12 +634,17 @@ pub extern "C" fn get_sudomains_for_domain() {
 #[no_mangle]
 pub extern "C" fn get_domain_list() {
 	let page: u8 = runtime::get_named_arg(ARG_MAIN_DOMAIN_PAGE);
-	let domains: Option<Vec<String>> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN_LIST, &format!("{}:{}", page, MAX_PAGE_SIZE));
+	let domains: Option<Vec<String>> = get_dictionary_value_from_key(
+		KEY_DATABASE_DICTIONARY_DOMAIN_LIST,
+		&format!("{}:{}", page, MAX_PAGE_SIZE)
+	);
 	if let Some(list) = domains {
 		let result = CLValue::from_t(list).expect("error while converting domain list to cl_value");
 		runtime::ret(result);
 	} else {
-		let result = CLValue::from_t::<Vec<String>>(vec![]).expect("error while converting domain list to cl_value");
+		let result = CLValue::from_t::<Vec<String>>(vec![]).expect(
+			"error while converting domain list to cl_value"
+		);
 		runtime::ret(result);
 	}
 }
@@ -552,7 +652,9 @@ pub extern "C" fn get_domain_list() {
 #[no_mangle]
 pub extern "C" fn add_authority() {
 	let caller = runtime::get_caller();
-	let maintainer = get_stored_value_from_key::<AccountHash>(KEY_MAIN_MAINTAINER).unwrap_or_revert_with(CommonError::NoAuthority);
+	let maintainer = get_stored_value_from_key::<AccountHash>(
+		KEY_MAIN_MAINTAINER
+	).unwrap_or_revert_with(CommonError::NoAuthority);
 	if caller != maintainer {
 		runtime::revert(MainContractErrors::OnlyMaintainerHasAccess);
 	}
@@ -566,7 +668,9 @@ pub extern "C" fn add_authority() {
 	if has_access {
 		runtime::revert(MainContractErrors::AuthorityHasAlreadyTaken);
 	}
-	let mut authorities = get_stored_value_from_key::<Vec<AccountHash>>(KEY_MAIN_AUTHORITIES).unwrap_or_revert_with(CommonError::NoAuthority);
+	let mut authorities = get_stored_value_from_key::<Vec<AccountHash>>(
+		KEY_MAIN_AUTHORITIES
+	).unwrap_or_revert_with(CommonError::NoAuthority);
 	authorities.push(authority);
 	store_value_for_key(KEY_MAIN_AUTHORITIES, authorities);
 }
@@ -574,7 +678,9 @@ pub extern "C" fn add_authority() {
 #[no_mangle]
 pub extern "C" fn remove_authority() {
 	let caller = runtime::get_caller();
-	let maintainer = get_stored_value_from_key::<AccountHash>(KEY_MAIN_MAINTAINER).unwrap_or_revert_with(CommonError::NoAuthority);
+	let maintainer = get_stored_value_from_key::<AccountHash>(
+		KEY_MAIN_MAINTAINER
+	).unwrap_or_revert_with(CommonError::NoAuthority);
 	if caller != maintainer {
 		runtime::revert(MainContractErrors::OnlyMaintainerHasAccess);
 	}
@@ -588,7 +694,9 @@ pub extern "C" fn remove_authority() {
 	if !has_access {
 		runtime::revert(MainContractErrors::UserHasNoAccess);
 	}
-	let mut authorities = get_stored_value_from_key::<Vec<AccountHash>>(KEY_MAIN_AUTHORITIES).unwrap_or_revert_with(CommonError::NoAuthority);
+	let mut authorities = get_stored_value_from_key::<Vec<AccountHash>>(
+		KEY_MAIN_AUTHORITIES
+	).unwrap_or_revert_with(CommonError::NoAuthority);
 	let index = authorities
 		.iter()
 		.position(|item| item == &authority)
@@ -606,14 +714,21 @@ pub extern "C" fn extend() {
 		runtime::revert(MainContractErrors::InvalidName);
 	}
 
-	let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain);
+	let store_domain_optional: Option<DomainName> = get_dictionary_value_from_key(
+		KEY_DATABASE_DICTIONARY_DOMAIN,
+		&domain
+	);
 	if let Some(mut domain) = store_domain_optional {
 		let result = is_extension_duration_correct(domain.end_time, duration.into());
 
 		if result {
 			let binding = year_to_millis(duration);
 			domain.end_time += binding;
-			upsert_dictionary_value_from_key(KEY_DATABASE_DICTIONARY_DOMAIN, &domain.name, domain.clone());
+			upsert_dictionary_value_from_key(
+				KEY_DATABASE_DICTIONARY_DOMAIN,
+				&domain.name,
+				domain.clone()
+			);
 		} else {
 			runtime::revert(MainContractErrors::InvalidDuration)
 		}
@@ -636,7 +751,9 @@ pub extern "C" fn get_data() {}
 
 #[no_mangle]
 pub extern "C" fn set_authorities_contract_hash() {
-	let authorities_contract_hash: ContractHash = runtime::get_named_arg(ARG_MAIN_PRICE_ORACLE_CONTRACT_HASH);
+	let authorities_contract_hash: ContractHash = runtime::get_named_arg(
+		ARG_MAIN_PRICE_ORACLE_CONTRACT_HASH
+	);
 	store_value_for_key(KEY_MAIN_AUTHORITIES_CONTRACT_HASH, authorities_contract_hash);
 }
 
@@ -683,12 +800,10 @@ pub extern "C" fn call() {
 		)
 	);
 
-	entrypoints.add_entry_point(EntryPoint::new("init", vec![], CLType::Unit, EntryPointAccess::Public, EntryPointType::Contract));
-
 	entrypoints.add_entry_point(
 		EntryPoint::new(
-			ENTRYPOINT_MAIN_REGISTER_DOMAIN,
-			vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()), Parameter::new(ARG_MAIN_DURATION, u8::cl_type()), Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())],
+			"init",
+			vec![],
 			CLType::Unit,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
@@ -696,13 +811,13 @@ pub extern "C" fn call() {
 	);
 
 	entrypoints.add_entry_point(
-		EntryPoint::new(ENTRYPOINT_MAIN_RESOLVE_DOMAIN, vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type())], CLType::Any, EntryPointAccess::Public, EntryPointType::Contract)
-	);
-
-	entrypoints.add_entry_point(
 		EntryPoint::new(
-			ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_DOMAIN,
-			vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()), Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())],
+			ENTRYPOINT_MAIN_REGISTER_DOMAIN,
+			vec![
+				Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()),
+				Parameter::new(ARG_MAIN_DURATION, u8::cl_type()),
+				Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())
+			],
 			CLType::Unit,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
@@ -712,7 +827,33 @@ pub extern "C" fn call() {
 	entrypoints.add_entry_point(
 		EntryPoint::new(
 			ENTRYPOINT_MAIN_RESOLVE_DOMAIN,
-			vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()), Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, String::cl_type())],
+			vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type())],
+			CLType::Any,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
+	);
+
+	entrypoints.add_entry_point(
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_DOMAIN,
+			vec![
+				Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()),
+				Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())
+			],
+			CLType::Unit,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
+	);
+
+	entrypoints.add_entry_point(
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_RESOLVE_DOMAIN,
+			vec![
+				Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()),
+				Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, String::cl_type())
+			],
 			CLType::Unit,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
@@ -722,7 +863,10 @@ pub extern "C" fn call() {
 	entrypoints.add_entry_point(
 		EntryPoint::new(
 			ENTRYPOINT_MAIN_REGISTER_SUB_DOMAIN,
-			vec![Parameter::new(ARG_MAIN_SUBDOMAIN, String::cl_type()), Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())],
+			vec![
+				Parameter::new(ARG_MAIN_SUBDOMAIN, String::cl_type()),
+				Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())
+			],
 			CLType::Unit,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
@@ -730,13 +874,22 @@ pub extern "C" fn call() {
 	);
 
 	entrypoints.add_entry_point(
-		EntryPoint::new(ENTRYPOINT_MAIN_REMOVE_SUBDOMAIN, vec![Parameter::new(ARG_MAIN_SUBDOMAIN, String::cl_type())], CLType::Unit, EntryPointAccess::Public, EntryPointType::Contract)
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_REMOVE_SUBDOMAIN,
+			vec![Parameter::new(ARG_MAIN_SUBDOMAIN, String::cl_type())],
+			CLType::Unit,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
 	);
 
 	entrypoints.add_entry_point(
 		EntryPoint::new(
 			ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN,
-			vec![Parameter::new(ARG_MAIN_SUBDOMAIN, String::cl_type()), Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())],
+			vec![
+				Parameter::new(ARG_MAIN_SUBDOMAIN, String::cl_type()),
+				Parameter::new(ARG_MAIN_RESOLVER_ADDRESS, AccountHash::cl_type())
+			],
 			CLType::Unit,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
@@ -744,25 +897,52 @@ pub extern "C" fn call() {
 	);
 
 	entrypoints.add_entry_point(
-		EntryPoint::new(ENTRYPOINT_MAIN_GET_SUBDOMAINS_FOR_DOMAIN, vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type())], CLType::Any, EntryPointAccess::Public, EntryPointType::Contract)
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_GET_SUBDOMAINS_FOR_DOMAIN,
+			vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type())],
+			CLType::Any,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
 	);
 
 	entrypoints.add_entry_point(
-		EntryPoint::new(ENTRYPOINT_MAIN_ADD_AUTHORITY, vec![Parameter::new(ARG_MAIN_AUTHORITY, AccountHash::cl_type())], CLType::Any, EntryPointAccess::Public, EntryPointType::Contract)
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_ADD_AUTHORITY,
+			vec![Parameter::new(ARG_MAIN_AUTHORITY, AccountHash::cl_type())],
+			CLType::Any,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
 	);
 
 	entrypoints.add_entry_point(
-		EntryPoint::new(ENTRYPOINT_MAIN_REMOVE_AUTHORITY, vec![Parameter::new(ARG_MAIN_AUTHORITY, AccountHash::cl_type())], CLType::Any, EntryPointAccess::Public, EntryPointType::Contract)
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_REMOVE_AUTHORITY,
+			vec![Parameter::new(ARG_MAIN_AUTHORITY, AccountHash::cl_type())],
+			CLType::Any,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
 	);
 
 	entrypoints.add_entry_point(
-		EntryPoint::new(ENTRYPOINT_MAIN_ADD_AUTHORITY, vec![Parameter::new(ARG_MAIN_DOMAIN_PAGE, u8::cl_type())], CLType::Unit, EntryPointAccess::Public, EntryPointType::Contract)
+		EntryPoint::new(
+			ENTRYPOINT_MAIN_ADD_AUTHORITY,
+			vec![Parameter::new(ARG_MAIN_DOMAIN_PAGE, u8::cl_type())],
+			CLType::Unit,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
 	);
 
 	entrypoints.add_entry_point(
 		EntryPoint::new(
 			ENTRYPOINT_MAIN_EXTEND,
-			vec![Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()), Parameter::new(ARG_MAIN_DURATION, u8::cl_type())],
+			vec![
+				Parameter::new(ARG_MAIN_DOMAIN, String::cl_type()),
+				Parameter::new(ARG_MAIN_DURATION, u8::cl_type())
+			],
 			CLType::Unit,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
@@ -777,14 +957,24 @@ pub extern "C" fn call() {
 	let authorities_uref = storage::new_uref(Vec::<AccountHash>::new());
 	main_named_keys.insert(KEY_MAIN_AUTHORITIES.to_string(), authorities_uref.into());
 
-	let price_oracle_contract_hash: ContractHash = runtime::get_named_arg(ARG_MAIN_PRICE_ORACLE_CONTRACT_HASH);
+	let price_oracle_contract_hash: ContractHash = runtime::get_named_arg(
+		ARG_MAIN_PRICE_ORACLE_CONTRACT_HASH
+	);
 	let price_oracle_contract_hash_uref = storage::new_uref(price_oracle_contract_hash);
-	main_named_keys.insert(KEY_MAIN_PRICE_ORACLE_CONTRACT_HASH.to_string(), price_oracle_contract_hash_uref.into());
+	main_named_keys.insert(
+		KEY_MAIN_PRICE_ORACLE_CONTRACT_HASH.to_string(),
+		price_oracle_contract_hash_uref.into()
+	);
 
 	let purse = create_purse();
 	main_named_keys.insert(KEY_MAIN_MAINTAINER_PURSE.to_string(), purse.into());
 
-	let (contract_hash, version) = storage::new_contract(entrypoints, Some(main_named_keys), Some(KEY_MAIN_CONTRACT_PACKAGE_NAME.to_string()), Some(KEY_MAIN_CONTRACT_ACCESS_UREF.to_string()));
+	let (contract_hash, version) = storage::new_contract(
+		entrypoints,
+		Some(main_named_keys),
+		Some(KEY_MAIN_CONTRACT_PACKAGE_NAME.to_string()),
+		Some(KEY_MAIN_CONTRACT_ACCESS_UREF.to_string())
+	);
 
 	let contract_hash_uref = storage::new_uref(contract_hash);
 	runtime::put_key(KEY_MAIN_CONTRACT_HASH, contract_hash_uref.into());
@@ -799,7 +989,3 @@ fn is_maintainer_or_has_authority(account: &AccountHash) -> bool {
 
 	is_maintainer || caller_has_authority
 }
-
-// 1. Smartcontract - 70% (registry contract impl, test, deploy on testnet)
-// 2. Backend - 30% (test, clippy, deploy)
-// 3. front end - 0 (test, lint, deploy)

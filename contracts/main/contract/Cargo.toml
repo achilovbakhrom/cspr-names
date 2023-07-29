@@ -9,7 +9,6 @@ casper-types = "3.0.0"
 serde = { version = "1.0.163", features = ["derive", "alloc"], default-features = false }
 common-lib = { path = "../../common", default-features = false }
 serde-json-wasm = { version = "0.5.1", default-features = false }
-casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std"}
 base16 = { version = "0.2", default-features = false, features = ["alloc"] }
 
 [[bin]]

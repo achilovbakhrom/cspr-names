@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract = { version = "3.0.0", features = ["test-support"] }
+casper-contract = { version = "3.0.0", default-features = false, features = ["test-support"] }
 casper-types = "3.0.0"
 common-lib = { path = "../../common", default-features = false }
 serde = { version = "1.0.163", default-features = false }

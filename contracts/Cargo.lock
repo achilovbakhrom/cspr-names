@@ -9,25 +9,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c7d0618f0e0b7e8ff11427422b64564d5fb0be1940354bfe2e0529b18a9d9b8"
 
 [[package]]
-name = "authorities"
-version = "0.1.0"
-dependencies = [
- "casper-contract",
- "casper-types",
- "common-lib",
-]
-
-[[package]]
-name = "authorities-tests"
-version = "0.1.0"
-dependencies = [
- "casper-contract",
- "casper-engine-test-support",
- "casper-execution-engine",
- "casper-types",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -326,6 +307,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "contract"
+version = "0.1.0"
+dependencies = [
+ "casper-contract",
+ "casper-types",
+]
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -388,6 +377,7 @@ name = "database"
 version = "0.1.0"
 dependencies = [
  "casper-contract",
+ "casper-serde-json-wasm",
  "casper-types",
  "common-lib",
 ]
@@ -836,21 +826,10 @@ version = "0.1.0"
 dependencies = [
  "base16",
  "casper-contract",
- "casper-serde-json-wasm",
  "casper-types",
  "common-lib",
  "serde",
  "serde-json-wasm",
-]
-
-[[package]]
-name = "main-tests"
-version = "0.1.0"
-dependencies = [
- "casper-contract",
- "casper-engine-test-support",
- "casper-execution-engine",
- "casper-types",
 ]
 
 [[package]]
@@ -1291,16 +1270,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "registry-tests"
-version = "0.1.0"
-dependencies = [
- "casper-contract",
- "casper-engine-test-support",
- "casper-execution-engine",
- "casper-types",
-]
-
-[[package]]
 name = "rustix"
 version = "0.37.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1577,6 +1546,16 @@ dependencies = [
  "serde-json-wasm",
  "serde_json",
  "sha256",
+]
+
+[[package]]
+name = "tests2"
+version = "0.1.0"
+dependencies = [
+ "casper-contract",
+ "casper-engine-test-support",
+ "casper-execution-engine",
+ "casper-types",
 ]
 
 [[package]]
