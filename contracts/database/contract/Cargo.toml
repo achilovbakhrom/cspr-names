@@ -4,16 +4,10 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-<<<<<<< HEAD
-casper-contract = { version = "3.0.0", default-features = false }
-casper-types    = { version = "3.0.0", default-features = false }
-common-lib      = { path = "../../common", default-features = false }
-=======
-casper-contract = {version = "3.0.0", features = ["test-support"]}
-casper-types = "3.0.0"
-common-lib = { path = "../../common", default-features = false }
-casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std"}
->>>>>>> origin/way_to_beta
+casper-contract        = { version = "3.0.0", default-features = false }
+casper-types           = { version = "3.0.0", default-features = false }
+common-lib             = { path = "../../common", default-features = false }
+casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std" }
 
 [[bin]]
 name    = "database-contract"

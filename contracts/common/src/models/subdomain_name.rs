@@ -6,7 +6,7 @@ use casper_types::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct SubdomainName {
     pub name: String,
     pub resolver: AccountHash,

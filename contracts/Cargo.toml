@@ -11,12 +11,6 @@ members = [
     "nft-core/client/*",
     "nft-contract/contract",
     "database/contract",
-<<<<<<< HEAD
+    "registry/contract",
     "tests",
 ]
-=======
-    "registry/contract",
-    "tests"
-    
-]
->>>>>>> origin/way_to_beta
