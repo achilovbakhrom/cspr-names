@@ -1,17 +1,12 @@
-use alloc::{ vec, vec::Vec };
-use casper_types::{
-    bytesrepr::FromBytes,
-    bytesrepr::ToBytes,
-    CLTyped
-};
+use alloc::{vec, vec::Vec};
+use casper_types::{bytesrepr::FromBytes, bytesrepr::ToBytes, CLTyped};
 
 #[derive(Clone, Copy)]
 #[repr(u8)]
 pub enum MutationType {
     Append = 0,
-    Replace = 1
+    Replace = 1,
 }
-
 
 impl FromBytes for MutationType {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), casper_types::bytesrepr::Error> {
@@ -19,7 +14,7 @@ impl FromBytes for MutationType {
         match value.0 {
             0 => Ok((MutationType::Append, value.1)),
             1 => Ok((MutationType::Replace, value.1)),
-            _ => Err(casper_types::bytesrepr::Error::OutOfMemory)
+            _ => Err(casper_types::bytesrepr::Error::OutOfMemory),
         }
     }
 }

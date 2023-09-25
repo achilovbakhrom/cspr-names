@@ -1,9 +1,5 @@
-use alloc::{ vec, vec::Vec };
-use casper_types::{
-    bytesrepr::FromBytes,
-    bytesrepr::ToBytes,
-    CLTyped
-};
+use alloc::{vec, vec::Vec};
+use casper_types::{bytesrepr::FromBytes, bytesrepr::ToBytes, CLTyped};
 
 #[derive(Clone, Copy)]
 #[repr(u8)]
@@ -20,7 +16,7 @@ impl FromBytes for DomainNameActualState {
             0 => Ok((DomainNameActualState::Available, value.1)),
             1 => Ok((DomainNameActualState::GracePeriod, value.1)),
             2 => Ok((DomainNameActualState::Busy, value.1)),
-            _ => Err(casper_types::bytesrepr::Error::OutOfMemory)
+            _ => Err(casper_types::bytesrepr::Error::OutOfMemory),
         }
     }
 }
@@ -36,6 +32,6 @@ impl ToBytes for DomainNameActualState {
         Ok(vec![*self as u8])
     }
     fn serialized_length(&self) -> usize {
-        vec![*self as u8].len()        
+        vec![*self as u8].len()
     }
 }
