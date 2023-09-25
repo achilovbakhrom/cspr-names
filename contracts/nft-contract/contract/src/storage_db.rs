@@ -1,5 +1,5 @@
 use casper_types::ContractHash;
-use common_lib::constants::KEY_NFT_CORE_CONTRACT_HASH;
+use common_lib::constants::{KEY_NFT_CONTRACT_HASH_NV, KEY_NFT_CORE_CONTRACT_HASH};
 use common_lib::db::store::Store;
 use common_lib::db::traits::Storable;
 
@@ -23,5 +23,12 @@ impl StorageDb {
         self.store.get(KEY_NFT_CORE_CONTRACT_HASH)
     }
 
+    pub fn set_current_contract_hash(&mut self, hash: ContractHash) {
+        self.store.set(KEY_NFT_CONTRACT_HASH_NV, hash)
+    }
+
+    pub fn get_current_contract_hash(&mut self) -> Option<ContractHash> {
+        self.store.get(KEY_NFT_CONTRACT_HASH_NV)
+    }
 
 }

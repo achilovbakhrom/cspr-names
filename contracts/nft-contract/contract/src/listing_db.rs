@@ -1,5 +1,6 @@
 use alloc::format;
 use alloc::string::{String, ToString};
+use casper_types::U512;
 use common_lib::constants::KEY_NFT_DICTIONARY_LISTING;
 use common_lib::db::dictionary::Dictionary;
 use common_lib::db::traits::Storable;
@@ -16,19 +17,27 @@ impl ListingDb {
         }
     }
 
-    pub fn list(&mut self, token_id: u64) {
-        self.store.set(&token_id.to_string(), true);
+    pub fn initialize() {
+        Dictionary::init(KEY_NFT_DICTIONARY_LISTING);
     }
 
-    pub fn un_list(&mut self, token_id: u64) {
-        self.store.set(&token_id.to_string(), false);
+    pub fn list(&mut self, token_id: String, price: U512) {
+        self.store.set(&token_id, price);
     }
 
-    pub fn is_listed(&self, token_id: u64) -> bool {
-        return match self.store.get::<bool>(&token_id.to_string()) {
+    pub fn un_list(&mut self, token_id: String) {
+        self.store.remove::<U512>(&token_id);
+    }
+
+    pub fn is_listed(&self, token_id: String) -> bool {
+        return match self.store.get::<bool>(&token_id) {
             Some(res) => res,
             None => false
         }
+    }
+
+    pub fn get_price(&self, token_id: String) -> Option<U512> {
+        self.store.get(&token_id)
     }
 
 }

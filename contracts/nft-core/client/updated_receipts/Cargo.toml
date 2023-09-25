@@ -6,8 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+<<<<<<< HEAD
 casper-contract = { version = "3.0.0", default-features = false }
 casper-types    = { version = "3.0.0", default-features = false }
+=======
+casper-contract = "3.0.0"
+casper-types = "3.0.0"
+>>>>>>> origin/way_to_beta
 
 [[bin]]
 name    = "updated_receipts"

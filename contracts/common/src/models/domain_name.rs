@@ -15,7 +15,7 @@ use serde::{Serialize, Deserialize};
 pub struct DomainName {
     pub end_time: u64,
     pub name: String,
-    pub token_id: [u8; 32],
+    pub token_id: String,
     pub owner: AccountHash,
     pub resolver: AccountHash
 }
@@ -34,8 +34,8 @@ impl ToBytes for DomainName {
 
     fn serialized_length(&self) -> usize {
         self.end_time.serialized_length() +
-        self.name.serialized_length() + 
-        self.token_id.serialized_length() + 
+        self.name.serialized_length() +
+        self.token_id.serialized_length() +
         self.owner.serialized_length() +
         self.resolver.serialized_length()
     }
@@ -45,7 +45,7 @@ impl FromBytes for DomainName {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), Error> {
         let (end_time, remainder) = u64::from_bytes(bytes)?;
         let (name, remainder) = String::from_bytes(remainder)?;
-        let (token_id, remainder) = <[u8; 32]>::from_bytes(remainder)?;
+        let (token_id, remainder) = String::from_bytes(remainder)?;
         let (owner, remainder) = AccountHash::from_bytes(remainder)?;
         let (resolver, remainder) = AccountHash::from_bytes(remainder)?;
 

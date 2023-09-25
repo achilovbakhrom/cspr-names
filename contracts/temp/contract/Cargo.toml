@@ -1,0 +1,33 @@
+[package]
+<<<<<<< HEAD:contracts/authorities/contract/Cargo.toml
+name    = "authorities"
+=======
+name = "contract"
+>>>>>>> origin/way_to_beta:contracts/temp/contract/Cargo.toml
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+<<<<<<< HEAD:contracts/authorities/contract/Cargo.toml
+casper-contract = { version = "3.0.0", default-features = false }
+casper-types    = { version = "3.0.0", default-features = false }
+
+[[bin]]
+name    = "authorities-contract"
+path    = "src/main.rs"
+bench   = false
+=======
+casper-contract = "3.0.0"
+casper-types = "3.0.0"
+
+[[bin]]
+name = "contract"
+path = "src/main.rs"
+bench = false
+>>>>>>> origin/way_to_beta:contracts/temp/contract/Cargo.toml
+doctest = false
+test    = false
+
+[profile.release]
+codegen-units = 1
+lto           = true

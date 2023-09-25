@@ -5,11 +5,19 @@ edition = "2018"
 
 [dependencies]
 casper-contract = { version = "3.0.0", default-features = false }
+<<<<<<< HEAD
 casper-types    = { version = "3.0.0", default-features = false }
 
 serde           = { version = "1.0.188", default-features = false }
 serde_json      = { version = "1.0.107", default-features = false }
 serde-json-wasm = { version = "1.0.0", default-features = false }
+=======
+casper-types = { version = "3.0.0", default-features = false }
+
+serde = { version = "1.0.163", default-features = false }
+serde_json = { version = "1.0.97", default-features = false }
+serde-json-wasm = { version = "0.5.1", default-features = false }
+>>>>>>> origin/way_to_beta
 
 sha3 = { version = "0.10.8", default-features = false }
 

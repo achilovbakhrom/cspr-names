@@ -1,16 +1,22 @@
 [workspace]
 members = [
+    "temp/contract",
+    "temp/tests",
     "common",
     "configuration/contract",
     "configuration/tests",
     "main/contract",
-    "main/tests",
     "price-oracle/contract",
     "nft-core/contract",
     "nft-core/client/*",
     "nft-contract/contract",
-    "authorities/contract",
-    "authorities/tests",
     "database/contract",
+<<<<<<< HEAD
     "tests",
 ]
+=======
+    "registry/contract",
+    "tests"
+    
+]
+>>>>>>> origin/way_to_beta

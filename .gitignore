@@ -1,0 +1,5 @@
+.idea
+.DS_Store
+contracts/target
+frontend/node_modules
+backend/target

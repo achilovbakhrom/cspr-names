@@ -4,12 +4,21 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
+<<<<<<< HEAD
 casper-contract = { version = "3.0.0", default-features = false }
 casper-types    = { version = "3.0.0", default-features = false }
 common-lib      = { path = "../../common", default-features = false }
 serde           = { version = "1.0.188", default-features = false }
 serde_json      = { version = "1.0.107", default-features = false }
 serde-json-wasm = { version = "1.0.0", default-features = false }
+=======
+casper-contract = { version = "3.0.0", default-features = false, features = ["test-support"] }
+casper-types = "3.0.0"
+common-lib = { path = "../../common", default-features = false }
+serde = { version = "1.0.163", default-features = false }
+serde_json = { version = "1.0.96", default-features = false }
+serde-json-wasm = { version = "0.5.1", default-features = false }
+>>>>>>> origin/way_to_beta
 
 [[bin]]
 name    = "nft-contract"
