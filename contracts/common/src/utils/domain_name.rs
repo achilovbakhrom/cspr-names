@@ -1,20 +1,10 @@
-use alloc::{
-    vec::Vec,
-    string::String,
+use crate::{
+    constants::{EXTENSION, GRACE_PERIOD, YEAR_IN_MILLIS},
+    enums::domain_name_actual_state::DomainNameActualState,
 };
-use crate::{constants::{ 
-    EXTENSION,
-    YEAR_IN_MILLIS,
-    GRACE_PERIOD,
-}, enums::domain_name_actual_state::DomainNameActualState};
-use sha3::{ Keccak256, Digest };
-use casper_contract::{
-    contract_api::{
-        runtime
-    },
-
-};
-
+use alloc::{string::String, vec::Vec};
+use casper_contract::contract_api::runtime;
+use sha3::{Digest, Keccak256};
 
 pub fn namehash_label(namehash: [u8; 32], label: &str) -> [u8; 32] {
     let mut hasher = Keccak256::default();
@@ -26,8 +16,7 @@ pub fn namehash_label(namehash: [u8; 32], label: &str) -> [u8; 32] {
 }
 
 pub fn is_domain_name_valid(domain_name: &str) -> bool {
-    domain_name.len() < 256 &&
-    domain_name.ends_with(EXTENSION)
+    domain_name.len() < 256 && domain_name.ends_with(EXTENSION)
 }
 
 pub fn is_sub_domain_name_valid(subdomain_name: &str) -> (bool, Option<String>) {
@@ -37,7 +26,7 @@ pub fn is_sub_domain_name_valid(subdomain_name: &str) -> (bool, Option<String>) 
         return (false, None);
     }
     let skipped_iterable_copy = split.iter().skip(1).copied();
-    
+
     let domain = skipped_iterable_copy.collect::<Vec<&str>>().join(".");
     (true, Some(domain))
 }

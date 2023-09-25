@@ -47,6 +47,11 @@ pub fn get_custom_metadata_schema() -> CustomMetadataSchema {
     CustomMetadataSchema { properties }
 }
 
+pub const CONTRACT_PACKAGE_NAME_KEY: &str = "CONTRACT_PACKAGE_NAME_KEY";
+pub const CONTRACT_ACCESS_UREF_KEY: &str = "CONTRACT_ACCESS_UREF_KEY";
+pub const CONTRACT_VERSION_KEY: &str = "CONTRACT_VERSION_KEY";
+pub const CONTRACT_HASH_KEY: &str = "CONTRACT_HASH_KEY";
+pub const CONTRACT_MAINTAINER_KEY: &str = "CONTRACT_MAINTAINER_KEY";
 
 pub const CSPR_HASH: [u8; 32] = [
     0xe0, 0x23, 0xb6, 0xc3, 0x8b, 0x8b, 0xcb, 0xf1, 0xcd, 0x48, 0xc7, 0xac, 0x35, 0xb0, 0xb2, 0x44,
@@ -97,7 +102,8 @@ pub const ENTRYPOINT_MAIN_RESOLVE_DOMAIN: &str = "resolve_domain";
 pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_DOMAIN: &str = "set_resolver_address_for_domain";
 pub const ENTRYPOINT_MAIN_REGISTER_SUB_DOMAIN: &str = "register_sub_domain";
 pub const ENTRYPOINT_MAIN_REMOVE_SUBDOMAIN: &str = "remove_subdomain";
-pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN: &str = "set_resolver_address_for_subdomain";
+pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN: &str =
+    "set_resolver_address_for_subdomain";
 pub const ENTRYPOINT_MAIN_GET_SUBDOMAINS_FOR_DOMAIN: &str = "get_sudomains_for_domain";
 pub const ENTRYPOINT_MAIN_GET_DOMAIN_LIST: &str = "get_domain_list";
 pub const ENTRYPOINT_MAIN_SET_PRICE_ORACLE_CONTRACT_HASH: &str = "set_price_oracle_contract_hash";
@@ -163,7 +169,6 @@ pub const KEY_DATABASE_CONTRACT_ACCESS_UREF: &str = "key_database_contract_acces
 pub const KEY_DATABASE_CONTRACT_VERSION: &str = "key_database_contract_version";
 pub const KEY_DATABASE_CONTRACT_HASH: &str = "key_database_contract_hash";
 
-
 // ENDPOINTS
 pub const ENDPOINT_DATABASE_SAVE_DOMAIN_NAME: &str = "save_domain_name";
 pub const ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME: &str = "save_subdomain_name";
@@ -188,7 +193,6 @@ pub const ARG_NFT_METADATA: &str = "arg_nft_metadata";
 pub const ARG_NFT_CONTRACT_HASH: &str = "arg_nft_contract_hash";
 pub const ARG_NFT_TOKEN_OWNER: &str = "arg_nft_token_owner";
 
-
 // KEYS
 pub const KEY_NFT_CORE_CONTRACT_HASH: &str = "key_nft_core_contract_hash";
 pub const KEY_NFT_DICTIONARY_LISTING: &str = "key_nft_dictionary_listing";
@@ -207,4 +211,3 @@ pub const ENDPOINT_NFT_LIST: &str = "list";
 pub const ENDPOINT_NFT_UN_LIST: &str = "un_list";
 pub const ENDPOINT_NFT_BUY: &str = "buy";
 pub const ENDPOINT_NFT_SET_NFT_CONTRACT_HASH: &str = "set_nft_contract_hash";
-
