@@ -1,6 +1,8 @@
 [workspace]
 members = [
     "common",
+    "configuration/contract",
+    "configuration/tests",
     "main/contract",
     "main/tests",
     "price-oracle/contract",
@@ -10,5 +12,5 @@ members = [
     "authorities/contract",
     "authorities/tests",
     "database/contract",
-    "tests"
+    "tests",
 ]
