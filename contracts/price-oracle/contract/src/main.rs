@@ -43,7 +43,7 @@ use crate::price_oracle_db::PriceOracleDb;
 
 use common_lib::utils::response::{response_error, response_success};
 use common_lib::{
-    constants::{
+    constants::common_keys::{
         ARG_PO_AUTHORITY, ARG_PO_CHARS_COUNT_MID, ARG_PO_PRICE, ARG_PO_PRICE_MID,
         ARG_PO_PRICE_MORE, ARG_PO_PRICE_TYPE, ARG_PO_PRICE_TYPE_CHARS_COUNT,
         ENDPOINT_PO_ADD_AUTHORITY, ENDPOINT_PO_GET_PRICE, ENDPOINT_PO_REMOVE_AUTHORITY,
@@ -61,20 +61,20 @@ use common_lib::{
     },
 };
 use common_lib::{
-    constants::{
+    constants::common_keys::{
         ENDPOINT_PO_PRICE_GET_SIMPLE_OPERATIONS, ENDPOINT_PO_PRICE_SET_SIMPLE_OPERATIONS,
         KEY_PO_SIMPLE_OPERATIONS,
     },
     utils::maintainer::create_new_contract,
 };
 
-use common_lib::constants::{
+use common_lib::constants::common_keys::{
     ARG_PO_EXTENSION, ENDPOINT_PO_INIT, ENDPOINT_PO_PRICE_GET_SIMPLE_OPERATIONS,
     ENDPOINT_PO_PRICE_SET_SIMPLE_OPERATIONS, KEY_PO_SIMPLE_OPERATIONS,
 };
 use common_lib::utils::response::{response_error, response_success};
 use common_lib::{
-    constants::{
+    constants::common_keys::{
         ARG_PO_AUTHORITY, ARG_PO_CHARS_COUNT_MID, ARG_PO_PRICE, ARG_PO_PRICE_MID,
         ARG_PO_PRICE_MORE, ARG_PO_PRICE_TYPE, ARG_PO_PRICE_TYPE_CHARS_COUNT,
         ENDPOINT_PO_ADD_AUTHORITY, ENDPOINT_PO_GET_PRICE, ENDPOINT_PO_REMOVE_AUTHORITY,

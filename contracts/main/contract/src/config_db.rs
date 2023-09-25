@@ -1,9 +1,10 @@
 use alloc::string::String;
-use alloc::vec;
 use alloc::vec::Vec;
 use casper_contract::unwrap_or_revert::UnwrapOrRevert;
 use casper_types::ContractHash;
-use common_lib::constants::{KEY_MAIN_ALLOWED_EXTENSIONS, KEY_MAIN_REGISTRY_CONTRACT_HASH};
+use common_lib::constants::common_keys::{
+    KEY_MAIN_ALLOWED_EXTENSIONS, KEY_MAIN_REGISTRY_CONTRACT_HASH,
+};
 use common_lib::db::store::Store;
 use common_lib::db::traits::Storable;
 use common_lib::errors::MainContractErrors;

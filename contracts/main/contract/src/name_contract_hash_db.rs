@@ -1,5 +1,5 @@
 use casper_types::ContractHash;
-use common_lib::constants::KEY_MAIN_NAME_CONTRACT_HASH;
+use common_lib::constants::common_keys::KEY_MAIN_NAME_CONTRACT_HASH;
 use common_lib::db::dictionary::Dictionary;
 use common_lib::db::traits::Storable;
 

@@ -4,7 +4,7 @@ use alloc::vec::Vec;
 use casper_contract::contract_api::runtime;
 use casper_types::system::CallStackElement;
 
-use crate::constants::{
+use crate::constants::common_keys::{
     ARG_AUTHORITY_CONTRACT_TYPE, ARG_AUTHORITY_EXTENSION, ENDPOINT_AUTHORITY_GET_CONTRACT,
 };
 use crate::enums::caller_verification_type::CallerVerificationType;

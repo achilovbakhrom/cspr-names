@@ -1,7 +1,7 @@
 use alloc::vec::Vec;
 use casper_contract::{contract_api::runtime, unwrap_or_revert::UnwrapOrRevert};
 
-use crate::constants::{
+use crate::constants::common_keys::{
     ARG_REGISTRY_CONTRACT_HASH, ARG_REGISTRY_OPERATOR_TYPE,
     ENDPOINT_REGISTRY_GET_OPERATORS_FOR_CONTRACT_HASH, KEY_CONTRACT_HASH, KEY_MAINTAINER,
     KEY_REGISTRY_CONTRACT_HASH,

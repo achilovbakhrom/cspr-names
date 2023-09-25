@@ -1,7 +1,5 @@
 [workspace]
 members = [
-    "temp/contract",
-    "temp/tests",
     "common",
     "configuration/contract",
     "configuration/tests",

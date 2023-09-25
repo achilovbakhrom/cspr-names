@@ -1,8 +1,7 @@
-use alloc::format;
 use alloc::string::String;
 use alloc::vec::Vec;
 use casper_types::U512;
-use common_lib::constants::{
+use common_lib::constants::common_keys::{
     KEY_PO_CHARS_COUNT_MID, KEY_PO_PRICE, KEY_PO_PRICES, KEY_PO_PRICE_MID, KEY_PO_PRICE_MORE,
     KEY_PO_PRICE_TYPE, KEY_PO_SIMPLE_OPERATIONS,
 };

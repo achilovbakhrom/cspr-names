@@ -1,5 +1,5 @@
 use crate::{
-    constants::{EXTENSION, GRACE_PERIOD, YEAR_IN_MILLIS},
+    constants::common_keys::{EXTENSION, GRACE_PERIOD, YEAR_IN_MILLIS},
     enums::domain_name_actual_state::DomainNameActualState,
 };
 use alloc::{string::String, vec::Vec};

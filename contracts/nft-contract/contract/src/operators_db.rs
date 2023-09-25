@@ -1,18 +1,17 @@
 use alloc::string::ToString;
 use casper_types::account::AccountHash;
-use common_lib::constants::KEY_NFT_OPERATORS;
+use common_lib::constants::common_keys::KEY_NFT_OPERATORS;
 use common_lib::db::dictionary::Dictionary;
 use common_lib::db::traits::Storable;
 
 pub struct OperatorsDb {
-    store: Dictionary
+    store: Dictionary,
 }
 
 impl OperatorsDb {
-
     pub fn instance() -> Self {
         Self {
-            store: Dictionary::instance(KEY_NFT_OPERATORS)
+            store: Dictionary::instance(KEY_NFT_OPERATORS),
         }
     }
 
@@ -28,5 +27,4 @@ impl OperatorsDb {
         let res: Option<AccountHash> = self.store.get(&account.to_string());
         res.is_some()
     }
-
 }
