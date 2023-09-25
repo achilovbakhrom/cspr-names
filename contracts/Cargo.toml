@@ -3,13 +3,20 @@ members = [
     "temp/contract",
     "temp/tests",
     "common",
+    "configuration/contract",
+    "configuration/tests",
     "main/contract",
     "price-oracle/contract",
     "nft-core/contract",
     "nft-core/client/*",
     "nft-contract/contract",
     "database/contract",
+<<<<<<< HEAD
+    "tests",
+]
+=======
     "registry/contract",
     "tests"
     
 ]
+>>>>>>> origin/way_to_beta

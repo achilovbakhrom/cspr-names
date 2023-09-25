@@ -1,23 +1,35 @@
 [package]
-name = "nft-core"
+name    = "nft-core"
 version = "1.1.1"
 edition = "2018"
 
 [dependencies]
+<<<<<<< HEAD
+casper-contract = { version = "3.0.0", default-features = false }
+casper-types = { version = "3.0.0", default-features = false }
+serde = { version = "1.0.188", features = [
+    "derive",
+    "alloc",
+], default-features = false }
+base16 = { version = "0.2.1", default-features = false, features = [
+    "alloc",
+] }
+casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std" }
+=======
 casper-contract = {version = "3.0.0", features = ["test-support"]}
 casper-types = "3.0.0"
 serde = { version = "1.0.163", features = ["derive", "alloc"], default-features = false }
 base16 = { version = "0.2", default-features = false, features = ["alloc"] }
 casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std"}
+>>>>>>> origin/way_to_beta
 
 [[bin]]
-name = "nft-core-contract"
-path = "src/main.rs"
-bench = false
+name    = "nft-core-contract"
+path    = "src/main.rs"
+bench   = false
 doctest = false
-test = false
+test    = false
 
 [profile.release]
 codegen-units = 1
-lto = true
-
+lto           = true

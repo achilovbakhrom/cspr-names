@@ -1,15 +1,10 @@
-use alloc::{ string::String, vec::Vec };
+use alloc::{string::String, vec::Vec};
 use casper_types::{
     account::AccountHash,
-    bytesrepr::{
-        ToBytes,
-        FromBytes,
-        allocate_buffer,
-        Error
-    },
-    CLTyped, CLType
+    bytesrepr::{allocate_buffer, Error, FromBytes, ToBytes},
+    CLType, CLTyped,
 };
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct DomainName {
@@ -17,7 +12,7 @@ pub struct DomainName {
     pub name: String,
     pub token_id: String,
     pub owner: AccountHash,
-    pub resolver: AccountHash
+    pub resolver: AccountHash,
 }
 
 impl ToBytes for DomainName {
@@ -28,16 +23,16 @@ impl ToBytes for DomainName {
         result.extend(self.token_id.to_bytes()?);
         result.extend(self.owner.to_bytes()?);
         result.extend(self.resolver.to_bytes()?);
-        
+
         Ok(result)
     }
 
     fn serialized_length(&self) -> usize {
-        self.end_time.serialized_length() +
-        self.name.serialized_length() +
-        self.token_id.serialized_length() +
-        self.owner.serialized_length() +
-        self.resolver.serialized_length()
+        self.end_time.serialized_length()
+            + self.name.serialized_length()
+            + self.token_id.serialized_length()
+            + self.owner.serialized_length()
+            + self.resolver.serialized_length()
     }
 }
 
@@ -49,12 +44,12 @@ impl FromBytes for DomainName {
         let (owner, remainder) = AccountHash::from_bytes(remainder)?;
         let (resolver, remainder) = AccountHash::from_bytes(remainder)?;
 
-        let result = DomainName { 
+        let result = DomainName {
             end_time,
             name,
             token_id,
             owner,
-            resolver
+            resolver,
         };
         Ok((result, remainder))
     }

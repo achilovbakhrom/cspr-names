@@ -1,17 +1,30 @@
 [package]
+<<<<<<< HEAD:contracts/authorities/tests/Cargo.toml
+name    = "authorities-tests"
+=======
 name = "tests2"
+>>>>>>> origin/way_to_beta:contracts/temp/tests/Cargo.toml
 version = "0.1.0"
 edition = "2018"
 
 [dev-dependencies]
+<<<<<<< HEAD:contracts/authorities/tests/Cargo.toml
+casper-contract = { version = "3.0.0", default-features = false }
+casper-types    = { version = "3.0.0", default-features = false }
+
+casper-engine-test-support = { version = "2.2.0", features = [
+    "test-support",
+] }
+casper-execution-engine = "2.0.1"
+=======
 casper-contract = { version = "3.0.0", default-features = false, features = ["test-support"] }
 casper-engine-test-support = { version = "5.0.0", features = ["test-support"] }
 casper-execution-engine = "5.0.0"
 casper-types = "3.0.0"
+>>>>>>> origin/way_to_beta:contracts/temp/tests/Cargo.toml
 
 [[bin]]
-name = "integration-tests"
-path = "src/integration_tests.rs"
-bench = false
+name    = "integration-tests"
+path    = "src/integration_tests.rs"
+bench   = false
 doctest = false
-

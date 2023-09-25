@@ -1,10 +1,10 @@
+use alloc::{string::String, vec::Vec};
 use casper_types::{
     account::AccountHash,
-    bytesrepr::{ ToBytes, FromBytes, allocate_buffer, Error },
-    CLTyped, CLType
+    bytesrepr::{allocate_buffer, Error, FromBytes, ToBytes},
+    CLType, CLTyped,
 };
-use alloc::{ string::String, vec::Vec };
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SubdomainName {
@@ -15,28 +15,24 @@ pub struct SubdomainName {
 impl ToBytes for SubdomainName {
     fn to_bytes(&self) -> Result<Vec<u8>, Error> {
         let mut result = allocate_buffer(self)?;
-        
+
         result.extend(self.name.to_bytes()?);
         result.extend(self.resolver.to_bytes()?);
-        
+
         Ok(result)
     }
 
     fn serialized_length(&self) -> usize {
-        self.name.serialized_length() + 
-        self.resolver.serialized_length()
+        self.name.serialized_length() + self.resolver.serialized_length()
     }
 }
 
 impl FromBytes for SubdomainName {
-    fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), Error> {        
+    fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), Error> {
         let (name, remainder) = String::from_bytes(bytes)?;
         let (resolver, remainder) = AccountHash::from_bytes(remainder)?;
 
-        let result = SubdomainName { 
-            name,
-            resolver
-        };
+        let result = SubdomainName { name, resolver };
         Ok((result, remainder))
     }
 }

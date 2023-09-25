@@ -1,17 +1,16 @@
-use alloc::vec::Vec;
-use casper_types::bytesrepr::{FromBytes, ToBytes};
-use casper_types::CLTyped;
 use crate::db::dictionary::Dictionary;
 use crate::db::traits::Storable;
 use crate::errors::CommonError;
 use crate::utils::response::response_error;
+use alloc::vec::Vec;
+use casper_types::bytesrepr::{FromBytes, ToBytes};
+use casper_types::CLTyped;
 
 pub struct DictionaryKeyList {
-    store: Dictionary
+    store: Dictionary,
 }
 
 impl DictionaryKeyList {
-
     pub fn instance(key: &str) -> Self {
         Self {
             store: Dictionary::instance(key),
@@ -37,7 +36,6 @@ impl DictionaryKeyList {
 
         current.dedup_by(|item1, item2| item1 == item2);
 
-
         self.set(key, current);
     }
 
@@ -45,10 +43,9 @@ impl DictionaryKeyList {
         let mut current = self.get::<V>(key).unwrap_or_default();
         let position = match current.iter().position(|item| item == &value) {
             Some(res) => res,
-            None => return response_error(CommonError::ItemNotFound)
+            None => return response_error(CommonError::ItemNotFound),
         };
         current.remove(position);
         self.set(key, current);
     }
-
 }

@@ -1,4 +1,4 @@
-use casper_types::{ApiError};
+use casper_types::ApiError;
 
 #[repr(u16)]
 pub enum Error {
@@ -6,11 +6,11 @@ pub enum Error {
     KeyMismatch = 1,
     InvalidDomainName = 2,
     InvalidDurationForRegistration = 3,
-    InvalidResolverAddress = 4
+    InvalidResolverAddress = 4,
 }
 
 impl From<Error> for ApiError {
-    fn from(error: Error) -> Self {        
+    fn from(error: Error) -> Self {
         ApiError::User(error as u16)
     }
 }

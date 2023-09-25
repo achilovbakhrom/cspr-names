@@ -6,14 +6,13 @@ use common_lib::errors::DatabaseErrors;
 use common_lib::models::SubdomainName;
 
 pub(crate) struct SubdomainMap {
-    store: Dictionary
+    store: Dictionary,
 }
 
 impl SubdomainMap {
-
     pub fn instance() -> Self {
         Self {
-            store: Dictionary::instance(KEY_DATABASE_DICTIONARY_SUBDOMAIN)
+            store: Dictionary::instance(KEY_DATABASE_DICTIONARY_SUBDOMAIN),
         }
     }
 
@@ -32,7 +31,7 @@ impl SubdomainMap {
     pub fn update_resolver(&self, name: &str, resolver: AccountHash) -> Result<(), DatabaseErrors> {
         let mut subdomain_name = match self.store.get::<SubdomainName>(name) {
             Some(res) => res,
-            None => return Err(DatabaseErrors::DatabaseSubdomainDoesntExist)
+            None => return Err(DatabaseErrors::DatabaseSubdomainDoesntExist),
         };
         subdomain_name.resolver = resolver;
         self.store.set(name, subdomain_name);

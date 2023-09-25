@@ -1,18 +1,9 @@
-
-use alloc::{ vec::Vec };
-use core::u16;
+use alloc::vec::Vec;
 use casper_types::{
-    bytesrepr::{
-        ToBytes,
-        FromBytes,
-        allocate_buffer,
-        Error
-    },
-    CLTyped,
-    CLType,
-    ContractHash
+    bytesrepr::{allocate_buffer, Error, FromBytes, ToBytes},
+    CLType, CLTyped, ContractHash,
 };
-
+use core::u16;
 
 #[derive(Clone)]
 pub struct ContractHashDatabaseMap {
@@ -30,8 +21,7 @@ impl ToBytes for ContractHashDatabaseMap {
     }
 
     fn serialized_length(&self) -> usize {
-        self.contract_hash.serialized_length() +
-            self.count.serialized_length()
+        self.contract_hash.serialized_length() + self.count.serialized_length()
     }
 }
 
@@ -39,7 +29,6 @@ impl FromBytes for ContractHashDatabaseMap {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), Error> {
         let (contract_hash, remainder) = ContractHash::from_bytes(bytes)?;
         let (count, remainder) = u16::from_bytes(remainder)?;
-
 
         let result = ContractHashDatabaseMap {
             contract_hash,

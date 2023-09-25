@@ -1,11 +1,11 @@
 use alloc::string::{String, ToString};
-use serde::{Serialize, Deserialize };
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Metadata {
     name: String,
     symbol: String,
-    token_id: String
+    token_id: String,
 }
 
 impl Metadata {
@@ -13,7 +13,7 @@ impl Metadata {
         Self {
             name,
             token_id,
-            symbol: "casper-names-token".to_string()
+            symbol: "casper-names-token".to_string(),
         }
     }
 }

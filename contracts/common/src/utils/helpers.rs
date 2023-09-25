@@ -20,4 +20,3 @@ pub fn get_metadata_schema(name: &str, token_id: &str) -> String {
 pub fn concat(str1: &str, str2: &str, connector: &str) -> String {
     format!("{}{}{}", str1, connector, str2)
 }
-
