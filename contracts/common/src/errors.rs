@@ -6,7 +6,17 @@ pub enum CommonError {
     UnexpectedKeyVariant = 1,
     MissingStorageUref = 2,
     InvalidStorageUref = 3,
-    NoAuthority = 4
+    NoAuthority = 4,
+    ItemNotFound = 5,
+    NoContractHashWasFoundInAuthoritiesContract = 6,
+    InvalidMaintainer = 7,
+    InvalidCaller = 8,
+    InvalidKey = 9,
+    UnknowError = 10,
+    MissingMaintainer = 11,
+    MissingRegistryHash = 12,
+    MissingContractHash = 13,
+    FailedToConvertToAccountHash = 14,
 }
 
 impl From<CommonError> for ApiError {
@@ -15,11 +25,10 @@ impl From<CommonError> for ApiError {
     }
 }
 
-
 #[repr(u16)]
 #[derive(Clone, Copy)]
 pub enum MainContractErrors {
-    InvalidDomain = 21,
+    InvalidName = 21,
     DomainAlreadyExists = 22,
     InvalidDuration = 23,
     PriceDiscrepancy = 24,
@@ -40,7 +49,15 @@ pub enum MainContractErrors {
     AuthorityHasAlreadyTaken = 39,
     CannotRemoveMaintainer = 40,
     UserHasNoAccess = 41,
-    
+    InvalidCreator = 42,
+    InvalidExtension = 43,
+    AllowedExtensionsNotConfigured = 44,
+    MaintainerNotConfigured = 45,
+    DatabaseFulfilledOrNotConfigured = 46,
+    MaintainerPurseNotConfigured = 47,
+    InsufficientCustomerBalance = 48,
+    AuthoritiesContractHashNotConfigured = 49,
+    RegistryContractHashNotConfigured = 50,
 }
 
 impl From<MainContractErrors> for ApiError {
@@ -64,9 +81,8 @@ pub enum PriceOracleContractErrors {
     PriceAuthorityHasAlreadyTaken = 49,
     PriceOnlyMaintainerHasAccess = 50,
     PriceUserHasNoAccess = 51,
-    PriceSimpleOperationsIsNotSet = 52
-
-
+    PriceSimpleOperationsIsNotSet = 52,
+    PricePriceIsNotSetForExtension = 53,
 }
 
 impl From<PriceOracleContractErrors> for ApiError {
@@ -83,7 +99,6 @@ pub enum DatabaseErrors {
     DatabaseSubdomainDoesntExist = 62,
     DatabaseDomainDoesntExist = 63,
     DatabaseUnexpected = 64,
-
 }
 
 impl From<DatabaseErrors> for ApiError {
@@ -94,13 +109,46 @@ impl From<DatabaseErrors> for ApiError {
 
 #[repr(u16)]
 #[derive(Clone, Copy)]
+pub enum AuthorityErrors {
+    AuthorityInvalidCaller = 100,
+    AuthorityMaintainerIsNotSet = 101,
+}
+
+impl From<AuthorityErrors> for ApiError {
+    fn from(e: AuthorityErrors) -> Self {
+        ApiError::User(e as u16)
+    }
+}
+
+#[repr(u16)]
+#[derive(Clone, Copy)]
 pub enum NFTErrors {
     NFTCoreHashIsNotSet = 80,
     NFTIsNotListed = 81,
+    NFTContractHashIsNotSet = 82,
 }
 
 impl From<NFTErrors> for ApiError {
     fn from(e: NFTErrors) -> Self {
+        ApiError::User(e as u16)
+    }
+}
+
+#[repr(u16)]
+#[derive(Clone, Copy)]
+pub enum RegistryErrors {
+    OperatorAlreadyExists = 200,
+    OperatorDoesntExist = 201,
+    MaintainerIsNotSet = 202,
+    RegistryObjectNotFound = 203,
+    InvalidContractHash = 204,
+    ContractHashCountExceeded = 205,
+    ContractHashNotFouond = 206,
+    InvalidCaller = 207,
+}
+
+impl From<RegistryErrors> for ApiError {
+    fn from(e: RegistryErrors) -> Self {
         ApiError::User(e as u16)
     }
 }

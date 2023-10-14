@@ -1,12 +1,5 @@
-use casper_contract::{
-    contract_api::runtime,
-};
-use casper_types::{
-    CLTyped,
-    bytesrepr::ToBytes,
-    CLValue,
-    ApiError
-};
+use casper_contract::contract_api::runtime;
+use casper_types::{bytesrepr::ToBytes, ApiError, CLTyped, CLValue};
 
 pub fn response_success<T: ToBytes + CLTyped>(arg: T, error_msg: &str) {
     let result = CLValue::from_t(arg).expect(error_msg);

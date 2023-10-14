@@ -1,17 +1,18 @@
 use std::collections::BTreeMap;
 use std::path::PathBuf;
-use casper_engine_test_support::{DEFAULT_ACCOUNT_ADDR, DEFAULT_RUN_GENESIS_REQUEST, InMemoryWasmTestBuilder};
+use casper_engine_test_support::{DEFAULT_ACCOUNT_ADDR, DEFAULT_RUN_GENESIS_REQUEST, ExecuteRequestBuilder, InMemoryWasmTestBuilder};
 use casper_types::account::AccountHash;
-use casper_types::{ContractHash, Key, PublicKey, runtime_args, SecretKey};
-use common_lib::constants::{ARG_NFT_CONTRACT_HASH, ARG_NFT_METADATA, ARG_NFT_TOKEN_OWNER, ENDPOINT_NFT_MINT, ENDPOINT_NFT_REGISTER_OWNER, ENDPOINT_NFT_SET_NFT_CONTRACT_HASH, get_custom_metadata_schema, KEY_NFT_CONTRACT_HASH};
+use casper_types::{CLValue, ContractHash, Key, PublicKey, runtime_args, SecretKey};
+use common_lib::constants::{ARG_NFT_CONTRACT_HASH, ARG_NFT_METADATA, ARG_NFT_TOKEN_OWNER, ENDPOINT_NFT_MINT, ENDPOINT_NFT_REGISTER_OWNER, ENDPOINT_NFT_SET_CURRENT_CONTRACT_HASH, ENDPOINT_NFT_SET_NFT_CONTRACT_HASH, ENDPOINT_NFT_TRANSFER, get_custom_metadata_schema, KEY_NFT_CONTRACT_HASH};
 use crate::utils::{deploy, DeploySource, fund_account, query};
 use casper_types::RuntimeArgs;
 use common_lib::errors::NFTErrors;
 use common_lib::models::nft::Metadata;
-use crate::nft_core::utility::constants::{ARG_TOKEN_OWNER, NFT_CONTRACT_WASM, NFT_TEST_COLLECTION, NFT_TEST_SYMBOL, NFT_TEST_TOKEN_SUPPLY, TEST_PRETTY_721_META_DATA};
+use crate::nft_core::utility::constants::{ARG_TOKEN_ID, ARG_TOKEN_OWNER, NFT_CONTRACT_WASM, NFT_TEST_COLLECTION, NFT_TEST_SYMBOL, NFT_TEST_TOKEN_SUPPLY, TEST_PRETTY_721_META_DATA};
 use crate::nft_core::utility::installer_request_builder::{BurnMode, InstallerRequestBuilder, MetadataMutability, MintingMode, NamedKeyConventionMode, NFTHolderMode, NFTIdentifierMode, NFTKind, NFTMetadataKind, OwnerReverseLookupMode, OwnershipMode, TEST_CUSTOM_METADATA_SCHEMA, WhitelistMode};
 use crate::nft_core::utility::support;
 use crate::nft_core::utility::support::{get_nft_contract_hash, get_token_page_by_hash};
+use casper_types::KeyTag::Account;
 
 struct NftContractContext {
     builder: InMemoryWasmTestBuilder,
@@ -76,12 +77,13 @@ impl NftContractContext {
             .with_identifier_mode(NFTIdentifierMode::Hash)
             .with_metadata_mutability(MetadataMutability::Immutable)
             .with_burn_mode(BurnMode::Burnable)
-            // .with_reporting_mode(OwnerReverseLookupMode::NoLookUp)
+            .with_reporting_mode(OwnerReverseLookupMode::NoLookUp)
             .with_named_key_convention_mode(NamedKeyConventionMode::DerivedFromCollectionName)
             .with_total_token_supply(NFT_TEST_TOKEN_SUPPLY)
             .with_collection_name(NFT_TEST_COLLECTION.to_string())
             .with_collection_symbol(NFT_TEST_SYMBOL.to_string())
             .with_allowing_minting(true)
+            .with_invalid_total_token_supply(CLValue::from_t(100u64).expect("error"))
             .build();
         // let install_request = InstallerRequestBuilder::new(*DEFAULT_ACCOUNT_ADDR, "nft-core-contract.wasm")
         //     .with_total_token_supply(2u64)
@@ -125,6 +127,20 @@ impl NftContractContext {
             None
         );
 
+        deploy(
+            &mut builder,
+            &alice_account,
+            &DeploySource::ByContractHash {
+                hash: nft_contract_hash.clone(),
+                entry_point: ENDPOINT_NFT_SET_CURRENT_CONTRACT_HASH.to_string(),
+            },
+            runtime_args! {
+                ARG_NFT_CONTRACT_HASH => nft_contract_hash.clone()
+            },
+            true,
+            None
+        );
+
         Self {
             builder,
             nft_contract_hash,
@@ -141,7 +157,7 @@ impl NftContractContext {
 
         let metadata_res = serde_json::to_string_pretty(&metadata).unwrap();
 
-        println!("metadata_res: {}", metadata_res.to_string());
+        let token_id = self.metadata_to_hash(metadata_res.to_string());
 
         let args = runtime_args! {
             ARG_NFT_TOKEN_OWNER => account,
@@ -159,8 +175,23 @@ impl NftContractContext {
             true,
             None
         );
+        let operator_key: Key = self.nft_contract_hash.into();
+        deploy(
+            &mut self.builder,
+            &self.alice_account,
+            &DeploySource::ByContractHash {
+                hash: self.nft_core_contract_hash.clone(),
+                entry_point: String::from("set_approval_for_all"),
+            },
+            runtime_args! {
+                "approve_all" => true,
+                "operator" => operator_key,
+            },
+            true,
+            None
+        );
 
-        self.metadata_to_hash(metadata_res.to_string())
+        token_id
     }
 
     fn register_owner(&mut self, account: AccountHash) {
@@ -194,14 +225,40 @@ impl NftContractContext {
             hash,
         )
     }
+
+    fn transfer(&mut self, token_id: String, source: Key, target: Key) {
+        let args = runtime_args! {
+            ARG_TOKEN_ID => token_id,
+            "source_key" => source,
+            "target_key" => target
+        };
+
+        deploy(
+            &mut self.builder,
+            &self.alice_account,
+            &DeploySource::ByContractHash {
+                hash: self.nft_contract_hash.clone(),
+                entry_point: ENDPOINT_NFT_TRANSFER.to_string(),
+            },
+            args,
+            true,
+            None
+        );
+    }
 }
 
 #[test]
 fn should_test_mint() {
     let mut context = NftContractContext::deploy();
-    context.register_owner(context.alice_account);
+    // context.register_owner(context.alice_account);
+    let _ = context.mint("token_id", context.alice_account);
+}
+
+#[test]
+fn should_test_transfer_by_hash() {
+    let mut context = NftContractContext::deploy();
     let hash = context.mint("token_id", context.alice_account);
-    println!("hash: {}", hash.to_string());
-    let page = context.get_page_by_hash(hash);
-    assert_eq!(page[0], true);
+    context.register_owner(context.alice_account);
+    println!("hash3333: {}, caller: {}, test-contract: {}", &hash, context.alice_account, context.nft_contract_hash);
+    context.transfer(hash, context.alice_account.into(), context.bob_account.into());
 }

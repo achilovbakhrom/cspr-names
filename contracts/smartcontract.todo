@@ -1,0 +1,52 @@
+{
+  "todotree": {
+    "tree": [
+      {
+        "key": 1687013643767,
+        "children": [],
+        "todo": {
+          "content": "make code cleaner",
+          "id": 1687013643767,
+          "level": "default",
+          "done": false,
+          "start": 1687013643767
+        }
+      },
+      {
+        "key": 1687013679647,
+        "children": [],
+        "todo": {
+          "content": "Registry contract finalize",
+          "id": 1687013679647,
+          "level": "default",
+          "done": false,
+          "start": 1687013679647
+        }
+      },
+      {
+        "key": 1687013689030,
+        "children": [],
+        "todo": {
+          "content": "Replace CEP-78 contract",
+          "id": 1687013689030,
+          "level": "default",
+          "done": false,
+          "start": 1687013689030
+        }
+      }
+    ],
+    "expandKeys": [
+      1674966703305
+    ],
+    "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
+    "add_mode": "bottom",
+    "virtual": false,
+    "showLine": true,
+    "playFontSize": 24,
+    "title": "smartcontract",
+    "autoSort": false,
+    "showEndTime": false,
+    "lang": "en",
+    "version": "1687013696032"
+  }
+}

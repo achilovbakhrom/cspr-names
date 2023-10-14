@@ -1,25 +1,18 @@
-use alloc::{ vec, vec::Vec };
-use casper_types::{
-    bytesrepr::{
-        ToBytes,
-        FromBytes
-    },
-    ApiError,
-    CLTyped,
-    Key,
-    URef,
-    api_error,
-    bytesrepr,
-};
-use casper_contract::{
-    contract_api::{ runtime, storage },
-    ext_ffi,
-    unwrap_or_revert::UnwrapOrRevert
-};
 use crate::errors::CommonError;
+use alloc::{vec, vec::Vec};
+use casper_contract::{
+    contract_api::{runtime, storage},
+    ext_ffi,
+    unwrap_or_revert::UnwrapOrRevert,
+};
+use casper_types::{
+    api_error, bytesrepr,
+    bytesrepr::{FromBytes, ToBytes},
+    ApiError, CLTyped, Key, URef,
+};
 use core::convert::TryInto;
 
-pub fn store_value_for_key<T: ToBytes + CLTyped>(name: &str, value: T) {    
+pub fn store_value_for_key<T: ToBytes + CLTyped>(name: &str, value: T) {
     match runtime::get_key(name) {
         Some(key) => {
             let key_ref = key.try_into().unwrap_or_revert();
@@ -38,12 +31,10 @@ pub fn get_stored_value_from_key<T: CLTyped + FromBytes>(name: &str) -> Option<T
             let key_ref = key.try_into().unwrap_or_revert();
             match storage::read(key_ref) {
                 Ok(result) => result,
-                Err(_) => None
+                Err(_) => None,
             }
         }
-        None => {
-            None
-        }
+        None => None,
     }
 }
 
@@ -91,7 +82,6 @@ pub(crate) fn get_key_with_user_errors(
     missing: CommonError,
     invalid: CommonError,
 ) -> Key {
-    
     let (name_ptr, name_size, _bytes) = to_ptr(name);
     let mut key_bytes = vec![0u8; Key::max_serialized_length()];
     let mut total_bytes: usize = 0;

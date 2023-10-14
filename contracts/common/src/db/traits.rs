@@ -1,6 +1,6 @@
 use casper_types::{
-    bytesrepr::{ FromBytes, ToBytes },
-    CLTyped
+    bytesrepr::{FromBytes, ToBytes},
+    CLTyped,
 };
 
 pub trait Storable {

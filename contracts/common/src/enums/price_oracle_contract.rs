@@ -1,17 +1,12 @@
-use alloc::{ vec, vec::Vec };
-use casper_types::{
-    bytesrepr::FromBytes,
-    bytesrepr::ToBytes,
-    CLTyped
-};
+use alloc::{vec, vec::Vec};
+use casper_types::{bytesrepr::FromBytes, bytesrepr::ToBytes, CLTyped};
 
 #[derive(Clone, Copy)]
 #[repr(u8)]
 pub enum PriceType {
     Fixed = 0,
-    Dynamic = 1
+    Dynamic = 1,
 }
-
 
 impl FromBytes for PriceType {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), casper_types::bytesrepr::Error> {
@@ -19,7 +14,7 @@ impl FromBytes for PriceType {
         match value.0 {
             0 => Ok((PriceType::Fixed, value.1)),
             1 => Ok((PriceType::Dynamic, value.1)),
-            _ => Err(casper_types::bytesrepr::Error::OutOfMemory)
+            _ => Err(casper_types::bytesrepr::Error::OutOfMemory),
         }
     }
 }
@@ -35,6 +30,6 @@ impl ToBytes for PriceType {
         Ok(vec![*self as u8])
     }
     fn serialized_length(&self) -> usize {
-        vec![*self as u8].len()        
+        vec![*self as u8].len()
     }
 }

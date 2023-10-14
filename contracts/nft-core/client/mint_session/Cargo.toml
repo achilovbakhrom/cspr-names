@@ -1,19 +1,19 @@
 [package]
-name = "mint_session"
+name    = "mint_session"
 version = "1.1.1"
 edition = "2018"
 
 [dependencies]
-casper-contract = "1.4.3"
-casper-types = "1.4.5"
+casper-contract = { version = "3.0.0", default-features = false }
+casper-types    = { version = "3.0.0", default-features = false }
 
 [[bin]]
-name = "mint_call"
-path = "src/main.rs"
-bench = false
+name    = "mint_call"
+path    = "src/main.rs"
+bench   = false
 doctest = false
-test = false
+test    = false
 
 [profile.release]
 codegen-units = 1
-lto = true
+lto           = true
