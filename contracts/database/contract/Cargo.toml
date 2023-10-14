@@ -1,21 +1,21 @@
 [package]
-name    = "database"
+name = "database"
 version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract        = { version = "3.0.0", default-features = false }
-casper-types           = { version = "3.0.0", default-features = false }
-common-lib             = { path = "../../common", default-features = false }
+casper-contract = { version = "3.0.0", default-features = false }
+casper-types = { version = "4.0.0", default-features = false }
+common-lib = { path = "../../common", default-features = false }
 casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std" }
 
 [[bin]]
-name    = "database-contract"
-path    = "src/main.rs"
-bench   = false
+name = "database-contract"
+path = "src/main.rs"
+bench = false
 doctest = false
-test    = false
+test = false
 
 [profile.release]
 codegen-units = 1
-lto           = true
+lto = true

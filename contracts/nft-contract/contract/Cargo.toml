@@ -1,23 +1,23 @@
 [package]
-name    = "nft-contract"
+name = "nft-contract"
 version = "0.1.0"
 edition = "2018"
 
 [dependencies]
 casper-contract = { version = "3.0.0", default-features = false }
-casper-types    = { version = "3.0.0", default-features = false }
-common-lib      = { path = "../../common", default-features = false }
-serde           = { version = "1.0.188", default-features = false }
-serde_json      = { version = "1.0.107", default-features = false }
+casper-types = { version = "4.0.0", default-features = false }
+common-lib = { path = "../../common", default-features = false }
+serde = { version = "1.0.188", default-features = false }
+serde_json = { version = "1.0.107", default-features = false }
 serde-json-wasm = { version = "1.0.0", default-features = false }
 
 [[bin]]
-name    = "nft-contract"
-path    = "src/main.rs"
-bench   = false
+name = "nft-contract"
+path = "src/main.rs"
+bench = false
 doctest = false
-test    = false
+test = false
 
 [profile.release]
 codegen-units = 1
-lto           = true
+lto = true

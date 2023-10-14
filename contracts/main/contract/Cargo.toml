@@ -5,8 +5,11 @@ edition = "2018"
 
 [dependencies]
 casper-contract = "3.0.0"
-casper-types = "3.0.0"
-serde = { version = "1.0.163", features = ["derive", "alloc"], default-features = false }
+casper-types = "4.0.0"
+serde = { version = "1.0.163", features = [
+    "derive",
+    "alloc",
+], default-features = false }
 common-lib = { path = "../../common", default-features = false }
 serde-json-wasm = { version = "0.5.1", default-features = false }
 base16 = { version = "0.2", default-features = false, features = ["alloc"] }
@@ -21,4 +24,3 @@ test = false
 [profile.release]
 codegen-units = 1
 lto = true
-
