@@ -8,7 +8,7 @@ compile_error!("target arch should be wasm32: compile with '--target wasm32-unkn
 // We need to explicitly import the std alloc crate and `alloc::string::String` as we're in a
 // `no_std` environment.
 extern crate alloc;
-mod store;
+mod stores;
 
 use alloc::alloc::*;
 use alloc::string::{ String, ToString };
@@ -58,11 +58,11 @@ use common_lib::errors::DatabaseErrors;
 use common_lib::models::{ SubdomainName, DomainName };
 use common_lib::utils::response::{ response_error, response_success };
 
-use crate::store::state::TotalState;
-use store::{
-	domain_list::DomainList,
-	domain_map::DomainEntityTable,
-	domain_pagination_map::DomainPaginationMap,
+use crate::stores::state::TotalState;
+use stores::{
+	domain_list::DomainListStore,
+	domain_entity::DomainEntityStore,
+	domain_pagination_map::DomainPaginationMapStore,
 	subdomain_list::SubdomainList,
 	subdomain_map::SubdomainMap,
 	owner_domain_list::OwnerDomainList,
@@ -105,14 +105,14 @@ pub extern "C" fn save_domain_name() {
 	// 100% sure that data is correct, no need extra validations
 	let domain_name: DomainName = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 
-	DomainEntityTable::instance().save(domain_name.clone());
-	let page = match DomainList::instance().add(&domain_name.name) {
+	DomainEntityStore::instance().save(domain_name.clone());
+	let page = match DomainListStore::instance().add(&domain_name.name) {
 		Ok(page) => page,
 		Err(e) => {
 			return response_error(e);
 		}
 	};
-	DomainPaginationMap::instance().map(&domain_name.name, page);
+	DomainPaginationMapStore::instance().map(&domain_name.name, page);
 
 	OwnerDomainList::instance().add_domain_name(domain_name.owner, &domain_name.name);
 	TotalState::instance().increment_domains_count();
@@ -133,11 +133,11 @@ pub extern "C" fn save_subdomain_name() {
 #[no_mangle]
 pub extern "C" fn remove_domain_name() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-	let domain_map = DomainEntityTable::instance();
+	let domain_map = DomainEntityStore::instance();
 	let domain = domain_map.get(&domain_name).expect("Domain is not found");
 	domain_map.remove(&domain_name);
 
-	let domain_pagination_map = DomainPaginationMap::instance();
+	let domain_pagination_map = DomainPaginationMapStore::instance();
 	let page_binding = &domain_pagination_map.get_page(&domain_name);
 	let page = match page_binding {
 		Ok(res) => res,
@@ -145,7 +145,7 @@ pub extern "C" fn remove_domain_name() {
 			return response_error(*e);
 		}
 	};
-	match DomainList::instance().remove(&domain_name, *page) {
+	match DomainListStore::instance().remove(*page, &domain_name) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -182,7 +182,7 @@ pub extern "C" fn set_domain_ownership() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 	let subdomain_name: AccountHash = runtime::get_named_arg(ARG_DATABASE_OWNER);
 
-	match DomainEntityTable::instance().update_owner(&domain_name, subdomain_name) {
+	match DomainEntityStore::instance().update_owner(&domain_name, subdomain_name) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -193,7 +193,7 @@ pub extern "C" fn set_domain_expiration() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 	let expiration_date: u64 = runtime::get_named_arg(ARG_DATABASE_EXPIRATION_DATE);
 
-	match DomainEntityTable::instance().update_expiration_date(&domain_name, expiration_date) {
+	match DomainEntityStore::instance().update_expiration_date(&domain_name, expiration_date) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -204,7 +204,7 @@ pub extern "C" fn set_domain_resolver() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 	let resolver: AccountHash = runtime::get_named_arg(ARG_DATABASE_RESOLVER);
 
-	match DomainEntityTable::instance().update_resolver_address(&domain_name, resolver) {
+	match DomainEntityStore::instance().update_resolver_address(&domain_name, resolver) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -231,7 +231,7 @@ pub extern "C" fn get_domain_list_for_owner() {
 #[no_mangle]
 pub extern "C" fn get_domain_list() {
 	let page: u64 = runtime::get_named_arg(ARG_DATABASE_PAGE);
-	let domains = DomainList::instance().get_domain_list(page.to_string().as_ref());
+	let domains = DomainListStore::instance().get_domain_list(page.to_string().as_ref());
 	response_success(domains, "Error while converting CL_Value");
 }
 
@@ -251,7 +251,7 @@ pub extern "C" fn get_totals() {
 #[no_mangle]
 pub extern "C" fn get_domain() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-	let domain = DomainEntityTable::instance().get(&domain_name);
+	let domain = DomainEntityStore::instance().get(&domain_name);
 	response_success(domain, "Error while converting CL_Value");
 }
 
@@ -264,9 +264,9 @@ pub extern "C" fn get_subdomain() {
 
 #[no_mangle]
 pub extern "C" fn init() {
-	DomainList::initialize();
-	DomainEntityTable::initialize();
-	DomainPaginationMap::initialize();
+	DomainListStore::initialize();
+	DomainEntityStore::initialize();
+	DomainPaginationMapStore::initialize();
 	OwnerDomainList::initialize();
 	SubdomainList::initialize();
 	SubdomainMap::initialize();

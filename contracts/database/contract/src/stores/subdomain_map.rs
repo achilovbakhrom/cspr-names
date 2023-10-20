@@ -29,15 +29,14 @@ impl SubdomainMap {
 	}
 
 	pub fn update_resolver(&self, name: &str, resolver: AccountHash) -> Result<(), DatabaseErrors> {
-		let mut subdomain_name = match self.store.get::<SubdomainName>(name) {
-			Some(res) => res,
-			None => {
-				return Err(DatabaseErrors::DatabaseSubdomainDoesntExist);
-			}
-		};
-		subdomain_name.resolver = resolver;
-		self.store.set(name, subdomain_name);
-		Ok(())
+		self.store
+			.get::<SubdomainName>(name)
+			.ok_or(DatabaseErrors::DatabaseSubdomainDoesntExist)
+			.and_then(|mut subdomain| {
+				subdomain.resolver = resolver;
+				self.store.set(name, subdomain);
+				Ok(())
+			})
 	}
 
 	pub fn get(&self, name: &str) -> Option<SubdomainName> {

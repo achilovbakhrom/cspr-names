@@ -20,7 +20,7 @@ impl TotalState {
 		self.increment_domains_count_by(1);
 	}
 
-    pub fn increment_domains_count_by(&self, by: u64) {
+	pub fn increment_domains_count_by(&self, by: u64) {
 		let mut count = self.store.get::<u64>(KEY_DATABASE_TOTALS_DOMAIN_COUNT).unwrap_or(0);
 		count += by;
 		self.store.set(KEY_DATABASE_TOTALS_DOMAIN_COUNT, count);

@@ -1,14 +1,15 @@
+use casper_contract::unwrap_or_revert::UnwrapOrRevert;
 use common_lib::{
 	db::{ dictionary::Dictionary, traits::Storable },
 	constants::common_keys::KEY_DATABASE_DICTIONARY_DOMAIN_MAP,
 	errors::DatabaseErrors,
 };
 
-pub(crate) struct DomainPaginationMap {
+pub(crate) struct DomainPaginationMapStore {
 	store: Dictionary,
 }
 
-impl DomainPaginationMap {
+impl DomainPaginationMapStore {
 	pub fn instance() -> Self {
 		Self {
 			store: Dictionary::instance(KEY_DATABASE_DICTIONARY_DOMAIN_MAP),
@@ -24,13 +25,7 @@ impl DomainPaginationMap {
 	}
 
 	pub fn get_page(&self, name: &str) -> Result<u64, DatabaseErrors> {
-		let page = match self.store.get::<u64>(name) {
-			None => {
-				return Err(DatabaseErrors::DatabaseDomainDoesntExist);
-			}
-			Some(res) => res,
-		};
-		Ok(page)
+		Ok(self.store.get::<u64>(name).unwrap_or_revert_with(DatabaseErrors::DatabaseDomainDoesntExist))
 	}
 
 	pub fn remove(&self, name: &str) {

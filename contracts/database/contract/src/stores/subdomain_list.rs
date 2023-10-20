@@ -45,16 +45,15 @@ impl SubdomainList {
 			None => vec![],
 		};
 
-		let position = match subdomains.iter().position(|x| x.name == subdomain_name) {
-			Some(pos) => pos,
-			None => {
-				return Err(DatabaseErrors::DatabaseSubdomainDoesntExist);
-			}
-		};
-		subdomains.remove(position);
-		self.store.set(name, subdomains);
-
-		Ok(())
+		subdomains
+			.iter()
+			.position(|x| x.name == subdomain_name)
+			.ok_or(DatabaseErrors::DatabaseSubdomainDoesntExist)
+			.and_then(|pos| {
+				subdomains.remove(pos);
+				self.store.set(name, subdomains);
+				Ok(())
+			})
 	}
 
 	pub fn get_subdomains(&self, name: &str) -> Vec<String> {
