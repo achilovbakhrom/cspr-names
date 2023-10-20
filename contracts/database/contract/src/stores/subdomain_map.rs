@@ -5,11 +5,11 @@ use common_lib::db::traits::Storable;
 use common_lib::errors::DatabaseErrors;
 use common_lib::models::SubdomainName;
 
-pub(crate) struct SubdomainMap {
+pub(crate) struct SubdomainEntityStore {
 	store: Dictionary,
 }
 
-impl SubdomainMap {
+impl SubdomainEntityStore {
 	pub fn instance() -> Self {
 		Self {
 			store: Dictionary::instance(KEY_DATABASE_DICTIONARY_SUBDOMAIN),

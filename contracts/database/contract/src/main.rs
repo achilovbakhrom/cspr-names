@@ -64,7 +64,7 @@ use stores::{
 	domain_entity::DomainEntityStore,
 	domain_pagination_map::DomainPaginationMapStore,
 	subdomain_list::SubdomainList,
-	subdomain_map::SubdomainMap,
+	subdomain_map::SubdomainEntityStore,
 	owner_domain_list::OwnerDomainList,
 };
 
@@ -122,7 +122,7 @@ pub extern "C" fn save_domain_name() {
 pub extern "C" fn save_subdomain_name() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 	let subdomain_name: SubdomainName = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
-	SubdomainMap::instance().save(subdomain_name.clone());
+	SubdomainEntityStore::instance().save(subdomain_name.clone());
 	match SubdomainList::instance().add(&domain_name, &subdomain_name) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
@@ -153,7 +153,7 @@ pub extern "C" fn remove_domain_name() {
 	let subdomain_list = SubdomainList::instance();
 	let subdomains = &subdomain_list.get_subdomains(&domain_name);
 	subdomains.iter().for_each(|x| {
-		SubdomainMap::instance().remove(x);
+		SubdomainEntityStore::instance().remove(x);
 		let _ = &subdomain_list
 			.remove(&domain_name, x)
 			.unwrap_or_revert_with(DatabaseErrors::DatabaseUnexpected);
@@ -169,7 +169,7 @@ pub extern "C" fn remove_domain_name() {
 pub extern "C" fn remove_subdomain_name() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 	let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
-	SubdomainMap::instance().remove(&subdomain_name);
+	SubdomainEntityStore::instance().remove(&subdomain_name);
 	match SubdomainList::instance().remove(&domain_name, &subdomain_name) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
@@ -215,7 +215,7 @@ pub extern "C" fn set_subdomain_resolver() {
 	let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
 	let resolver: AccountHash = runtime::get_named_arg(ARG_DATABASE_RESOLVER);
 
-	match SubdomainMap::instance().update_resolver(&subdomain_name, resolver) {
+	match SubdomainEntityStore::instance().update_resolver(&subdomain_name, resolver) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -258,7 +258,7 @@ pub extern "C" fn get_domain() {
 #[no_mangle]
 pub extern "C" fn get_subdomain() {
 	let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
-	let subdomain = SubdomainMap::instance().get(&subdomain_name);
+	let subdomain = SubdomainEntityStore::instance().get(&subdomain_name);
 	response_success(subdomain, "Error while converting CL_Value");
 }
 
@@ -269,7 +269,7 @@ pub extern "C" fn init() {
 	DomainPaginationMapStore::initialize();
 	OwnerDomainList::initialize();
 	SubdomainList::initialize();
-	SubdomainMap::initialize();
+	SubdomainEntityStore::initialize();
 }
 
 /**
