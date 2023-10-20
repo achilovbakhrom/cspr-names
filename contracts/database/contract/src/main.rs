@@ -68,12 +68,6 @@ use stores::{
 	owner_domain_list::OwnerDomainList,
 };
 
-/// If there is an out of memory error, just panic.
-// #[handle_alloc_error]
-// fn my_allocator_error(_layout: Layout) -> ! {
-// 	panic!("out of memory");
-// }
-
 #[derive(Default)]
 pub struct Allocator;
 
@@ -85,11 +79,6 @@ unsafe impl GlobalAlloc for Allocator {
 		dealloc(ptr, layout);
 	}
 }
-
-// #[alloc_error_handler]
-// fn my_allocator_error(_layout: Layout) -> ! {
-//     panic!("out of memory");
-// }
 
 #[global_allocator]
 static GLOBAL_ALLOCATOR: Allocator = Allocator;
