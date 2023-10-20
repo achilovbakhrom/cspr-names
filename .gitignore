@@ -3,3 +3,4 @@
 contracts/target
 frontend/node_modules
 backend/target
+.vscode
