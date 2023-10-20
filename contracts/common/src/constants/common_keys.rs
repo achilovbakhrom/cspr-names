@@ -1,50 +1,41 @@
 // Common usage constants
 
 use alloc::collections::BTreeMap;
-use alloc::string::{String, ToString};
+use alloc::string::{ String, ToString };
 
-use serde::{Deserialize, Serialize};
+use serde::{ Deserialize, Serialize };
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct MetadataSchemaProperty {
-    name: String,
-    description: String,
-    required: bool,
+	name: String,
+	description: String,
+	required: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct CustomMetadataSchema {
-    properties: BTreeMap<String, MetadataSchemaProperty>,
+	properties: BTreeMap<String, MetadataSchemaProperty>,
 }
 
 pub fn get_custom_metadata_schema() -> CustomMetadataSchema {
-    let mut properties = BTreeMap::new();
-    properties.insert(
-        "name".to_string(),
-        MetadataSchemaProperty {
-            name: "name".to_string(),
-            description: "The name of domain name.".to_string(),
-            required: true,
-        },
-    );
-    properties.insert(
-        "symbol".to_string(),
-        MetadataSchemaProperty {
-            name: "symbol".to_string(),
-            description: "The symbol of the token.".to_string(),
-            required: true,
-        },
-    );
+	let mut properties = BTreeMap::new();
+	properties.insert("name".to_string(), MetadataSchemaProperty {
+		name: "name".to_string(),
+		description: "The name of domain name.".to_string(),
+		required: true,
+	});
+	properties.insert("symbol".to_string(), MetadataSchemaProperty {
+		name: "symbol".to_string(),
+		description: "The symbol of the token.".to_string(),
+		required: true,
+	});
 
-    properties.insert(
-        "token_id".to_string(),
-        MetadataSchemaProperty {
-            name: "token_id".to_string(),
-            description: "Calculated id of the domain name.".to_string(),
-            required: true,
-        },
-    );
-    CustomMetadataSchema { properties }
+	properties.insert("token_id".to_string(), MetadataSchemaProperty {
+		name: "token_id".to_string(),
+		description: "Calculated id of the domain name.".to_string(),
+		required: true,
+	});
+	CustomMetadataSchema { properties }
 }
 
 pub const CONTRACT_PACKAGE_NAME_KEY: &str = "CONTRACT_PACKAGE_NAME_KEY";
@@ -53,8 +44,8 @@ pub const CONTRACT_VERSION_KEY: &str = "CONTRACT_VERSION_KEY";
 pub const CONTRACT_HASH_KEY: &str = "CONTRACT_HASH_KEY";
 pub const CONTRACT_MAINTAINER_KEY: &str = "CONTRACT_MAINTAINER_KEY";
 pub const CSPR_HASH: [u8; 32] = [
-    0xe0, 0x23, 0xb6, 0xc3, 0x8b, 0x8b, 0xcb, 0xf1, 0xcd, 0x48, 0xc7, 0xac, 0x35, 0xb0, 0xb2, 0x44,
-    0x62, 0xfa, 0x8b, 0x66, 0x3b, 0x16, 0x63, 0x07, 0xd8, 0x80, 0xfa, 0xf2, 0x27, 0x1f, 0x67, 0xa6,
+	0xe0, 0x23, 0xb6, 0xc3, 0x8b, 0x8b, 0xcb, 0xf1, 0xcd, 0x48, 0xc7, 0xac, 0x35, 0xb0, 0xb2, 0x44,
+	0x62, 0xfa, 0x8b, 0x66, 0x3b, 0x16, 0x63, 0x07, 0xd8, 0x80, 0xfa, 0xf2, 0x27, 0x1f, 0x67, 0xa6,
 ];
 
 pub const MAX_DOMAIN_NAME_COUNT_PER_DATABASE: u16 = 10_000;
@@ -62,7 +53,7 @@ pub const MAX_DOMAIN_NAME_COUNT_PER_DATABASE: u16 = 10_000;
 pub(crate) const GRACE_PERIOD: u64 = 1000 * 60 * 60 * 24 * 90;
 pub(crate) const EXTENSION: &str = "cspr";
 pub const YEAR_IN_MILLIS: u64 = 1000 * 60 * 60 * 24 * 365;
-pub const MAX_PAGE_SIZE: u8 = 10;
+pub const MAX_PAGE_SIZE: usize = 10;
 pub const MAX_SUBDOMAIN_COUNT: u8 = 50;
 
 pub const MAIN_CONTRACT_NAME_WASM: &str = "main-contract.wasm";
@@ -117,7 +108,7 @@ pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_DOMAIN: &str = "set_resolver_
 pub const ENTRYPOINT_MAIN_REGISTER_SUB_DOMAIN: &str = "register_sub_domain";
 pub const ENTRYPOINT_MAIN_REMOVE_SUBDOMAIN: &str = "remove_subdomain";
 pub const ENTRYPOINT_MAIN_SET_RESOLVER_ADDRESS_FOR_SUBDOMAIN: &str =
-    "set_resolver_address_for_subdomain";
+	"set_resolver_address_for_subdomain";
 
 pub const ENTRYPOINT_MAIN_GET_SUBDOMAINS_FOR_DOMAIN: &str = "get_sudomains_for_domain";
 pub const ENTRYPOINT_MAIN_GET_DOMAIN_LIST: &str = "get_domain_list";
@@ -188,7 +179,7 @@ pub const KEY_DATABASE_CONTRACT_ACCESS_UREF: &str = "key_database_contract_acces
 pub const KEY_DATABASE_CONTRACT_VERSION: &str = "key_database_contract_version";
 pub const KEY_DATABASE_CONTRACT_HASH: &str = "key_database_contract_hash";
 pub const KEY_DATABASE_DICTIONARY_OWNER_DOMAIN_LIST: &str =
-    "key_database_dictionary_owner_domain_list";
+	"key_database_dictionary_owner_domain_list";
 // ENDPOINTS
 pub const ENDPOINT_DATABASE_SAVE_DOMAIN_NAME: &str = "save_domain_name";
 pub const ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME: &str = "save_subdomain_name";
@@ -290,9 +281,9 @@ pub const KEY_REGISTRY_CONTRACT_OPERATORS: &str = "key_registry_contract_operato
 
 // Endpoints
 pub const ENDPOINT_REGISTRY_MAP_DOMAIN_NAME_TO_CONTRACT_HASH: &str =
-    "map_domain_name_to_contract_hash";
+	"map_domain_name_to_contract_hash";
 pub const ENDPOINT_REGISTRY_GET_CONTRACT_HASH_FOR_DOMAIN_NAME: &str =
-    "get_contract_hash_for_domain_name";
+	"get_contract_hash_for_domain_name";
 pub const ENDPOINT_REGISTRY_SET_CONTRACT_HASH_LIST: &str = "set_contract_hash_list";
 pub const ENDPOINT_REGISTRY_REMOVE_CONTRACT_HASH_LIST: &str = "remove_contract_hash_list";
 pub const ENDPOINT_REGISTRY_GET_CONTRACT: &str = "get_contract";
@@ -301,9 +292,9 @@ pub const ENDPOINT_REGISTRY_DECREMENT_COUNT_OF_CONTRACT: &str = "decrement_count
 pub const ENDPOINT_REGISTRY_ADD_OPERATOR: &str = "add_operator";
 pub const ENDPOINT_REGISTRY_REMOVE_OPERATOR: &str = "remove_operator";
 pub const ENDPOINT_REGISTRY_SET_OPERATORS_FOR_CONTRACT_HASH: &str =
-    "set_operators_for_contract_hash";
+	"set_operators_for_contract_hash";
 pub const ENDPOINT_REGISTRY_REMOVE_OPERATORS_FROM_CONTRACT_HASH: &str =
-    "remove_operators_from_contract_hash";
+	"remove_operators_from_contract_hash";
 pub const ENDPOINT_REGISTRY_HAS_OPERATOR_FOR_CONTRACT_HASH: &str = "has_operator_for_contract_hash";
 pub const ENDPOINT_REGISTRY_GET_OPERATORS_FOR_CONTRACT_HASH: &str =
-    "get_operators_for_contract_hash";
+	"get_operators_for_contract_hash";
