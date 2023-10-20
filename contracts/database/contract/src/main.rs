@@ -64,7 +64,7 @@ use stores::{
 	domain_entity::DomainEntityStore,
 	domain_pagination_map::DomainPaginationMapStore,
 	subdomain_list::SubdomainList,
-	subdomain_map::SubdomainEntityStore,
+	subdomain_entity::SubdomainEntityStore,
 	owner_domain_list::OwnerDomainList,
 };
 
