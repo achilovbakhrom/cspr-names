@@ -2,7 +2,8 @@ pub use domain_name::DomainName;
 pub use local_metadata::LocalMetadata;
 pub use subdomain_name::SubdomainName;
 
-pub mod contract_hash_database_map;
+pub mod confiugration;
+pub mod contract_hash_item;
 pub mod domain_name;
 pub mod local_metadata;
 pub mod nft;

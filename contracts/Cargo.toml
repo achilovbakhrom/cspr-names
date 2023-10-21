@@ -2,7 +2,6 @@
 members = [
     "common",
     "configuration/contract",
-    "configuration/tests",
     "main/contract",
     "price-oracle/contract",
     "nft-core/contract",

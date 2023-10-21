@@ -6,12 +6,12 @@ use casper_types::{
 use core::u16;
 
 #[derive(Clone)]
-pub struct ContractHashDatabaseMap {
+pub struct ContractHashItem {
     pub contract_hash: ContractHash,
     pub count: u16,
 }
 
-impl ToBytes for ContractHashDatabaseMap {
+impl ToBytes for ContractHashItem {
     fn to_bytes(&self) -> Result<Vec<u8>, Error> {
         let mut result = allocate_buffer(self)?;
         result.extend(self.contract_hash.to_bytes()?);
@@ -25,12 +25,12 @@ impl ToBytes for ContractHashDatabaseMap {
     }
 }
 
-impl FromBytes for ContractHashDatabaseMap {
+impl FromBytes for ContractHashItem {
     fn from_bytes(bytes: &[u8]) -> Result<(Self, &[u8]), Error> {
         let (contract_hash, remainder) = ContractHash::from_bytes(bytes)?;
         let (count, remainder) = u16::from_bytes(remainder)?;
 
-        let result = ContractHashDatabaseMap {
+        let result = ContractHashItem {
             contract_hash,
             count,
         };
@@ -38,7 +38,7 @@ impl FromBytes for ContractHashDatabaseMap {
     }
 }
 
-impl CLTyped for ContractHashDatabaseMap {
+impl CLTyped for ContractHashItem {
     fn cl_type() -> CLType {
         CLType::Any
     }
