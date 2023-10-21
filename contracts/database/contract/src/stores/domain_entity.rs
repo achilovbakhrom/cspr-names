@@ -1,4 +1,4 @@
-use casper_types::account::AccountHash;
+use casper_types::{ account::AccountHash, Key };
 use common_lib::{
 	constants::common_keys::KEY_DATABASE_DICTIONARY_DOMAIN,
 	db::{ dictionary::Dictionary, traits::Storable },
@@ -49,7 +49,7 @@ impl DomainEntityStore {
 		self.store.get(name)
 	}
 
-	pub fn update_owner(&self, name: &str, new_owner: AccountHash) -> Result<(), DatabaseErrors> {
+	pub fn update_owner(&self, name: &str, new_owner: Key) -> Result<(), DatabaseErrors> {
 		self.update_domain_name(name, DatabaseErrors::DatabaseDomainDoesntExist, |mut arg| {
 			arg.owner = new_owner;
 			arg

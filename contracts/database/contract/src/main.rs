@@ -17,6 +17,7 @@ use alloc::vec;
 // use core::u64;
 
 use casper_contract::{ contract_api::{ runtime, storage }, unwrap_or_revert::UnwrapOrRevert };
+use casper_types::Key;
 use casper_types::{
 	CLType,
 	CLTyped,
@@ -169,9 +170,9 @@ pub extern "C" fn remove_subdomain_name() {
 #[no_mangle]
 pub extern "C" fn set_domain_ownership() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-	let subdomain_name: AccountHash = runtime::get_named_arg(ARG_DATABASE_OWNER);
+	let owner: Key = runtime::get_named_arg(ARG_DATABASE_OWNER);
 
-	match DomainEntityStore::instance().update_owner(&domain_name, subdomain_name) {
+	match DomainEntityStore::instance().update_owner(&domain_name, owner) {
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
