@@ -1,4 +1,4 @@
-use alloc::{ collections::BTreeMap, format, string::{ String, ToString }, vec::Vec };
+use alloc::{ collections::BTreeMap, string::{ String, ToString }, vec::Vec };
 
 use serde::{ Deserialize, Serialize };
 
@@ -116,7 +116,7 @@ pub(crate) fn get_metadata_schema(kind: &NFTMetadataKind) -> CustomMetadataSchem
 				NFTCoreError::InvalidJsonSchema
 			);
 
-			serde_json_wasm
+			casper_serde_json_wasm
 				::from_str::<CustomMetadataSchema>(&custom_schema_json)
 				.map_err(|_| NFTCoreError::InvalidJsonSchema)
 				.unwrap_or_revert()
@@ -178,7 +178,7 @@ pub(crate) fn validate_metadata(
 	let token_schema = get_metadata_schema(metadata_kind);
 	match metadata_kind {
 		NFTMetadataKind::CEP78 => {
-			let metadata = serde_json_wasm
+			let metadata = casper_serde_json_wasm
 				::from_str::<MetadataCEP78>(&token_metadata)
 				.map_err(|_| NFTCoreError::FailedToParseCep99Metadata)?;
 

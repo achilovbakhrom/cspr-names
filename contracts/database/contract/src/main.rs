@@ -10,15 +10,14 @@ compile_error!("target arch should be wasm32: compile with '--target wasm32-unkn
 extern crate alloc;
 mod stores;
 
-use alloc::alloc::*;
 use alloc::string::{ String, ToString };
 use alloc::vec;
 
-// use core::u64;
+// use common_lib::utils::allocator::*;
 
 use casper_contract::{ contract_api::{ runtime, storage }, unwrap_or_revert::UnwrapOrRevert };
-use casper_types::Key;
 use casper_types::{
+	Key,
 	CLType,
 	CLTyped,
 	account::AccountHash,
@@ -69,26 +68,26 @@ use stores::{
 	owner_domain_list::OwnerDomainList,
 };
 
-#[derive(Default)]
-pub struct Allocator;
+// #[derive(Default)]
+// pub struct Allocator;
 
-unsafe impl GlobalAlloc for Allocator {
-	unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
-		alloc(layout) as *mut u8
-	}
-	unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
-		dealloc(ptr, layout);
-	}
-}
+// unsafe impl GlobalAlloc for Allocator {
+// 	unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+// 		alloc(layout) as *mut u8
+// 	}
+// 	unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+// 		dealloc(ptr, layout);
+// 	}
+// }
 
-#[global_allocator]
-static GLOBAL_ALLOCATOR: Allocator = Allocator;
+// #[global_allocator]
+// static GLOBAL_ALLOCATOR: Allocator = Allocator;
 
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-	loop {
-	}
-}
+// #[panic_handler]
+// fn panic(_info: &core::panic::PanicInfo) -> ! {
+// 	loop {
+// 	}
+// }
 
 #[no_mangle]
 pub extern "C" fn save_domain_name() {

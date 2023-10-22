@@ -1,5 +1,7 @@
 #![no_std]
 #![no_main]
+#![feature(default_alloc_error_handler)]
+#![allow(unused_variables)]
 
 #[cfg(not(target_arch = "wasm32"))]
 compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
@@ -14,6 +16,8 @@ extern crate alloc;
 
 use alloc::{ boxed::Box, format, string::{ String, ToString }, vec, vec::Vec };
 use core::convert::TryInto;
+
+use common_lib::utils::*;
 
 use casper_types::{
 	contracts::NamedKeys,
@@ -31,7 +35,6 @@ use casper_types::{
 	Parameter,
 	RuntimeArgs,
 	Tagged,
-	ApiError,
 };
 
 use casper_contract::{

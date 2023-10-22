@@ -5,13 +5,14 @@ edition = "2018"
 
 [dependencies]
 casper-contract = { version = "3.0.0", default-features = false }
-casper-types = { version = "4.0.0", default-features = false }
+casper-types = { version = "3.0.0", default-features = false }
 serde = { version = "1.0.188", features = [
     "derive",
     "alloc",
 ], default-features = false }
 base16 = { version = "0.2.1", default-features = false, features = ["alloc"] }
 casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std" }
+common-lib = { path = "../../common", default-features = false }
 
 [[bin]]
 name = "nft-core-contract"
