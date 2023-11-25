@@ -1,5 +1,12 @@
 # Configuration Contract
 
+# toolchain
+- rustup toolchain list
+- rustup override set <version>
+- rustc --version
+- rustup update
+
+
 ## Configuration
 {
     allowed_chars_count: 3,

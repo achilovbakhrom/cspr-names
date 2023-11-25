@@ -69,6 +69,9 @@ pub const KEY_CONTRACT_MAINTAINER: &str = "key_contract_maintainer";
 pub const KEY_CONTRACT_HASH: &str = "key_contract_hash";
 pub const KEY_CONTRACT_VERSION: &str = "key_contract_version";
 pub const KEY_REGISTRY_CONTRACT_HASH: &str = "key_registry_contract_hash";
+pub const KEY_CONTRACT_PACKAGE_NAME: &str = "key_contract_package_name";
+pub const KEY_CONTRACT_ACCESS: &str = "key_contract_access";
+
 
 // ******* Main Contract constants *********
 

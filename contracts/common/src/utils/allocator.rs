@@ -15,8 +15,8 @@ unsafe impl GlobalAlloc for Allocator {
 #[global_allocator]
 static GLOBAL_ALLOCATOR: Allocator = Allocator;
 
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-	loop {
-	}
-}
+// #[panic_handler]
+// fn panic(_info: &core::panic::PanicInfo) -> ! {
+// 	loop {
+// 	}
+// }

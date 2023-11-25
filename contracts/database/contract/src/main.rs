@@ -1,27 +1,39 @@
 #![no_std]
 #![no_main]
-#![feature(default_alloc_error_handler)]
 
 #[cfg(not(target_arch = "wasm32"))]
-compile_error!("target arch should be wasm32: compile with '--target wasm32-unknown-unknown'");
+compile_error!(
+	"target arch should be wasm32: compile with '--target wasm32-unknown-unknown'"
+);
 
 // We need to explicitly import the std alloc crate and `alloc::string::String` as we're in a
 // `no_std` environment.
 extern crate alloc;
 mod stores;
+mod init_call;
 
 use alloc::string::{ String, ToString };
 use alloc::vec;
 
 // use common_lib::utils::allocator::*;
 
-use casper_contract::{ contract_api::{ runtime, storage }, unwrap_or_revert::UnwrapOrRevert };
+use casper_contract::{
+	contract_api::{ runtime, storage },
+	unwrap_or_revert::UnwrapOrRevert,
+};
 use casper_types::{
 	Key,
 	CLType,
 	CLTyped,
 	account::AccountHash,
-	contracts::{ EntryPoint, EntryPoints, EntryPointType, EntryPointAccess, Parameter, NamedKeys },
+	contracts::{
+		EntryPoint,
+		EntryPoints,
+		EntryPointType,
+		EntryPointAccess,
+		Parameter,
+		NamedKeys,
+	},
 };
 
 use common_lib::constants::common_keys::{
@@ -83,16 +95,18 @@ use stores::{
 // #[global_allocator]
 // static GLOBAL_ALLOCATOR: Allocator = Allocator;
 
-// #[panic_handler]
-// fn panic(_info: &core::panic::PanicInfo) -> ! {
-// 	loop {
-// 	}
-// }
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+	loop {
+	}
+}
 
 #[no_mangle]
 pub extern "C" fn save_domain_name() {
 	// 100% sure that data is correct, no need extra validations
-	let domain_name: DomainName = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
+	let domain_name: DomainName = runtime::get_named_arg(
+		ARG_DATABASE_DOMAIN_NAME
+	);
 
 	DomainEntityStore::instance().save(domain_name.clone());
 	let page = match DomainListStore::instance().add(&domain_name.name) {
@@ -103,14 +117,19 @@ pub extern "C" fn save_domain_name() {
 	};
 	DomainPaginationMapStore::instance().map(&domain_name.name, page);
 
-	OwnerDomainList::instance().add_domain_name(domain_name.owner, &domain_name.name);
+	OwnerDomainList::instance().add_domain_name(
+		domain_name.owner,
+		&domain_name.name
+	);
 	TotalState::instance().increment_domains_count();
 }
 
 #[no_mangle]
 pub extern "C" fn save_subdomain_name() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-	let subdomain_name: SubdomainName = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
+	let subdomain_name: SubdomainName = runtime::get_named_arg(
+		ARG_DATABASE_SUBDOMAIN_NAME
+	);
 	SubdomainEntityStore::instance().save(subdomain_name.clone());
 	match SubdomainList::instance().add(&domain_name, &subdomain_name) {
 		Ok(()) => {}
@@ -157,7 +176,9 @@ pub extern "C" fn remove_domain_name() {
 #[no_mangle]
 pub extern "C" fn remove_subdomain_name() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-	let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
+	let subdomain_name: String = runtime::get_named_arg(
+		ARG_DATABASE_SUBDOMAIN_NAME
+	);
 	SubdomainEntityStore::instance().remove(&subdomain_name);
 	match SubdomainList::instance().remove(&domain_name, &subdomain_name) {
 		Ok(()) => {}
@@ -180,9 +201,16 @@ pub extern "C" fn set_domain_ownership() {
 #[no_mangle]
 pub extern "C" fn set_domain_expiration() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
-	let expiration_date: u64 = runtime::get_named_arg(ARG_DATABASE_EXPIRATION_DATE);
+	let expiration_date: u64 = runtime::get_named_arg(
+		ARG_DATABASE_EXPIRATION_DATE
+	);
 
-	match DomainEntityStore::instance().update_expiration_date(&domain_name, expiration_date) {
+	match
+		DomainEntityStore::instance().update_expiration_date(
+			&domain_name,
+			expiration_date
+		)
+	{
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -193,7 +221,12 @@ pub extern "C" fn set_domain_resolver() {
 	let domain_name: String = runtime::get_named_arg(ARG_DATABASE_DOMAIN_NAME);
 	let resolver: AccountHash = runtime::get_named_arg(ARG_DATABASE_RESOLVER);
 
-	match DomainEntityStore::instance().update_resolver_address(&domain_name, resolver) {
+	match
+		DomainEntityStore::instance().update_resolver_address(
+			&domain_name,
+			resolver
+		)
+	{
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -201,10 +234,14 @@ pub extern "C" fn set_domain_resolver() {
 
 #[no_mangle]
 pub extern "C" fn set_subdomain_resolver() {
-	let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
+	let subdomain_name: String = runtime::get_named_arg(
+		ARG_DATABASE_SUBDOMAIN_NAME
+	);
 	let resolver: AccountHash = runtime::get_named_arg(ARG_DATABASE_RESOLVER);
 
-	match SubdomainEntityStore::instance().update_resolver(&subdomain_name, resolver) {
+	match
+		SubdomainEntityStore::instance().update_resolver(&subdomain_name, resolver)
+	{
 		Ok(()) => {}
 		Err(e) => response_error(e),
 	}
@@ -220,7 +257,9 @@ pub extern "C" fn get_domain_list_for_owner() {
 #[no_mangle]
 pub extern "C" fn get_domain_list() {
 	let page: u64 = runtime::get_named_arg(ARG_DATABASE_PAGE);
-	let domains = DomainListStore::instance().get_domain_list(page.to_string().as_ref());
+	let domains = DomainListStore::instance().get_domain_list(
+		page.to_string().as_ref()
+	);
 	response_success(domains, "Error while converting CL_Value");
 }
 
@@ -246,7 +285,9 @@ pub extern "C" fn get_domain() {
 
 #[no_mangle]
 pub extern "C" fn get_subdomain() {
-	let subdomain_name: String = runtime::get_named_arg(ARG_DATABASE_SUBDOMAIN_NAME);
+	let subdomain_name: String = runtime::get_named_arg(
+		ARG_DATABASE_SUBDOMAIN_NAME
+	);
 	let subdomain = SubdomainEntityStore::instance().get(&subdomain_name);
 	response_success(subdomain, "Error while converting CL_Value");
 }
@@ -451,7 +492,10 @@ pub extern "C" fn call() {
 
 	let mut database_named_keys = NamedKeys::new();
 	let maintainer_uref = storage::new_uref(runtime::get_caller());
-	database_named_keys.insert(KEY_MAINTAINER.to_string(), maintainer_uref.into());
+	database_named_keys.insert(
+		KEY_MAINTAINER.to_string(),
+		maintainer_uref.into()
+	);
 
 	let domains_count_uref = storage::new_uref(0);
 	database_named_keys.insert(

@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract = { version = "3.0.0", default-features = false }
-casper-types = { version = "4.0.0", default-features = false }
+casper-contract = { version = "2.0.0", default-features = false }
+casper-types = { version = "2.0.0", default-features = false }
 common-lib = { path = "../../common", default-features = false }
 
 [[bin]]

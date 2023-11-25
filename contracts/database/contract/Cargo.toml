@@ -4,10 +4,9 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract = { version = "3.0.0", default-features = false }
-casper-types = { version = "3.0.0", default-features = false }
+casper-contract = { version = "2.0.0", default-features = false }
+casper-types = { version = "2.0.0", default-features = false }
 common-lib = { path = "../../common", default-features = false }
-casper-serde-json-wasm = { git = "https://github.com/darthsiroftardis/casper-serde-json-wasm", branch = "casper-no-std" }
 
 [[bin]]
 name = "database-contract"

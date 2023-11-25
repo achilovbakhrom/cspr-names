@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-casper-contract = "3.0.0"
-casper-types = "4.0.0"
+casper-contract = "2.0.0"
+casper-types = "2.0.0"
 serde = { version = "1.0.163", features = [
     "derive",
     "alloc",

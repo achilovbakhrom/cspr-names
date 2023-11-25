@@ -6,6 +6,8 @@ members = [
     "price-oracle/contract",
     "nft-core/contract",
     "nft-core/client/*",
+    "nft-core/test-contracts/*",
+    "nft-core/tests",
     "nft-contract/contract",
     "database/contract",
     "registry/contract",
