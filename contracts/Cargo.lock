@@ -18,6 +18,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f26201604c87b1e01bd3d98f8d5d9a8fcbb815e8cedb41ffccbeb4bf593a35fe"
 
 [[package]]
+name = "administration"
+version = "0.1.0"
+dependencies = [
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
+ "common-lib",
+]
+
+[[package]]
 name = "aho-corasick"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -83,7 +92,7 @@ dependencies = [
 name = "balance_of_session"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -214,6 +223,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "casper-contract"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4243fe64dad13cfbc610a11b72587f5cebcc7578db057be19a8a67d75d64f947"
+dependencies = [
+ "casper-types 3.0.0",
+ "hex_fmt",
+ "wee_alloc",
+]
+
+[[package]]
 name = "casper-engine-test-support"
 version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -263,7 +283,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f819282085ee57396e55ce479358cec55a59256d41123bdeff01603a656a8d43"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-event-standard-macro",
  "casper-types 2.0.0",
 ]
@@ -534,8 +554,8 @@ dependencies = [
 name = "common-lib"
 version = "0.1.0"
 dependencies = [
- "casper-contract",
- "casper-types 2.0.0",
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
  "serde",
  "serde-json-wasm 1.0.0",
  "serde_json",
@@ -546,8 +566,8 @@ dependencies = [
 name = "configuration"
 version = "0.1.0"
 dependencies = [
- "casper-contract",
- "casper-types 2.0.0",
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
 ]
 
 [[package]]
@@ -555,7 +575,7 @@ name = "contract"
 version = "1.4.0"
 dependencies = [
  "base16",
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-event-standard",
  "casper-types 2.0.0",
  "hex",
@@ -632,8 +652,8 @@ dependencies = [
 name = "database"
 version = "0.1.0"
 dependencies = [
- "casper-contract",
- "casper-types 2.0.0",
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
  "common-lib",
 ]
 
@@ -822,7 +842,7 @@ dependencies = [
 name = "get_approved_session"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -988,7 +1008,7 @@ dependencies = [
 name = "is_approved_for_all_session"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -1127,8 +1147,8 @@ name = "main"
 version = "0.1.0"
 dependencies = [
  "base16",
- "casper-contract",
- "casper-types 2.0.0",
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
  "common-lib",
  "serde",
  "serde-json-wasm 0.5.1",
@@ -1138,7 +1158,7 @@ dependencies = [
 name = "mangle_named_keys"
 version = "1.1.1"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -1179,7 +1199,7 @@ dependencies = [
 name = "mint_session"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -1187,7 +1207,7 @@ dependencies = [
 name = "minting_contract"
 version = "1.1.1"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -1195,7 +1215,7 @@ dependencies = [
 name = "nft-contract"
 version = "0.1.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
  "common-lib",
  "serde",
@@ -1368,7 +1388,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 name = "owner_of_session"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -1411,8 +1431,8 @@ checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 name = "price-oracle"
 version = "0.1.0"
 dependencies = [
- "casper-contract",
- "casper-types 2.0.0",
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
  "common-lib",
 ]
 
@@ -1627,8 +1647,8 @@ checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 name = "registry-contract"
 version = "0.1.0"
 dependencies = [
- "casper-contract",
- "casper-types 2.0.0",
+ "casper-contract 3.0.0",
+ "casper-types 3.0.0",
  "common-lib",
 ]
 
@@ -1913,7 +1933,7 @@ version = "1.0.0"
 dependencies = [
  "base16",
  "blake2 0.10.6",
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-engine-test-support 5.0.0",
  "casper-execution-engine 5.0.0",
  "casper-types 2.0.0",
@@ -2002,7 +2022,7 @@ dependencies = [
 name = "transfer_filter_contract"
 version = "1.1.1"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -2010,7 +2030,7 @@ dependencies = [
 name = "transfer_session"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 
@@ -2060,7 +2080,7 @@ checksum = "a156c684c91ea7d62626509bce3cb4e1d9ed5c4d978f7b4352658f96a4c26b4a"
 name = "updated_receipts"
 version = "1.4.0"
 dependencies = [
- "casper-contract",
+ "casper-contract 2.0.0",
  "casper-types 2.0.0",
 ]
 

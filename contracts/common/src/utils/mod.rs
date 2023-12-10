@@ -1,5 +1,5 @@
 pub mod access;
-pub mod allocator;
+pub mod authority;
 pub mod contract;
 pub mod domain_name;
 pub mod helpers;

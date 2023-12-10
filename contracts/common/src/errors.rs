@@ -17,6 +17,7 @@ pub enum CommonError {
 	MissingRegistryHash = 12,
 	MissingContractHash = 13,
 	FailedToConvertToAccountHash = 14,
+	NoAdministrationContractHashStored = 15,
 }
 
 impl From<CommonError> for ApiError {
@@ -149,6 +150,23 @@ pub enum RegistryErrors {
 
 impl From<RegistryErrors> for ApiError {
 	fn from(e: RegistryErrors) -> Self {
+		ApiError::User(e as u16)
+	}
+}
+
+// Administration errors
+#[repr(u16)]
+#[derive(Clone, Copy)]
+pub enum AdministrationErrors {
+	ExtensionNotExist = 1000,
+	ExtensionAlreadyExist = 1001,
+	ContractNotFound = 1002,
+	ProvideExtensionArgument = 1003,
+	ContractIsFilled = 1004,
+}
+
+impl From<AdministrationErrors> for ApiError {
+	fn from(e: AdministrationErrors) -> Self {
 		ApiError::User(e as u16)
 	}
 }
