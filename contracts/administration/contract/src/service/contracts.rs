@@ -43,7 +43,8 @@ pub fn get_contract() -> TResult<Key> {
 		if !keys.is_empty() {
 			let filtered = keys
 				.iter()
-				.filter(|item| *item.count < limit)
+				.filter(|item| (**item).count.unwrap_or(0) < limit)
+				.map(|item| *item)
 				.collect::<Vec<CompoundContract>>();
 			if filtered.is_empty() {
 				return Err(AdministrationErrors::ContractIsFilled);
@@ -55,10 +56,10 @@ pub fn get_contract() -> TResult<Key> {
 		}
 	} else {
 		let contract_key = store
-			.get_simple_contract(contract_kind)
+			.get_simple_contract(kind)
 			.unwrap_or_revert_with(AdministrationErrors::ContractNotFound);
 
-		Ok(key)
+		Ok(contract_key)
 	}
 }
 
@@ -76,7 +77,10 @@ pub fn add_contract() -> TResult<()> {
 
 	if is_compound(kind) {
 		let extension = get_extension_arg().unwrap_or_revert();
-		store.add_compound_contract(kind, &extension, key);
+		store.add_compound_contract(kind, &extension, CompoundContract {
+			key: key,
+			count: Some(0),
+		});
 	} else {
 		store.set_simple_contract(kind, key);
 	}

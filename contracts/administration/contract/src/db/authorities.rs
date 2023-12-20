@@ -1,4 +1,4 @@
-use alloc::{ vec::{ Vec, self }, string::ToString };
+use alloc::{ vec::Vec, vec, string::ToString };
 use casper_types::Key;
 use common_lib::{
 	db::{ store::Store, traits::Storable },
@@ -14,7 +14,7 @@ pub(crate) trait Authorities {
 impl Authorities for Store {
 	fn add_authorities(&self, keys: Vec<Key>) -> () {
 		let store_key = &AdministractionStoreKeys::Authorities.to_string();
-		let authorities = self.get::<Vec<Key>>(store_key).unwrap_or(vec![]);
+		let mut authorities = self.get::<Vec<Key>>(store_key).unwrap_or(vec![]);
 
 		keys.iter().for_each(|key| {
 			if !authorities.contains(key) {
@@ -26,11 +26,11 @@ impl Authorities for Store {
 
 	fn remove_authorities(&self, keys: Vec<Key>) -> () {
 		let store_key = &AdministractionStoreKeys::Authorities.to_string();
-		let authorities = self.get::<Vec<Key>>(store_key).unwrap_or(vec![]);
+		let mut authorities = self.get::<Vec<Key>>(store_key).unwrap_or(vec![]);
 		keys.iter().for_each(|key| {
 			let pos = authorities.iter().position(|k| k == key);
-			if let position = pos {
-				authorities.remove(position)
+			if let Some(position) = pos {
+				authorities.remove(position);
 			}
 		});
 

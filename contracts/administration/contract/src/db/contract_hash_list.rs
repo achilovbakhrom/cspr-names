@@ -1,14 +1,10 @@
-use alloc::{ vec::{ Vec, self }, string::ToString, format };
-use casper_contract::unwrap_or_revert::UnwrapOrRevert;
+use alloc::{ vec::Vec, vec, string::ToString, format };
 use casper_types::Key;
 use common_lib::{
 	db::{ store::Store, traits::Storable },
 	enums::contracts_enum::ContractKind,
 	models::registry_pointer::CompoundContract,
-	constants::common_keys::AdministractionStoreKeys,
 };
-
-use crate::types::TResult;
 
 pub(crate) trait ContractHashList {
 	fn set_simple_contract(&self, contract_kind: ContractKind, key: Key) -> ();
@@ -17,8 +13,10 @@ pub(crate) trait ContractHashList {
 	fn init_compound_contracts(
 		&self,
 		contract_kind: ContractKind,
-		keys: Vec<Key>
+		extension: &str,
+		keys: Vec<CompoundContract>
 	) -> ();
+
 	fn add_compound_contract(
 		&self,
 		contract_kind: ContractKind,
@@ -81,16 +79,21 @@ impl ContractHashList for Store {
 		value: i32
 	) -> () {
 		let store_key = &format!("{}:{}", contract_kind, extension);
-		let mut keys = self
-			.get::<Vec<CompoundContract>>(store_key)
-			.unwrap_or(vec![]);
+		let keys = self.get::<Vec<CompoundContract>>(store_key).unwrap_or(vec![]);
 
-		let keys = keys.iter().map(|item| {
-			if *item.key == key && *item.count + value >= 0 {
-				item.count = *item.count + 1;
-			}
-			return item;
-		});
+		let keys = keys
+			.iter()
+			.map(|item| {
+				let count = (*item).count.unwrap_or(0) as i32;
+				if (*item).key == key && count + value >= 0 {
+					return CompoundContract {
+						count: Some((count + value) as u32),
+						..*item
+					};
+				}
+				return *item;
+			})
+			.collect::<Vec<CompoundContract>>();
 
 		self.set(store_key, keys);
 	}
@@ -101,6 +104,6 @@ impl ContractHashList for Store {
 		extension: &str
 	) -> Vec<CompoundContract> {
 		let store_key = &format!("{}:{}", contract_kind, extension);
-		self.get(&store_key)
+		self.get(&store_key).unwrap_or(vec![])
 	}
 }

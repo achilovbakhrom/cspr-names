@@ -15,30 +15,23 @@ mod types;
 mod service;
 mod utils;
 
-use alloc::{ string::{ String, ToString }, vec::{ self, Vec } };
+use alloc::{ string::{ ToString, String }, vec };
 
-use casper_contract::{
-	contract_api::{ runtime, storage },
-	unwrap_or_revert::UnwrapOrRevert,
-};
 use casper_types::{
 	ApiError,
-	Key,
-	EntryPoints,
-	Parameter,
-	ContractHash,
-	CLTyped,
 	CLType,
 	EntryPointAccess,
 	EntryPointType,
-	contracts::Parameters,
+	Parameter,
+	CLTyped,
+	ContractHash,
+	EntryPoints,
 };
 use common_lib::{
-	db::store::Store,
 	utils::{ response::controller, contract::create_entrypoint },
 	constants::common_keys::{ AdministrationEndpoints, AdministrationArgs },
+	enums::contracts_enum::ContractKind,
 };
-use crate::service;
 
 const KEY_NAME: &str = "my-key-name";
 const RUNTIME_ARG_NAME: &str = "message";
@@ -165,7 +158,7 @@ pub extern "C" fn call() {
 				),
 				Parameter::new(
 					&AdministrationArgs::ContractAuthorities.to_string(),
-					Vec::<Key>::cl_type()
+					CLType::Any
 				)
 			],
 			CLType::Unit,
@@ -180,11 +173,11 @@ pub extern "C" fn call() {
 			vec![
 				Parameter::new(
 					&AdministrationArgs::ContractHash.to_string(),
-					ContractHash::cl_type()
+					CLType::Key
 				),
 				Parameter::new(
 					&AdministrationArgs::ContractAuthority.to_string(),
-					Key::cl_type()
+					CLType::Key
 				)
 			],
 			CLType::Unit,
@@ -235,7 +228,7 @@ pub extern "C" fn call() {
 					&AdministrationArgs::ContractKind.to_string(),
 					ContractKind::cl_type()
 				),
-				Parameter::new(&AdministrationArgs::Key.to_string(), Key::cl_type())
+				Parameter::new(&AdministrationArgs::Key.to_string(), CLType::Key)
 			],
 			CLType::Unit,
 			EntryPointAccess::Public,
@@ -251,7 +244,7 @@ pub extern "C" fn call() {
 					&AdministrationArgs::ContractKind.to_string(),
 					ContractKind::cl_type()
 				),
-				Parameter::new(&AdministrationArgs::Key.to_string(), Key::cl_type())
+				Parameter::new(&AdministrationArgs::Key.to_string(), CLType::Key)
 			],
 			CLType::Unit,
 			EntryPointAccess::Public,
@@ -267,7 +260,7 @@ pub extern "C" fn call() {
 					&AdministrationArgs::ContractKind.to_string(),
 					ContractKind::cl_type()
 				),
-				Parameter::new(&AdministrationArgs::Key.to_string(), Key::cl_type())
+				Parameter::new(&AdministrationArgs::Key.to_string(), CLType::Key)
 			],
 			CLType::Unit,
 			EntryPointAccess::Public,
@@ -331,7 +324,7 @@ pub extern "C" fn call() {
 			vec![
 				Parameter::new(
 					&AdministrationArgs::CharsCount.to_string(),
-					String::cl_type()
+					CLType::String
 				)
 			],
 			CLType::Unit,
@@ -363,10 +356,7 @@ pub extern "C" fn call() {
 					&AdministrationArgs::ContractKind.to_string(),
 					ContractKind::cl_type()
 				),
-				Parameter::new(
-					&AdministrationArgs::CharsCount.to_string(),
-					u16::cl_type()
-				)
+				Parameter::new(&AdministrationArgs::CharsCount.to_string(), CLType::U32)
 			],
 			CLType::Unit,
 			EntryPointAccess::Public,

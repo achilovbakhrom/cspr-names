@@ -1,7 +1,7 @@
-use alloc::{ vec::{ Vec, self }, string::ToString };
+use alloc::{ vec::Vec, vec, string::ToString };
 use casper_types::{ ContractHash, Key };
 use common_lib::{
-	db::{ store::Store, dictionary::Dictionary, traits::Storable },
+	db::{ dictionary::Dictionary, traits::Storable },
 	constants::common_keys::AdministractionStoreKeys,
 };
 
@@ -9,7 +9,7 @@ pub struct ContractAuthoritiesStore {
 	pub dictionary: Dictionary,
 }
 
-pub impl ContractAuthoritiesStore {
+impl ContractAuthoritiesStore {
 	pub fn instance() -> Self {
 		Self {
 			dictionary: Dictionary::instance(

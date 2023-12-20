@@ -1,12 +1,8 @@
-use alloc::{ vec::Vec, string::String };
-use casper_contract::{
-	unwrap_or_revert::UnwrapOrRevert,
-	contract_api::runtime::revert,
-};
+use alloc::{ vec::Vec, string::{ String, ToString } };
+use casper_contract::unwrap_or_revert::UnwrapOrRevert;
 use common_lib::{
 	db::{ store::Store, traits::Storable },
 	constants::common_keys::AdministractionStoreKeys,
-	errors::AdministrationErrors,
 };
 
 pub(crate) trait AllowedExtensions {
@@ -19,19 +15,22 @@ pub(crate) trait AllowedExtensions {
 impl AllowedExtensions for Store {
 	fn get_allowed_extensions(&self) -> Vec<String> {
 		self
-			.get(AdministractionStoreKeys::AllowedExtensions)
+			.get(&AdministractionStoreKeys::AllowedExtensions.to_string())
 			.unwrap_or(Vec::<String>::new())
 	}
 
 	fn set_allowed_extensions(&self, vec: Vec<String>) -> () {
-		self.set(AdministractionStoreKeys::AllowedExtensions, vec)
+		self.set(&AdministractionStoreKeys::AllowedExtensions.to_string(), vec)
 	}
 
 	fn add_extension(&self, ext: String) -> () {
 		let mut extensions = self.get_allowed_extensions();
 		if !extensions.contains(&ext) {
 			extensions.push(ext);
-			self.set(AdministractionStoreKeys::AllowedExtensions, extensions);
+			self.set(
+				&AdministractionStoreKeys::AllowedExtensions.to_string(),
+				extensions
+			);
 		}
 	}
 
@@ -41,9 +40,12 @@ impl AllowedExtensions for Store {
 			let position = extensions
 				.iter()
 				.position(|item| item == &ext)
-				.unwrap_or_revert_with(error);
-			extensions.remove(ext);
-			self.set(AdministractionStoreKeys::AllowedExtensions, extensions);
+				.unwrap_or_revert();
+			extensions.remove(position);
+			self.set(
+				&AdministractionStoreKeys::AllowedExtensions.to_string(),
+				extensions
+			);
 		}
 	}
 }

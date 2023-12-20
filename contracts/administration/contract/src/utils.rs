@@ -1,5 +1,8 @@
-use alloc::string::ToString;
-use casper_contract::contract_api::runtime;
+use alloc::string::{ ToString, String };
+use casper_contract::{
+	contract_api::runtime,
+	unwrap_or_revert::UnwrapOrRevert,
+};
 use common_lib::{
 	constants::common_keys::AdministrationArgs,
 	errors::AdministrationErrors,

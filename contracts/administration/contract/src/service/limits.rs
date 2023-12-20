@@ -1,7 +1,9 @@
+use alloc::string::{ ToString, String };
 use casper_contract::{
-	unwrap_or_revert::UnwrapOrRevert,
 	contract_api::runtime,
+	unwrap_or_revert::UnwrapOrRevert,
 };
+
 use common_lib::{
 	db::store::Store,
 	constants::common_keys::AdministrationArgs,
@@ -38,7 +40,7 @@ pub fn set_chars_min_count() -> TResult<()> {
 /// Parameters:
 /// - contract_kind - required
 
-pub fn get_listing_limit() -> TResult<u16> {
+pub fn get_listing_limit() -> TResult<u32> {
 	let kind: ContractKind = runtime::get_named_arg(
 		&AdministrationArgs::ContractKind.to_string()
 	);
@@ -51,9 +53,11 @@ pub fn get_listing_limit() -> TResult<u16> {
 /// - value - required
 pub fn set_listing_limit() -> TResult<()> {
 	let kind: ContractKind = runtime::get_named_arg(
-		AdministrationArgs::ContractKind
+		&AdministrationArgs::ContractKind.to_string()
 	);
-	let value: u16 = runtime::get_named_arg(&AdministrationArgs::CharsCount.to_string());
+	let value = runtime::get_named_arg(
+		&AdministrationArgs::CharsCount.to_string()
+	);
 	let store = Store::instance();
 	store.set_listing_limit(kind, value);
 	Ok(())
