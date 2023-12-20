@@ -17,9 +17,9 @@ pub fn response_error<T: Into<ApiError>>(error: T) {
 }
 
 pub fn controller<F, T, E>(arg: F)
-	where E: ApiError, F: Fn() -> Result<T: ToBytes + CLTyped, E>
+	where F: Fn() -> Result<T, E>, T: ToBytes + CLTyped, E: Into<ApiError>
 {
-	match arg {
+	match arg() {
 		Ok(res) => { response_success_default(res) }
 		Err(err) => { response_error(err) }
 	}

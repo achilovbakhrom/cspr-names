@@ -8,7 +8,7 @@ use casper_types::{ bytesrepr::FromBytes, bytesrepr::ToBytes, CLTyped };
  * Compound Contract - ContractKind + Extension <-> Key (Also need to consider the number of storing items)
  */
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 #[repr(u8)]
 pub enum ContractKind {
 	Main = 0, // single
@@ -39,7 +39,6 @@ impl FromBytes for ContractKind {
 			2 => Ok((ContractKind::NFT, value.1)),
 			3 => Ok((ContractKind::NFTCore, value.1)),
 			4 => Ok((ContractKind::PriceOracle, value.1)),
-			5 => Ok((ContractKind::Authorities, value.1)),
 			_ => Err(casper_types::bytesrepr::Error::OutOfMemory),
 		}
 	}
@@ -67,8 +66,7 @@ impl ContractKind {
 			Self::Main,
 			Self::NFT,
 			Self::NFTCore,
-			Self::PriceOracle,
-			Self::Authorities
+			Self::PriceOracle
 		]
 	}
 }

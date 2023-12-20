@@ -13,7 +13,7 @@ use casper_contract::{
 	contract_api::{ runtime, storage },
 	unwrap_or_revert::UnwrapOrRevert,
 };
-use casper_types::{ account::AccountHash, EntryPoints, Key };
+use casper_types::{ EntryPoints, Key };
 
 use super::storage::{ get_stored_value_from_key, store_value_for_key };
 
@@ -37,14 +37,14 @@ pub fn create_new_contract(
 	store_value_for_key(CONTRACT_VERSION_KEY, contract_version);
 }
 
-pub fn is_maintainer(account: &Key) -> bool {
+pub fn is_maintainer(key: &Key) -> bool {
 	let maintainer = get_stored_value_from_key::<Key>(
 		CONTRACT_MAINTAINER_KEY
 	).unwrap_or_revert_with(CommonError::NoAuthority);
-	&maintainer == account
+	&maintainer == key
 }
 
 pub fn is_caller_maintainer() -> bool {
 	let caller = runtime::get_caller();
-	is_maintainer(&caller)
+	is_maintainer(&caller.into())
 }

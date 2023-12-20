@@ -1,12 +1,12 @@
-use alloc::string::{ String, ToString };
+use alloc::string::ToString;
 use casper_types::{ account::AccountHash, ContractHash };
 
 use crate::{
 	db::{ store::Store, traits::Storable },
-	constants::common_keys::{ CommonKeys, AdministractionStoreKeys },
+	constants::common_keys::CommonKeys,
 };
 
-pub impl Store {
+impl Store {
 	pub fn get_maintainer(&self) -> Option<AccountHash> {
 		self.get(&CommonKeys::Maintainer.to_string())
 	}

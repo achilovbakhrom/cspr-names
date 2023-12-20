@@ -1,7 +1,5 @@
 // Common usage constants
 
-use core::fmt::write;
-
 use alloc::collections::BTreeMap;
 use alloc::fmt;
 use alloc::string::{ String, ToString };

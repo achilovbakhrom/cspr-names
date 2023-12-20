@@ -1,6 +1,5 @@
 use super::traits::Storable;
 use crate::utils::storage::{ get_stored_value_from_key, store_value_for_key };
-use alloc::string::String;
 use casper_types::bytesrepr::{ FromBytes, ToBytes };
 use casper_types::CLTyped;
 

@@ -1,16 +1,16 @@
-use alloc::vec::{ Vec, self };
+use alloc::vec::Vec;
 use casper_contract::{
 	contract_api::runtime,
 	unwrap_or_revert::UnwrapOrRevert,
 };
-use casper_types::{ Key, runtime_args };
+use casper_types::{ Key, runtime_args, runtime_args::RuntimeArgs };
 
 use crate::{ db::store::Store, errors::CommonError };
 
 fn is_key_maintainer(key: Key) -> bool {
 	let store = Store::instance();
 	let maintainer = store.get_maintainer();
-	key == maintainer.into()
+	key == maintainer.unwrap().into()
 }
 
 fn is_caller_maintainer() -> bool {
@@ -34,5 +34,5 @@ fn has_permission_calling_contract() -> bool {
 	);
 
 	let caller = runtime::get_caller();
-	authorities.contains(&caller)
+	authorities.contains(&caller.into())
 }

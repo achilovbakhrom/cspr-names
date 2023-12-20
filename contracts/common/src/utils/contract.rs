@@ -1,14 +1,13 @@
-use alloc::{ vec::{ self, Vec }, string::String };
+use alloc::string::ToString;
+use casper_contract::contract_api::{ storage, runtime };
 use casper_types::{
 	EntryPoint,
 	contracts::{ Parameters, NamedKeys },
 	CLType,
 	EntryPointAccess,
 	EntryPointType,
-	URef,
 	EntryPoints,
 	ContractHash,
-	Key,
 };
 
 use crate::constants::common_keys::{
@@ -16,7 +15,6 @@ use crate::constants::common_keys::{
 	KEY_CONTRACT_ACCESS,
 	KEY_CONTRACT_HASH,
 	KEY_CONTRACT_VERSION,
-	KEY_CONTRACT_MAINTAINER,
 	CommonKeys,
 };
 
@@ -30,15 +28,15 @@ pub fn create_entrypoint(
 	EntryPoint::new(key, params, ret, access, entry_point_type)
 }
 
-pub fn create_named_keys(values: Vec<(String, URef)>) -> NamedKeys {
-	let mut keys = NamedKeys::new();
+// pub fn create_named_keys(values: Vec<(String, URef)>) -> NamedKeys {
+// 	let mut keys = NamedKeys::new();
 
-	values.iter().for_each(|(key, value)| {
-		keys.insert(key, value);
-	});
+// 	values.iter().for_each(|(key, value)| {
+// 		keys.insert(key, value);
+// 	});
 
-	keys
-}
+// 	keys
+// }
 
 pub fn create_contract(
 	entrypoints: EntryPoints,

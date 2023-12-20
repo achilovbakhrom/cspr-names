@@ -1,13 +1,21 @@
+use alloc::{ fmt::Display, string::{ ToString, String } };
 use casper_types::{
 	bytesrepr::{ allocate_buffer, FromBytes, ToBytes },
 	CLTyped,
 	Key,
 };
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct CompoundContract {
 	pub key: Key,
-	pub count: Option<i32>,
+	pub count: Option<u32>,
+}
+
+impl Display for CompoundContract {
+	fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+		let c = self.count.unwrap_or(0).to_string();
+		write!(f, "{}:{}", self.key.to_string(), c)
+	}
 }
 
 impl ToBytes for CompoundContract {
@@ -31,7 +39,7 @@ impl FromBytes for CompoundContract {
 		bytes: &[u8]
 	) -> Result<(Self, &[u8]), casper_types::bytesrepr::Error> {
 		let (contract_hash, remainder) = Key::from_bytes(bytes)?;
-		let (count, remainder) = Option::<i32>::from_bytes(remainder)?;
+		let (count, remainder) = Option::<u32>::from_bytes(remainder)?;
 
 		let result = Self {
 			key: contract_hash,
