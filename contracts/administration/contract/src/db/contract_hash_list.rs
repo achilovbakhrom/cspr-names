@@ -63,7 +63,7 @@ impl ContractHashList for Store {
 		extension: &str,
 		key: CompoundContract
 	) -> () {
-		let store_key = &format!("{}:{}", contract_kind, key);
+		let store_key = &format!("{}:{}", contract_kind, extension);
 		let mut keys = self
 			.get::<Vec<CompoundContract>>(store_key)
 			.unwrap_or(vec![]);

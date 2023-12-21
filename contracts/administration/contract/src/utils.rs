@@ -21,7 +21,3 @@ pub fn get_extension_arg() -> TResult<String> {
 		)
 	)
 }
-
-pub fn has_permission() -> bool {
-	false
-}

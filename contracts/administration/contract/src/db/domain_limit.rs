@@ -26,12 +26,21 @@ fn to_domain_list_limit_key(kind: &ContractKind) -> String {
 
 impl DomainLimit for Store {
 	fn get_chars_min_count(&self, extension: &str) -> u8 {
-		let key = AdministractionStoreKeys::CharsCount.to_string();
+		let key = format!(
+			"{}:{}",
+			extension,
+			AdministractionStoreKeys::CharsCount.to_string()
+		);
 		self.get::<u8>(&key).unwrap_or(DEFAULT_DOMAIN_CHARS_COUNT)
 	}
 
 	fn set_chars_min_count(&self, extension: &str, count: u8) -> () {
-		let key = AdministractionStoreKeys::CharsCount.to_string();
+		let key = format!(
+			"{}:{}",
+			extension,
+			AdministractionStoreKeys::CharsCount.to_string()
+		);
+
 		self.set(&key, count);
 	}
 

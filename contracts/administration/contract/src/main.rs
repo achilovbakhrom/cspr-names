@@ -18,7 +18,6 @@ mod utils;
 use alloc::{ string::{ ToString, String }, vec };
 
 use casper_types::{
-	ApiError,
 	CLType,
 	EntryPointAccess,
 	EntryPointType,
@@ -26,28 +25,16 @@ use casper_types::{
 	CLTyped,
 	ContractHash,
 	EntryPoints,
+	contracts::NamedKeys,
 };
 use common_lib::{
-	utils::{ response::controller, contract::create_entrypoint },
+	utils::{
+		response::controller,
+		contract::{ create_entrypoint, setup_contract_info },
+	},
 	constants::common_keys::{ AdministrationEndpoints, AdministrationArgs },
 	enums::contracts_enum::ContractKind,
 };
-
-const KEY_NAME: &str = "my-key-name";
-const RUNTIME_ARG_NAME: &str = "message";
-
-/// An error enum which can be converted to a `u16` so it can be returned as an `ApiError::User`.
-#[repr(u16)]
-enum Error {
-	KeyAlreadyExists = 0,
-	KeyMismatch = 1,
-}
-
-impl From<Error> for ApiError {
-	fn from(error: Error) -> Self {
-		ApiError::User(error as u16)
-	}
-}
 
 /// Authorities endpoints
 #[no_mangle]
@@ -363,4 +350,8 @@ pub extern "C" fn call() {
 			EntryPointType::Contract
 		)
 	);
+
+	let named_keys = NamedKeys::new();
+
+	setup_contract_info(entrypoints, named_keys)
 }

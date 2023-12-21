@@ -1,4 +1,4 @@
-use alloc::{ string::{ ToString, String }, vec::Vec };
+use alloc::{ string::ToString, vec::Vec };
 use casper_contract::{
 	contract_api::runtime,
 	unwrap_or_revert::UnwrapOrRevert,
@@ -31,10 +31,6 @@ pub fn get_contract() -> TResult<Key> {
 	let store = Store::instance();
 
 	if is_compound(kind) {
-		let arg_extension: Option<String> = runtime::get_named_arg(
-			&AdministrationArgs::Extension.to_string()
-		);
-
 		let extension = get_extension_arg().unwrap_or_revert();
 
 		let keys = store.get_compound_contracts(kind, &extension);
