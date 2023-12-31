@@ -1,4 +1,4 @@
-use alloc::string::{ ToString, String };
+use alloc::{ string::{ ToString, String }, format };
 use casper_contract::{
 	contract_api::runtime,
 	unwrap_or_revert::UnwrapOrRevert,
@@ -55,7 +55,7 @@ pub fn set_listing_limit() -> TResult<()> {
 	let kind: ContractKind = runtime::get_named_arg(
 		&AdministrationArgs::ContractKind.to_string()
 	);
-	let value = runtime::get_named_arg(
+	let value: u32 = runtime::get_named_arg(
 		&AdministrationArgs::CharsCount.to_string()
 	);
 	let store = Store::instance();

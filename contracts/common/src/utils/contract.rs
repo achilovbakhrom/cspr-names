@@ -13,8 +13,6 @@ use casper_types::{
 use crate::constants::common_keys::{
 	KEY_CONTRACT_PACKAGE_NAME,
 	KEY_CONTRACT_ACCESS,
-	KEY_CONTRACT_HASH,
-	KEY_CONTRACT_VERSION,
 	CommonKeys,
 };
 
@@ -40,11 +38,11 @@ pub fn create_entrypoint(
 
 pub fn create_contract(
 	entrypoints: EntryPoints,
-	named_keys: NamedKeys
+	named_keys: Option<NamedKeys>
 ) -> (ContractHash, u32) {
 	storage::new_contract(
 		entrypoints,
-		Some(named_keys),
+		named_keys,
 		Some(KEY_CONTRACT_PACKAGE_NAME.to_string()),
 		Some(KEY_CONTRACT_ACCESS.to_string())
 	)
@@ -59,11 +57,17 @@ pub fn setup_contract_info(
 
 	let (contract_hash, contract_version) = create_contract(
 		entrypoints,
-		named_keys
+		Some(named_keys)
 	);
 	let contract_hash_uref = storage::new_uref(contract_hash);
-	runtime::put_key(KEY_CONTRACT_HASH, contract_hash_uref.into());
+	runtime::put_key(
+		&CommonKeys::ContractHash.to_string(),
+		contract_hash_uref.into()
+	);
 
 	let contract_version_uref = storage::new_uref(contract_version);
-	runtime::put_key(KEY_CONTRACT_VERSION, contract_version_uref.into());
+	runtime::put_key(
+		&CommonKeys::ContractVersion.to_string(),
+		contract_version_uref.into()
+	);
 }

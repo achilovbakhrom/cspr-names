@@ -163,6 +163,7 @@ pub enum AdministrationErrors {
 	ContractNotFound = 1002,
 	ProvideExtensionArgument = 1003,
 	ContractIsFilled = 1004,
+	InvalidCaller = 1005,
 }
 
 impl From<AdministrationErrors> for ApiError {

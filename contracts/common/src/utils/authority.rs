@@ -5,7 +5,13 @@ use casper_contract::{
 };
 use casper_types::{ Key, runtime_args, runtime_args::RuntimeArgs };
 
-use crate::{ db::store::Store, errors::CommonError };
+use crate::{
+	db::store::Store,
+	errors::CommonError,
+	enums::caller_verification_type::CallerVerificationType,
+};
+
+use super::{ helpers::is_array_contain, registry::get_verified_caller };
 
 fn is_key_maintainer(key: Key) -> bool {
 	let store = Store::instance();
@@ -18,7 +24,7 @@ fn is_caller_maintainer() -> bool {
 	is_key_maintainer(caller.into())
 }
 
-fn has_permission_calling_contract() -> bool {
+pub fn has_permission_calling_contract() -> bool {
 	if is_caller_maintainer() {
 		return true;
 	}
@@ -35,4 +41,17 @@ fn has_permission_calling_contract() -> bool {
 
 	let caller = runtime::get_caller();
 	authorities.contains(&caller.into())
+}
+
+pub fn ensure_caller_has_permission() -> Result<(), CommonError> {
+	if !is_caller_maintainer() {
+		let store = Store::instance();
+		let authorities = store.get_authorities();
+		let caller = runtime::get_caller();
+		let contains = is_array_contain(&authorities, &caller.into());
+		if !contains {
+			return Err(CommonError::InvalidCaller);
+		}
+	}
+	Ok(())
 }

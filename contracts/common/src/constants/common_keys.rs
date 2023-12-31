@@ -396,6 +396,8 @@ impl fmt::Display for AdministractionStoreKeys {
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum AdministrationArgs {
+	AllowedExtensions,
+	AllowedExtension,
 	ContractKind,
 	Extension,
 	Key,
@@ -408,6 +410,8 @@ pub enum AdministrationArgs {
 impl fmt::Display for AdministrationArgs {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match self {
+			Self::AllowedExtension => write!(f, "allowed_extension"),
+			Self::AllowedExtensions => write!(f, "allowed_extensions"),
 			Self::ContractKind => write!(f, "contract_kind"),
 			Self::Extension => write!(f, "extension"),
 			Self::Key => write!(f, "key"),
@@ -419,27 +423,10 @@ impl fmt::Display for AdministrationArgs {
 	}
 }
 
-/// Common Keys
-#[derive(Debug, Clone, Copy)]
-#[repr(u8)]
-pub enum CommonKeys {
-	Maintainer,
-	AdministrationContract,
-}
-
-impl fmt::Display for CommonKeys {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		match self {
-			Self::Maintainer => write!(f, "maintainer"),
-			Self::AdministrationContract => write!(f, "administration_contract"),
-		}
-	}
-}
-
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum AdministrationEndpoints {
-	SetAuthorityList,
+	SetContractAuthorityList,
 	AddContractAuthority,
 	GetContractAuthorityList,
 	GetContract,
@@ -459,7 +446,8 @@ pub enum AdministrationEndpoints {
 impl fmt::Display for AdministrationEndpoints {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		match self {
-			Self::SetAuthorityList => write!(f, "set_authority_list"),
+			Self::SetContractAuthorityList =>
+				write!(f, "set_contract_authority_list"),
 			Self::AddContractAuthority => write!(f, "add_contract_authority"),
 			Self::GetContractAuthorityList =>
 				write!(f, "get_contract_authority_list"),
@@ -475,6 +463,67 @@ impl fmt::Display for AdministrationEndpoints {
 			Self::SetCharsMinCount => write!(f, "set_chars_min_count"),
 			Self::GetListingLimit => write!(f, "get_listing_limit"),
 			Self::SetListingLimit => write!(f, "set_listing_limit"),
+		}
+	}
+}
+
+/// Common Keys
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum CommonKeys {
+	Maintainer,
+	AdministrationContract,
+	ContractHash,
+	ContractVersion,
+	Authorities,
+	AllowedContracts,
+}
+
+impl fmt::Display for CommonKeys {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match self {
+			Self::Maintainer => write!(f, "maintainer"),
+			Self::AdministrationContract => write!(f, "administration_contract"),
+			Self::ContractHash => write!(f, "contract_hash"),
+			Self::ContractVersion => write!(f, "contract_version"),
+			Self::Authorities => write!(f, "authorities"),
+			Self::AllowedContracts => write!(f, "allowed_contracts"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum CommonArgs {
+	Authorities,
+	Authority,
+}
+
+impl fmt::Display for CommonArgs {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Authorities => write!(f, "authorities"),
+			Self::Authority => write!(f, "authority"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum CommonEndpoints {
+	SetAuthorities,
+	AddAuthority,
+	RemoveAuthority,
+	GetAuthorities,
+}
+
+impl fmt::Display for CommonEndpoints {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::SetAuthorities => write!(f, "set_authorities"),
+			Self::AddAuthority => write!(f, "add_authority"),
+			Self::RemoveAuthority => write!(f, "remove_authority"),
+			Self::GetAuthorities => write!(f, "get_authorities"),
 		}
 	}
 }

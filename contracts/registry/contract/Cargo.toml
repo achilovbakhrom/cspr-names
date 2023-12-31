@@ -9,7 +9,7 @@ casper-types = "3.0.0"
 common-lib = { path = "../../common", default-features = false }
 
 [[bin]]
-name = "contract"
+name = "registry-contract"
 path = "src/main.rs"
 bench = false
 doctest = false

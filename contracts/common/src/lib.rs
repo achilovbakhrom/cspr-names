@@ -4,6 +4,7 @@
 extern crate alloc;
 
 pub mod constants;
+pub mod controllers;
 pub mod db;
 pub mod enums;
 pub mod errors;

@@ -15,8 +15,15 @@ mod types;
 mod service;
 mod utils;
 
-use alloc::{ string::{ ToString, String }, vec };
+use alloc::{
+	string::{ ToString, String },
+	vec::Vec,
+	vec,
+	borrow::ToOwned,
+	boxed::Box,
+};
 
+use casper_contract::contract_api::storage;
 use casper_types::{
 	CLType,
 	EntryPointAccess,
@@ -32,24 +39,31 @@ use common_lib::{
 		response::controller,
 		contract::{ create_entrypoint, setup_contract_info },
 	},
-	constants::common_keys::{ AdministrationEndpoints, AdministrationArgs },
+	constants::common_keys::{
+		AdministrationEndpoints,
+		AdministrationArgs,
+		AdministractionStoreKeys,
+		CommonEndpoints,
+		CommonArgs,
+	},
 	enums::contracts_enum::ContractKind,
 };
+use common_lib::controllers::authorities;
 
-/// Authorities endpoints
+/// Contract Authorities endpoints
 #[no_mangle]
-pub extern "C" fn set_authority_list() {
-	controller(service::authority::set_contract_autority_list)
+pub extern "C" fn set_contract_authority_list() {
+	controller(service::contract_authority::set_contract_autority_list)
 }
 
 #[no_mangle]
 pub extern "C" fn add_contract_authority() {
-	controller(service::authority::add_contract_authority)
+	controller(service::contract_authority::add_contract_authority)
 }
 
 #[no_mangle]
 pub extern "C" fn get_contract_authority_list() {
-	controller(service::authority::get_contract_authority_list)
+	controller(service::contract_authority::get_contract_authority_list)
 }
 
 /// Contracts endpoints
@@ -137,7 +151,7 @@ pub extern "C" fn call() {
 	let mut entrypoints = EntryPoints::new();
 	entrypoints.add_entry_point(
 		create_entrypoint(
-			&AdministrationEndpoints::SetAuthorityList.to_string(),
+			&AdministrationEndpoints::SetContractAuthorityList.to_string(),
 			vec![
 				Parameter::new(
 					&AdministrationArgs::ContractHash.to_string(),
@@ -201,7 +215,7 @@ pub extern "C" fn call() {
 					Option::<String>::cl_type()
 				)
 			],
-			CLType::Unit,
+			CLType::Any,
 			EntryPointAccess::Public,
 			EntryPointType::Contract
 		)
@@ -311,7 +325,11 @@ pub extern "C" fn call() {
 			vec![
 				Parameter::new(
 					&AdministrationArgs::CharsCount.to_string(),
-					CLType::String
+					u8::cl_type()
+				),
+				Parameter::new(
+					&AdministrationArgs::Extension.to_string(),
+					CLType::Option(Box::new(String::cl_type()))
 				)
 			],
 			CLType::Unit,
@@ -343,7 +361,10 @@ pub extern "C" fn call() {
 					&AdministrationArgs::ContractKind.to_string(),
 					ContractKind::cl_type()
 				),
-				Parameter::new(&AdministrationArgs::CharsCount.to_string(), CLType::U32)
+				Parameter::new(
+					&AdministrationArgs::CharsCount.to_string(),
+					u32::cl_type()
+				)
 			],
 			CLType::Unit,
 			EntryPointAccess::Public,
@@ -351,7 +372,47 @@ pub extern "C" fn call() {
 		)
 	);
 
-	let named_keys = NamedKeys::new();
+	entrypoints.add_entry_point(
+		create_entrypoint(
+			&CommonEndpoints::SetAuthorities.to_string(),
+			vec![Parameter::new(&CommonArgs::Authorities.to_string(), CLType::Any)],
+			CLType::Unit,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
+	);
+
+	entrypoints.add_entry_point(
+		create_entrypoint(
+			&CommonEndpoints::AddAuthority.to_string(),
+			vec![Parameter::new(&CommonArgs::Authority.to_string(), CLType::Key)],
+			CLType::Unit,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
+	);
+
+	entrypoints.add_entry_point(
+		create_entrypoint(
+			&CommonEndpoints::RemoveAuthority.to_string(),
+			vec![Parameter::new(&CommonArgs::Authority.to_string(), CLType::Key)],
+			CLType::Unit,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
+	);
+
+	entrypoints.add_entry_point(
+		create_entrypoint(
+			&CommonEndpoints::GetAuthorities.to_string(),
+			vec![],
+			CLType::Any,
+			EntryPointAccess::Public,
+			EntryPointType::Contract
+		)
+	);
+
+	let mut named_keys = NamedKeys::new();
 
 	setup_contract_info(entrypoints, named_keys)
 }

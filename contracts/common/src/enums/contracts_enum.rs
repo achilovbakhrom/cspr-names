@@ -21,8 +21,16 @@ pub enum ContractKind {
 }
 
 impl Display for ContractKind {
-	fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-		write!(f, "{}", self)
+	fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+		match self {
+			Self::Main => write!(f, "Main"),
+			Self::Database => write!(f, "Database"),
+			Self::NFT => write!(f, "NFT"),
+			Self::NFTCore => write!(f, "NFTCore"),
+			Self::PriceOracle => write!(f, "PriceOracle"),
+			Self::Registry => write!(f, "Registry"),
+			Self::Administration => write!(f, "Administration"),
+		}
 	}
 }
 
@@ -34,11 +42,13 @@ impl FromBytes for ContractKind {
 			::from_bytes(bytes)
 			.expect("Error while unwrapping &[u8] to u8");
 		match value.0 {
-			0 => Ok((ContractKind::Database, value.1)),
-			1 => Ok((ContractKind::Main, value.1)),
+			0 => Ok((ContractKind::Main, value.1)),
+			1 => Ok((ContractKind::Database, value.1)),
 			2 => Ok((ContractKind::NFT, value.1)),
 			3 => Ok((ContractKind::NFTCore, value.1)),
 			4 => Ok((ContractKind::PriceOracle, value.1)),
+			5 => Ok((ContractKind::Registry, value.1)),
+			6 => Ok((ContractKind::Administration, value.1)),
 			_ => Err(casper_types::bytesrepr::Error::OutOfMemory),
 		}
 	}
@@ -66,7 +76,8 @@ impl ContractKind {
 			Self::Main,
 			Self::NFT,
 			Self::NFTCore,
-			Self::PriceOracle
+			Self::PriceOracle,
+			Self::Administration
 		]
 	}
 }

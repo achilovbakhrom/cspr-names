@@ -24,7 +24,7 @@ use crate::utils::get_extension_arg;
 /// - contract_kind - required
 /// - extension - optional for simple contracts, otherwise is required
 
-pub fn get_contract() -> TResult<Key> {
+pub fn get_contract() -> TResult<(Key, Option<u32>)> {
 	let kind: ContractKind = runtime::get_named_arg(
 		&AdministrationArgs::ContractKind.to_string()
 	);
@@ -46,7 +46,7 @@ pub fn get_contract() -> TResult<Key> {
 				return Err(AdministrationErrors::ContractIsFilled);
 			}
 			let first = filtered.first().unwrap();
-			Ok(first.key)
+			Ok((first.key, first.count))
 		} else {
 			return Err(AdministrationErrors::ContractNotFound);
 		}
@@ -55,7 +55,7 @@ pub fn get_contract() -> TResult<Key> {
 			.get_simple_contract(kind)
 			.unwrap_or_revert_with(AdministrationErrors::ContractNotFound);
 
-		Ok(contract_key)
+		Ok((contract_key, None))
 	}
 }
 
@@ -94,7 +94,6 @@ pub fn increment_contract() -> TResult<()> {
 	);
 	let key: Key = runtime::get_named_arg(&AdministrationArgs::Key.to_string());
 	let store = Store::instance();
-
 	if is_compound(kind) {
 		let extension = get_extension_arg().unwrap_or_revert();
 		store.change_count_of_compound_contracts(kind, &extension, key, 1);

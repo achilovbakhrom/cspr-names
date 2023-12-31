@@ -6,10 +6,7 @@ use casper_contract::{
 use common_lib::{
 	db::store::Store,
 	constants::common_keys::AdministrationArgs,
-	utils::authority::{
-		ensure_caller_has_permission,
-		ensure_caller_is_allowed_contract,
-	},
+	utils::authority::ensure_caller_has_permission,
 	errors::AdministrationErrors,
 };
 
@@ -22,13 +19,14 @@ pub fn set_allowed_extensions() -> TResult<()> {
 	let extensions: Vec<String> = runtime::get_named_arg(
 		&AdministrationArgs::AllowedExtensions.to_string()
 	);
+
 	let store = Store::instance();
 	store.set_allowed_extensions(extensions);
 	Ok(())
 }
 
 pub fn get_allowed_extensions() -> TResult<Vec<String>> {
-	ensure_caller_is_allowed_contract().unwrap_or_revert_with(
+	ensure_caller_has_permission().unwrap_or_revert_with(
 		AdministrationErrors::InvalidCaller
 	);
 	let store = Store::instance();

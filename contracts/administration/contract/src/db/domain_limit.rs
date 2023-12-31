@@ -1,8 +1,10 @@
 use alloc::{ string::{ ToString, String }, format };
+use casper_contract::contract_api::runtime;
 use common_lib::{
 	constants::common_keys::AdministractionStoreKeys,
 	db::{ store::Store, traits::Storable },
 	enums::contracts_enum::ContractKind,
+	utils::helpers::to_domain_list_limit_key,
 };
 
 const DEFAULT_DOMAIN_CHARS_COUNT: u8 = 3u8;
@@ -17,11 +19,6 @@ pub(crate) trait DomainLimit {
 	fn set_chars_min_count(&self, extension: &str, count: u8) -> ();
 	fn get_listing_limit(&self, kind: ContractKind) -> u32;
 	fn set_listing_limit(&self, kind: ContractKind, limit: u32) -> ();
-}
-
-fn to_domain_list_limit_key(kind: &ContractKind) -> String {
-	let key = AdministractionStoreKeys::DomainListLimit.to_string();
-	format!("{}:{}", key, kind)
 }
 
 impl DomainLimit for Store {
@@ -51,6 +48,7 @@ impl DomainLimit for Store {
 
 	fn set_listing_limit(&self, kind: ContractKind, limit: u32) -> () {
 		let key = to_domain_list_limit_key(&kind);
+		runtime::print(&format!("GMAIL {} kind {}", &key, kind as u8));
 		self.set(&key, limit);
 	}
 }

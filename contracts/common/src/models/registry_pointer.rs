@@ -1,4 +1,4 @@
-use alloc::{ fmt::Display, string::{ ToString, String } };
+use alloc::{ fmt::Display, string::ToString };
 use casper_types::{
 	bytesrepr::{ allocate_buffer, FromBytes, ToBytes },
 	CLTyped,
