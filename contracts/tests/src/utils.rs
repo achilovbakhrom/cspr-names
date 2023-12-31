@@ -1,9 +1,10 @@
+use common_lib::constants::common_keys::KEY_DATABASE_CONTRACT_HASH;
 use rand::Rng;
 use std::path::PathBuf;
 use casper_types::{
 	ContractHash,
 	URef,
-	bytesrepr::{ FromBytes },
+	bytesrepr::FromBytes,
 	CLTyped,
 	runtime_args,
 	system::mint,
@@ -12,6 +13,8 @@ use casper_types::{
 	ContractPackageHash,
 	RuntimeArgs,
 	Key,
+	SecretKey,
+	PublicKey,
 };
 use casper_engine_test_support::{
 	WasmTestBuilder,
@@ -162,12 +165,20 @@ pub fn deploy(
 		}
 	};
 
-	let mut execute_request_builder = ExecuteRequestBuilder::from_deploy_item(deploy_builder.build());
+	let mut execute_request_builder = ExecuteRequestBuilder::from_deploy_item(
+		deploy_builder.build()
+	);
 	if let Some(ustamp) = block_time {
 		execute_request_builder = execute_request_builder.with_block_time(ustamp);
 	}
 	let exec = builder.exec(execute_request_builder.build());
-	(if success { exec.expect_success() } else { exec.expect_failure() }).commit();
+	(
+		if success {
+			exec.expect_success()
+		} else {
+			exec.expect_failure()
+		}
+	).commit();
 }
 
 pub fn query<T: FromBytes + CLTyped>(
@@ -203,17 +214,86 @@ pub fn query_uref(
 		.expect("must convert to seed uref")
 }
 
-pub fn query_dictionary<T: FromBytes + CLTyped>(
+pub fn query_dictionary<T>(
 	builder: &InMemoryWasmTestBuilder,
 	base: URef,
 	path: &str
-) -> T {
+) -> T
+	where T: FromBytes + CLTyped
+{
 	builder
 		.query_dictionary_item(None, base, path)
 		.expect("should be stored dictionary value.")
 		.as_cl_value()
 		.expect("should be cl value.")
-		.clone()
+		.to_owned()
 		.into_t()
 		.expect("Wrong type in query result.")
+}
+
+pub struct UnitTestContext {
+	pub builder: InMemoryWasmTestBuilder,
+	pub contract_hash: ContractHash,
+	pub maintainer: AccountHash,
+	pub accounts: Vec<AccountHash>,
+}
+
+impl UnitTestContext {
+	pub fn instance(
+		acc_count: u8,
+		contract_path: &str,
+		contract_hash_key: &str
+	) -> Self {
+		let pk = PublicKey::from(
+			&SecretKey::ed25519_from_bytes([1u8; 32]).unwrap()
+		);
+		let maintainer = AccountHash::from(&pk);
+
+		let mut accounts = Vec::<AccountHash>::new();
+		for i in 2..=acc_count + 1 {
+			let pk = PublicKey::from(
+				&SecretKey::ed25519_from_bytes([i; 32]).unwrap()
+			);
+			let account_hash = AccountHash::from(&pk);
+			accounts.push(account_hash);
+		}
+
+		let fund_acc = fund_account(&maintainer);
+
+		let mut builder = InMemoryWasmTestBuilder::default();
+		builder.run_genesis(&DEFAULT_RUN_GENESIS_REQUEST).commit();
+
+		builder.exec(fund_acc).expect_success().commit();
+		let contract_path_buf = PathBuf::from(contract_path);
+
+		deploy(
+			&mut builder,
+			&maintainer,
+			&DeploySource::Code(contract_path_buf.clone()),
+			runtime_args! {},
+			true,
+			None
+		);
+
+		let contract_hash: ContractHash = query(
+			&builder,
+			Key::Account(maintainer),
+			&[contract_hash_key.to_string()]
+		);
+
+		Self {
+			builder,
+			contract_hash,
+			maintainer,
+			accounts,
+		}
+	}
+
+	pub fn fund_account(&mut self, idx: u8) {
+		let acc = self.accounts.get(idx as usize);
+		if let Some(account) = acc {
+			let fund_acc = fund_account(&account);
+			self.builder.exec(fund_acc).expect_success().commit();
+		}
+	}
 }
