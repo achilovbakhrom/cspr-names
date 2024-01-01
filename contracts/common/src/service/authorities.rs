@@ -8,7 +8,7 @@ use casper_types::Key;
 use crate::{
 	constants::common_keys::CommonArgs,
 	db::store::Store,
-	utils::{ storage, authority::ensure_caller_has_permission },
+	utils::authority::ensure_caller_has_permission,
 	errors::CommonError,
 	types::types::CResult,
 };

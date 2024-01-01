@@ -5,13 +5,9 @@ use casper_contract::{
 };
 use casper_types::{ Key, runtime_args, runtime_args::RuntimeArgs };
 
-use crate::{
-	db::store::Store,
-	errors::CommonError,
-	enums::caller_verification_type::CallerVerificationType,
-};
+use crate::{ db::store::Store, errors::CommonError };
 
-use super::{ helpers::is_array_contain, registry::get_verified_caller };
+use super::helpers::is_array_contain;
 
 fn is_key_maintainer(key: Key) -> bool {
 	let store = Store::instance();

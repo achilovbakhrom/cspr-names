@@ -368,7 +368,6 @@ pub const ENDPOINT_REGISTRY_GET_OPERATORS_FOR_CONTRACT_HASH: &str =
 	"get_operators_for_contract_hash";
 
 // ADMINISTRATION SCOPE
-
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum AdministractionStoreKeys {
@@ -463,6 +462,95 @@ impl fmt::Display for AdministrationEndpoints {
 			Self::SetCharsMinCount => write!(f, "set_chars_min_count"),
 			Self::GetListingLimit => write!(f, "get_listing_limit"),
 			Self::SetListingLimit => write!(f, "set_listing_limit"),
+		}
+	}
+}
+
+/// NFT Contract Keys
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum NFTContractKeys {
+	Listing,
+	Operator,
+	NFTCoreContractHash,
+	NFTCoreContractHashCurrent,
+}
+
+impl fmt::Display for NFTContractKeys {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Listing => write!(f, "listing"),
+			Self::Operator => write!(f, "listing"),
+			Self::NFTCoreContractHash => write!(f, "nft_core_contract_hash"),
+			Self::NFTCoreContractHashCurrent =>
+				write!(f, "nft_core_contract_hash_current"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum NFTContractArgs {
+	Owner,
+	Metadata,
+	NftCoreContractHash,
+	TokenId,
+	SourceKey,
+	DestinationKey,
+	TokenPrice,
+}
+
+impl fmt::Display for NFTContractArgs {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Owner => write!(f, "owner"),
+			Self::Metadata => write!(f, "metadata"),
+			Self::NftCoreContractHash => write!(f, "contract_hash"),
+			Self::TokenId => write!(f, "token_id"),
+			Self::SourceKey => write!(f, "source_key"),
+			Self::DestinationKey => write!(f, "destination_key"),
+			Self::TokenPrice => write!(f, "token_price"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum NFTContractEndpoints {
+	Mint,
+	Transfer,
+	Burn,
+	List,
+	UnList,
+	Buy,
+}
+
+impl fmt::Display for NFTContractEndpoints {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Mint => write!(f, "mint"),
+			Self::Transfer => write!(f, "transfer"),
+			Self::Burn => write!(f, "burn"),
+			Self::List => write!(f, "list"),
+			Self::UnList => write!(f, "un_list"),
+			Self::Buy => write!(f, "buy"),
+		}
+	}
+}
+
+pub enum NFTCoreContractEndpoints {
+	Mint,
+	Transfer,
+	Burn,
+}
+
+impl fmt::Display for NFTCoreContractEndpoints {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Mint => write!(f, "mint"),
+			Self::Transfer => write!(f, "transfer"),
+			Self::Burn => write!(f, "burn"),
 		}
 	}
 }

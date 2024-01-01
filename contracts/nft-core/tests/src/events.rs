@@ -7,7 +7,7 @@ use casper_engine_test_support::{
 use casper_event_standard::EVENTS_DICT;
 use casper_types::{account::AccountHash, runtime_args, Key, RuntimeArgs};
 
-use contract::{
+use nft_core_contract::{
     constants::{
         ACCESS_KEY_NAME_1_0_0, APPROVED, ARG_APPROVE_ALL, ARG_COLLECTION_NAME, ARG_EVENTS_MODE,
         ARG_NAMED_KEY_CONVENTION, ARG_OPERATOR, ARG_SOURCE_KEY, ARG_SPENDER, ARG_TARGET_KEY,
@@ -336,7 +336,7 @@ fn should_record_cep47_dictionary_style_metadata_update_event_for_nft721_using_t
             &builder,
             &nft_contract_key,
             dictionary_name,
-            &base16::encode_lower(&support::create_blake2b_hash(original_metadata)),
+            &base16::encode_lower(&support::create_blake2b_hash(updated_metadata)),
         ),
     };
 

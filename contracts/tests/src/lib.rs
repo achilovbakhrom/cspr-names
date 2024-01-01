@@ -3,6 +3,12 @@ mod context;
 mod unit;
 
 // #[cfg(test)]
+// mod nft_core;
+
+// #[cfg(test)]
+// mod nft_tests;
+
+// #[cfg(test)]
 // mod database_tests;
 
 // #[cfg(test)]
@@ -10,11 +16,5 @@ mod unit;
 
 // #[cfg(test)]
 // mod main_tests;
-
-// #[cfg(test)]
-// mod nft_core;
-
-// #[cfg(test)]
-// mod nft_tests;
 
 mod utils;

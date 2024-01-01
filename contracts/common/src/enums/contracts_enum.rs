@@ -69,15 +69,15 @@ impl ToBytes for ContractKind {
 	}
 }
 
-impl ContractKind {
-	fn all_contracts() -> Vec<Self> {
-		vec![
-			Self::Database,
-			Self::Main,
-			Self::NFT,
-			Self::NFTCore,
-			Self::PriceOracle,
-			Self::Administration
-		]
-	}
-}
+// impl ContractKind {
+// 	fn all_contracts() -> Vec<Self> {
+// 		vec![
+// 			Self::Database,
+// 			Self::Main,
+// 			Self::NFT,
+// 			Self::NFTCore,
+// 			Self::PriceOracle,
+// 			Self::Administration
+// 		]
+// 	}
+// }
