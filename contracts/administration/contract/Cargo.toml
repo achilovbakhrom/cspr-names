@@ -1,0 +1,20 @@
+[package]
+name = "administration-contract"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+casper-contract = { version = "3.0.0", features = ["test-support"] }
+casper-types = "3.0.0"
+common-lib = { path = "../../common", default-features = false }
+
+[[bin]]
+name = "administration-contract"
+path = "src/main.rs"
+bench = false
+doctest = false
+test = false
+
+[profile.release]
+codegen-units = 1
+lto = true

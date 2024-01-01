@@ -1,5 +1,5 @@
 [package]
-name = "contract"
+name = "configuration"
 version = "0.1.0"
 edition = "2018"
 
@@ -8,7 +8,7 @@ casper-contract = "3.0.0"
 casper-types = "3.0.0"
 
 [[bin]]
-name = "contract"
+name = "configuration"
 path = "src/main.rs"
 bench = false
 doctest = false
@@ -17,4 +17,3 @@ test = false
 [profile.release]
 codegen-units = 1
 lto = true
-

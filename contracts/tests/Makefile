@@ -1,6 +1,11 @@
 prepare:
 	rustup target add wasm32-unknown-unknown
 
+build-administration-contract:
+	cd ../administration/contract && cargo build --release --target wasm32-unknown-unknown
+	wasm-strip contract/target/wasm32-unknown-unknown/release/administration-contract.wasm 2>/dev/null | true
+	cp ../target/wasm32-unknown-unknown/release/administration-contract.wasm wasm
+
 build-main-contract:
 	cd ../main/contract && cargo build --release --target wasm32-unknown-unknown
 	wasm-strip contract/target/wasm32-unknown-unknown/release/contract.wasm 2>/dev/null | true
@@ -46,11 +51,12 @@ build-nft-contract:
 
 test:
 	mkdir -p wasm
-	make build-main-contract
-	make build-nft-core-contract
-	make build-nft-contract
-	make build-price-oracle-contract
-	make build-database-contract
+	make build-administration-contract
+	# make build-main-contract
+	# make build-nft-core-contract
+	# make build-nft-contract
+	# make build-price-oracle-contract
+	# make build-database-contract
 	cargo test
 
 clippy:
