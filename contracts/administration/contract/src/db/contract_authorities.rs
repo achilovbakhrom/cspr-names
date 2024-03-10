@@ -1,8 +1,10 @@
 use alloc::{ vec::Vec, vec, string::ToString };
+use casper_contract::unwrap_or_revert::UnwrapOrRevert;
 use casper_types::{ ContractHash, Key };
 use common_lib::{
-	db::{ dictionary::Dictionary, traits::Storable },
 	constants::common_keys::AdministractionStoreKeys,
+	db::{ dictionary::Dictionary, traits::Storable },
+	errors::CommonError,
 };
 
 pub struct ContractAuthoritiesStore {
@@ -33,6 +35,12 @@ pub trait ContractAuthorities {
 	fn add_contract_authority(&self, contract_hash: ContractHash, key: Key) -> ();
 
 	fn get_contract_authority(&self, contract_hash: ContractHash) -> Vec<Key>;
+
+	fn remove_contract_authority(
+		&self,
+		contract_hash: ContractHash,
+		key: Key
+	) -> ();
 }
 
 impl ContractAuthorities for ContractAuthoritiesStore {
@@ -55,6 +63,20 @@ impl ContractAuthorities for ContractAuthoritiesStore {
 	) -> () {
 		let mut authorities = self.get_contract_authority(contract_hash.clone());
 		authorities.push(key);
+		self.set_contract_authority_list(contract_hash, authorities)
+	}
+
+	fn remove_contract_authority(
+		&self,
+		contract_hash: ContractHash,
+		key: Key
+	) -> () {
+		let mut authorities = self.get_contract_authority(contract_hash.clone());
+		let position = authorities
+			.iter()
+			.position(|item| item == key)
+			.unwrap_or_revert_with(CommonError::ItemNotFound);
+		authorities.remove(position);
 		self.set_contract_authority_list(contract_hash, authorities)
 	}
 }

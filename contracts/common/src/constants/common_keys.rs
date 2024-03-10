@@ -1,5 +1,7 @@
 // Common usage constants
 
+use core::fmt::write;
+
 use alloc::collections::BTreeMap;
 use alloc::fmt;
 use alloc::string::{ String, ToString };
@@ -174,60 +176,6 @@ pub const KEY_PO_CONTRACT_ACCESS_UREF: &str =
 	"key_price_oracle_contract_access_uref";
 pub const KEY_PO_PRICES: &str = "key_price_oracle_prices";
 
-// ******* Database Contract constants **********
-
-// ARGS
-pub const ARG_DATABASE_DOMAIN_NAME: &str = "arg_database_domain_name";
-pub const ARG_DATABASE_SUBDOMAIN_NAME: &str = "arg_database_subdomain_name";
-pub const ARG_DATABASE_RESOLVER: &str = "arg_database_resolver";
-pub const ARG_DATABASE_EXPIRATION_DATE: &str = "arg_database_expiration_date";
-pub const ARG_DATABASE_OWNER: &str = "arg_database_owner";
-pub const ARG_DATABASE_PAGE: &str = "arg_database_page";
-
-// KEYS
-pub const KEY_DATABASE_DICTIONARY_SUBDOMAIN: &str = "key_database_subdomain";
-pub const KEY_DATABASE_SUBDOMAIN_COUNT: &str = "key_database_subdomain_count";
-pub const KEY_DATABASE_DICTIONARY_SUBDOMAIN_LIST: &str =
-	"key_database_subdomain_list";
-pub const KEY_DATABASE_DICTIONARY_DOMAIN: &str = "key_database_domain";
-pub const KEY_DATABASE_DICTIONARY_DOMAIN_MAP: &str = "key_database_domain_map";
-pub const KEY_DATABASE_DICTIONARY_DOMAIN_LIST: &str =
-	"key_database_domain_list";
-pub const KEY_DATABASE_DOMAIN_LIST_PAGINATION: &str =
-	"key_database_domain_list_pagination";
-pub const KEY_DATABASE_TOTALS_DOMAIN_COUNT: &str =
-	"key_database_totals_domain_count";
-pub const KEY_DATABASE_TOTALS_SUBDOMAIN_COUNT: &str =
-	"key_database_totals_subdomain_count";
-pub const KEY_DATABASE_CONTRACT_PACKAGE_NAME: &str =
-	"key_database_contract_package_name";
-pub const KEY_DATABASE_CONTRACT_ACCESS_UREF: &str =
-	"key_database_contract_access_uref";
-pub const KEY_DATABASE_CONTRACT_VERSION: &str = "key_database_contract_version";
-pub const KEY_DATABASE_CONTRACT_HASH: &str = "key_database_contract_hash";
-pub const KEY_DATABASE_DICTIONARY_OWNER_DOMAIN_LIST: &str =
-	"key_database_dictionary_owner_domain_list";
-// ENDPOINTS
-pub const ENDPOINT_DATABASE_SAVE_DOMAIN_NAME: &str = "save_domain_name";
-pub const ENDPOINT_DATABASE_SAVE_SUBDOMAIN_NAME: &str = "save_subdomain_name";
-pub const ENDPOINT_DATABASE_REMOVE_DOMAIN_NAME: &str = "remove_domain_name";
-pub const ENDPOINT_DATABASE_REMOVE_SUBDOMAIN_NAME: &str =
-	"remove_subdomain_name";
-pub const ENDPOINT_DATABASE_SET_DOMAIN_OWNERSHIP: &str = "set_domain_ownership";
-pub const ENDPOINT_DATABASE_SET_DOMAIN_EXPIRATION: &str =
-	"set_domain_expiration";
-pub const ENDPOINT_DATABASE_SET_DOMAIN_RESOLVER: &str = "set_domain_resolver";
-pub const ENDPOINT_DATABASE_SET_SUBDOMAIN_RESOLVER: &str =
-	"set_subdomain_resolver";
-pub const ENDPOINT_DATABASE_GET_DOMAIN_LIST: &str = "get_domain_list";
-pub const ENDPOINT_DATABASE_GET_SUBDOMAIN_LIST: &str = "get_subdomain_list";
-pub const ENDPOINT_DATABASE_GET_TOTALS: &str = "get_totals";
-pub const ENDPOINT_DATABASE_GET_DOMAIN: &str = "get_domain";
-pub const ENDPOINT_DATABASE_GET_SUBDOMAIN: &str = "get_subdomain";
-pub const ENDPOINT_DATABASE_INIT: &str = "init";
-pub const ENDPOINT_DATABASE_GET_DOMAIN_LIST_FOR_OWNER: &str =
-	"get_domain_list_for_owner";
-
 // ******* NFT Contract constants **********
 
 // ARGS
@@ -262,36 +210,6 @@ pub const ENDPOINT_NFT_SET_CURRENT_CONTRACT_HASH: &str =
 	"set_current_contract_hash";
 pub const ENDPOINT_SET_APPROVAL_FOR_ALL: &str = "set_approval_for_all";
 pub const ENDPOINT_NFT_INITIALIZE: &str = "init";
-
-// ******* Authorities **********
-
-// ARGS
-pub const ARG_AUTHORITY_MUTATION_TYPE: &str = "arg_authority_mutation_type";
-pub const ARG_AUTHORITY_CONTRACT_HASH: &str = "arg_authority_contract_hash";
-pub const ARG_AUTHORITY_AUTHORITY_LIST: &str = "arg_authority_authority_list";
-pub const ARG_AUTHORITY_EXTENSION: &str = "arg_authority_extension";
-pub const ARG_AUTHORITY_CONTRACT_TYPE: &str = "arg_authority_contract_type";
-
-// KEYS
-pub const KEY_AUTHORITY_AUTHORITIES: &str = "key_authority_authorities";
-pub const KEY_AUTHORITY_CONTRACTS: &str = "key_authority_contracts";
-pub const KEY_AUTHORITY_CONTRACT_DB: &str = "key_authority_contract_db";
-pub const KEY_AUTHORITY_MAINTAINER: &str = "key_authority_maintainer";
-pub const KEY_AUTHORITY_CONTRACT_PACKAGE_NAME: &str =
-	"key_authority_contract_package_name";
-pub const KEY_AUTHORITY_CONTRACT_ACCESS_UREF: &str =
-	"key_authority_contract_access_uref";
-pub const KEY_AUTHORITY_CONTRACT_HASH: &str = "key_authority_contract_hash";
-pub const KEY_AUTHORITY_CONTRACT_VERSION: &str =
-	"key_authority_contract_version";
-
-// ENDPOINTS
-pub const ENDPOINT_AUTHORITY_SET_AUTHORITY: &str = "set_authority";
-pub const ENDPOINT_AUTHORITY_GET_AUTHORITY: &str = "get_authority";
-pub const ENDPOINT_AUTHORITY_REMOVE_AUTHORITY: &str = "remove_authority";
-pub const ENDPOINT_AUTHORITY_SET_CONTRACT: &str = "set_contract";
-pub const ENDPOINT_AUTHORITY_GET_CONTRACT: &str = "get_contract";
-pub const ENDPOINT_AUTHORITY_REMOVE_CONTRACT: &str = "remove_contract";
 
 // <-- Registry -->
 
@@ -428,6 +346,7 @@ pub enum AdministrationEndpoints {
 	SetContractAuthorityList,
 	AddContractAuthority,
 	GetContractAuthorityList,
+	RemoveContractAuthority,
 	GetContract,
 	AddContract,
 	IncrementContract,
@@ -450,6 +369,7 @@ impl fmt::Display for AdministrationEndpoints {
 			Self::AddContractAuthority => write!(f, "add_contract_authority"),
 			Self::GetContractAuthorityList =>
 				write!(f, "get_contract_authority_list"),
+			Self::RemoveContractAuthority => write!(f, "remove_contract_authority"),
 			Self::GetContract => write!(f, "get_contract"),
 			Self::AddContract => write!(f, "add_contract"),
 			Self::IncrementContract => write!(f, "increment_contract"),
@@ -555,6 +475,56 @@ impl fmt::Display for NFTCoreContractEndpoints {
 	}
 }
 
+/// Price Oracle Keys
+#[derive(Debug, Clone, Copy)]
+pub enum PriceOracleKeys {
+	PriceType,
+	Price,
+	PriceMid,
+	CharsCount,
+	PriceMore,
+	SimpleOperations,
+	Main,
+}
+
+impl fmt::Display for PriceOracleKeys {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::PriceType => write!(f, "price_type"),
+			Self::Price => write!(f, "price"),
+			Self::PriceMid => write!(f, "price_mid"),
+			Self::CharsCount => write!(f, "chars_count"),
+			Self::PriceMore => write!(f, "price_more"),
+			Self::SimpleOperations => write!(f, "simple_operations"),
+			Self::Main => write!(f, "main"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u8)]
+pub enum PriceOracleArgs {
+	Extension,
+	PriceType,
+	Price,
+	PriceMid,
+	CharsCount,
+	PriceMore,
+}
+
+impl fmt::Display for PriceOracleArgs {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::PriceType => write!(f, "price_type"),
+			Self::Price => write!(f, "price"),
+			Self::PriceMid => write!(f, "price_mid"),
+			Self::CharsCount => write!(f, "chars_count"),
+			Self::PriceMore => write!(f, "price_more"),
+			Self::Extension => write!(f, "extension"),
+		}
+	}
+}
+
 /// Common Keys
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
@@ -585,6 +555,7 @@ impl fmt::Display for CommonKeys {
 pub enum CommonArgs {
 	Authorities,
 	Authority,
+	AdministrationContract,
 }
 
 impl fmt::Display for CommonArgs {
@@ -592,6 +563,7 @@ impl fmt::Display for CommonArgs {
 		match self {
 			Self::Authorities => write!(f, "authorities"),
 			Self::Authority => write!(f, "authority"),
+			Self::AdministrationContract => write!(f, "administration_contract"),
 		}
 	}
 }
@@ -612,6 +584,250 @@ impl fmt::Display for CommonEndpoints {
 			Self::AddAuthority => write!(f, "add_authority"),
 			Self::RemoveAuthority => write!(f, "remove_authority"),
 			Self::GetAuthorities => write!(f, "get_authorities"),
+		}
+	}
+}
+
+/// Database Contract Keys
+
+#[derive(Debug, Clone, Copy)]
+pub enum DatabaseKeys {
+	DictionarySubdomain = "key_database_subdomain",
+	SubdomainCount = "key_database_subdomain_count",
+	DictionarySubdomainList = "key_database_subdomain_list",
+	DictionaryDomain = "key_database_domain",
+	DictionaryDomainMap = "key_database_domain_map",
+	DictionaryDomainList = "key_database_domain_list",
+	DomainListPagination = "key_database_domain_list_pagination",
+	TotalDomainCount = "key_database_totals_domain_count",
+	TotalSubdomainCount = "key_database_totals_subdomain_count",
+	DictionaryDomainOwer = "key_database_dictionary_owner_domain_list",
+}
+
+impl fmt::Display for DatabaseKeys {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::DictionarySubdomain => write!(f, "key_database_subdomain"),
+			Self::SubdomainCount => write!(f, "key_database_subdomain_count"),
+			Self::DictionarySubdomainList => write!(f, "key_database_subdomain_list"),
+			Self::DictionaryDomain => write!(f, "key_database_domain"),
+			Self::DictionaryDomainMap => write!(f, "key_database_domain_map"),
+			Self::DictionaryDomainList => write!(f, "key_database_domain_list"),
+			Self::DomainListPagination =>
+				write!(f, "key_database_domain_list_pagination"),
+			Self::TotalDomainCount => write!(f, "key_database_totals_domain_count"),
+			Self::TotalSubdomainCount =>
+				write!(f, "key_database_totals_subdomain_count"),
+			Self::DictionaryDomainOwer =>
+				write!(f, "key_database_dictionary_owner_domain_list"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum DatabaseArgs {
+	DomainName,
+	SubdomainName,
+	Resolver,
+	ExpirationDate,
+	Owner,
+	Page,
+}
+
+impl fmt::Display for DatabaseArgs {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::DomainName => write!(f, "arg_database_domain_name"),
+			Self::SubdomainName => write!(f, "arg_database_subdomain_name"),
+			Self::Resolver => write!(f, "arg_database_resolver"),
+			Self::ExpirationDate => write!(f, "arg_database_expiration_date"),
+			Self::Owner => write!(f, "arg_database_owner"),
+			Self::Page => write!(f, "arg_database_page"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum DatabaseEndpoints {
+	SaveDomainName,
+	SaveSubdomainName,
+	RemoveDomainName,
+	RemoveSubdomainName,
+	SetDomainOwnership,
+	SetDomainExpiration,
+	SetDomainResolver,
+	SetSubdomainResolver,
+	GetDomainList,
+	GetSubdomainList,
+	GetTotals,
+	GetDomain,
+	GetSubdomain,
+	Init,
+	GetDomainListForOwner,
+}
+
+impl fmt::Display for DatabaseEndpoints {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::SaveDomainName => write!(f, "save_domain_name"),
+			Self::SaveSubdomainName => write!(f, "save_subdomain_name"),
+			Self::RemoveDomainName => write!(f, "remove_domain_name"),
+			Self::RemoveSubdomainName => write!(f, "remove_subdomain_name"),
+			Self::SetDomainOwnership => write!(f, "set_domain_ownership"),
+			Self::SetDomainExpiration => write!(f, "set_domain_expiration"),
+			Self::SetDomainResolver => write!(f, "set_domain_resolver"),
+			Self::SetSubdomainResolver => write!(f, "set_subdomain_resolver"),
+			Self::GetDomainList => write!(f, "get_domain_list"),
+			Self::GetSubdomainList => write!(f, "get_subdomain_list"),
+			Self::GetTotals => write!(f, "get_totals"),
+			Self::GetDomain => write!(f, "get_domain"),
+			Self::GetSubdomain => write!(f, "get_subdomain"),
+			Self::Init => write!(f, "init"),
+			Self::GetDomainListForOwner => write!(f, "get_domain_list_for_owner"),
+		}
+	}
+}
+
+/// Registry Contract Keys
+
+#[derive(Debug, Clone, Copy)]
+pub enum RegistryEndpoints {
+	MapDomainNameToContractHash,
+	GetContractHashForDomainName,
+}
+
+impl fmt::Display for RegistryEndpoints {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::MapDomainNameToContractHash =>
+				write!(f, "map_domain_name_to_contract_hash"),
+			Self::GetContractHashForDomainName =>
+				write!(f, "get_contract_hash_for_domain_name"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum RegistryArgs {
+	DomainName,
+	DatabaseContractHash,
+	NftContractHash,
+}
+
+impl fmt::Display for RegistryArgs {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::DomainName => write!(f, "arg_registry_domain_name"),
+			Self::DatabaseContractHash =>
+				write!(f, "arg_registry_database_contract_hash"),
+			Self::NftContractHash => write!(f, "arg_registry_nft_contract_hash"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum RegistryKeys {
+	DomainContractHash = "key_registry_domain_contract_hash",
+}
+
+impl fmt::Display for RegistryKeys {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::DomainContractHash =>
+				write!(f, "key_registry_domain_contract_hash"),
+		}
+	}
+}
+
+/// Main Contract Keys
+
+#[derive(Debug, Clone, Copy)]
+pub enum MainEndpoints {
+	RegisterDomain,
+	ResolverDomain,
+	SetResolverAddressForDomain,
+	RegisterSubDomain,
+	RemoveSubDomain,
+	SetResolverAddressForSubDomain,
+	GetSubdomainsForDomain,
+	GetDomainList,
+	Init,
+	Extend,
+}
+
+impl fmt::Display for MainEndpoints {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::RegisterDomain => write!(f, "register_domain"),
+			Self::ResolverDomain => write!(f, "resolve_domain"),
+			Self::SetResolverAddressForDomain =>
+				write!(f, "set_resolver_address_for_domain"),
+			Self::RegisterSubDomain => write!(f, "register_sub_domain"),
+			Self::RemoveSubDomain => write!(f, "remove_subdomain"),
+			Self::SetResolverAddressForSubDomain =>
+				write!(f, "set_resolver_address_for_subdomain"),
+			Self::GetSubdomainsForDomain => write!(f, "get_sudomains_for_domain"),
+			Self::GetDomainList => write!(f, "get_domain_list"),
+			Self::Init => write!(f, "init"),
+			Self::Extend => write!(f, "extend"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum MainArgs {
+	Domain,
+	Subdomain,
+	Duration,
+	ResolverAddress,
+	DomainPage,
+	PriceOracleContractHash,
+	RegisterAmount,
+	CustomerPurse,
+}
+
+impl fmt::Display for MainArgs {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Domain => write!(f, "arg_domain"),
+			Self::Subdomain => write!(f, "arg_subdomain"),
+			Self::Duration => write!(f, "arg_duration"),
+			Self::ResolverAddress => write!(f, "arg_resolver_address"),
+			Self::DomainPage => write!(f, "arg_domain_page"),
+			Self::PriceOracleContractHash =>
+				write!(f, "arg_price_oracle_contract_hash"),
+			Self::RegisterAmount => write!(f, "arg_amount"),
+			Self::CustomerPurse => write!(f, "arg_main_customer_purse"),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum MainKeys {
+	Maintainer,
+	DictionaryDomainMetadata,
+	DictionarySubdomainMetadata,
+	SubdomainMetadata,
+	PriceOracleContractHash,
+	DatabaseContractHash,
+	MaintainerPurse,
+	RegistryContractHash,
+}
+
+impl fmt::Display for MainKeys {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Maintainer => write!(f, "key_main_maintainer"),
+			Self::DictionaryDomainMetadata => write!(f, "key_domain_metadata"),
+			Self::DictionarySubdomainMetadata => write!(f, "key_subdomain_metadata"),
+			Self::SubdomainMetadata => write!(f, "key_subdomain_metadata"),
+			Self::PriceOracleContractHash =>
+				write!(f, "key_main_price_oracle_contract_hash"),
+			Self::DatabaseContractHash =>
+				write!(f, "key_main_database_contract_hash_map"),
+			Self::MaintainerPurse => write!(f, "key_main_maintainer_purse"),
+			Self::RegistryContractHash =>
+				write!(f, "key_main_registry_contract_hash"),
 		}
 	}
 }

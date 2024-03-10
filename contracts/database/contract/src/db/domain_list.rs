@@ -32,20 +32,25 @@ impl DomainListStore {
 		let pagination = self.get_pagination();
 		let domain_list = self.get_domain_list(pagination[0].to_string().as_ref());
 
-		Ok((domain_list.clone(), pagination.clone())).and_then(|(mut list, mut pagination)| {
-			if list.len() >= MAX_PAGE_SIZE {
-				if pagination.len() == 1 {
-					pagination[0] += 1;
-				} else {
-					pagination.remove(0);
+		Ok((domain_list.clone(), pagination.clone())).and_then(
+			|(mut list, mut pagination)| {
+				if list.len() >= MAX_PAGE_SIZE {
+					if pagination.len() == 1 {
+						pagination[0] += 1;
+					} else {
+						pagination.remove(0);
+					}
+					self.state.set(
+						KEY_DATABASE_DOMAIN_LIST_PAGINATION,
+						pagination.clone()
+					);
 				}
-				self.state.set(KEY_DATABASE_DOMAIN_LIST_PAGINATION, pagination.clone());
-			}
-			list.push(name.to_string());
-			self.store.set(pagination[0].to_string().as_ref(), list);
+				list.push(name.to_string());
+				self.store.set(pagination[0].to_string().as_ref(), list);
 
-			Ok(pagination[0])
-		})
+				Ok(pagination[0])
+			}
+		)
 	}
 
 	pub fn remove(&self, page: u64, name: &str) -> Result<(), DatabaseErrors> {
@@ -81,6 +86,8 @@ impl DomainListStore {
 	}
 
 	fn get_pagination(&self) -> Vec<u64> {
-		self.state.get::<Vec<u64>>(KEY_DATABASE_DOMAIN_LIST_PAGINATION).unwrap_or(vec![0u64])
+		self.state
+			.get::<Vec<u64>>(KEY_DATABASE_DOMAIN_LIST_PAGINATION)
+			.unwrap_or(vec![0u64])
 	}
 }

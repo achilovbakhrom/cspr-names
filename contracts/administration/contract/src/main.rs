@@ -33,98 +33,175 @@ use casper_types::{
 	contracts::NamedKeys,
 };
 use common_lib::{
-	utils::{
-		response::controller,
-		contract::{ create_entrypoint, setup_contract_info },
-	},
 	constants::common_keys::{
-		AdministrationEndpoints,
-		AdministrationArgs,
 		AdministractionStoreKeys,
-		CommonEndpoints,
+		AdministrationArgs,
+		AdministrationEndpoints,
 		CommonArgs,
+		CommonEndpoints,
 	},
-	enums::contracts_enum::ContractKind,
+	enums::{ contracts_enum::ContractKind, controller_roles::ControllerRoles },
+	utils::{
+		contract::{ create_entrypoint, setup_contract_info },
+		response::controller,
+	},
 };
+
+/// Authorities for administration contract
 use common_lib::controllers::authorities;
 
-/// Contract Authorities endpoints
+/// Others Contracts Authority endpoints
 #[no_mangle]
 pub extern "C" fn set_contract_authority_list() {
-	controller(service::contract_authority::set_contract_autority_list)
+	controller(
+		service::contract_authority::set_contract_autority_list,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn add_contract_authority() {
-	controller(service::contract_authority::add_contract_authority)
+	controller(
+		service::contract_authority::add_contract_authority,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn get_contract_authority_list() {
-	controller(service::contract_authority::get_contract_authority_list)
+	controller(
+		service::contract_authority::get_contract_authority_list,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
-/// Contracts endpoints
+#[no_mangle]
+pub extern "C" fn remove_contract_authority() {
+	controller(
+		service::contract_authority::remove_contract_authority,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
+}
+
+/// List of Contracts endpoints
 #[no_mangle]
 pub extern "C" fn get_contract() {
-	controller(service::contracts::get_contract)
+	controller(
+		service::contracts::get_contract,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn add_contract() {
-	controller(service::contracts::add_contract)
+	controller(
+		service::contracts::add_contract,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn increment_contract() {
-	controller(service::contracts::increment_contract)
+	controller(
+		service::contracts::increment_contract,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn decrement_contract() {
-	controller(service::contracts::decrement_contract)
+	controller(
+		service::contracts::decrement_contract,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
-/// Extension Endpoints
+/// Extension Endpoints (.cspr, .com ....)
 #[no_mangle]
 pub extern "C" fn set_allowed_extensions() {
-	controller(service::extensions::set_allowed_extensions)
+	controller(
+		service::extensions::set_allowed_extensions,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn get_allowed_extensions() {
-	controller(service::extensions::get_allowed_extensions)
+	controller(
+		service::extensions::get_allowed_extensions,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn add_extension() {
-	controller(service::extensions::add_extension)
+	controller(
+		service::extensions::add_extension,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn remove_extension() {
-	controller(service::extensions::remove_extension)
+	controller(
+		service::extensions::remove_extension,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
-/// Limits Endpoints
+/// Limits Endpoints (min chars count for extension: .cspr - 3, ...)
 #[no_mangle]
 pub extern "C" fn get_chars_min_count() {
-	controller(service::limits::get_chars_min_count)
+	controller(
+		service::limits::get_chars_min_count,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn set_chars_min_count() {
-	controller(service::limits::set_chars_min_count)
+	controller(
+		service::limits::set_chars_min_count,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
+/// Database and NFT contract items limit .... (10 000 items for example can hold)
 #[no_mangle]
 pub extern "C" fn get_listing_limit() {
-	controller(service::limits::get_listing_limit)
+	controller(
+		service::limits::get_listing_limit,
+		vec![
+			ControllerRoles::OnlyLocalOperators,
+			ControllerRoles::OnlyAuthorizedContracts
+		]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn set_listing_limit() {
-	controller(service::limits::set_listing_limit)
+	controller(
+		service::limits::set_listing_limit,
+		vec![ControllerRoles::OnlyLocalOperators]
+	)
 }
 
 /// Endpoints
@@ -146,271 +223,7 @@ pub extern "C" fn set_listing_limit() {
 
 #[no_mangle]
 pub extern "C" fn call() {
-	let mut entrypoints = EntryPoints::new();
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::SetContractAuthorityList.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractHash.to_string(),
-					ContractHash::cl_type()
-				),
-				Parameter::new(
-					&AdministrationArgs::ContractAuthorities.to_string(),
-					CLType::Any
-				)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
+	use service::init::init;
 
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::AddContractAuthority.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractHash.to_string(),
-					CLType::Key
-				),
-				Parameter::new(
-					&AdministrationArgs::ContractAuthority.to_string(),
-					CLType::Key
-				)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::GetContractAuthorityList.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractHash.to_string(),
-					ContractHash::cl_type()
-				)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::GetContract.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractKind.to_string(),
-					ContractKind::cl_type()
-				),
-				Parameter::new(
-					&AdministrationArgs::Extension.to_string(),
-					Option::<String>::cl_type()
-				)
-			],
-			CLType::Any,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::AddContract.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractKind.to_string(),
-					ContractKind::cl_type()
-				),
-				Parameter::new(&AdministrationArgs::Key.to_string(), CLType::Key)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::IncrementContract.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractKind.to_string(),
-					ContractKind::cl_type()
-				),
-				Parameter::new(&AdministrationArgs::Key.to_string(), CLType::Key)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::DecrementContract.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractKind.to_string(),
-					ContractKind::cl_type()
-				),
-				Parameter::new(&AdministrationArgs::Key.to_string(), CLType::Key)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::SetAllowedExtensions.to_string(),
-			vec![],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::GetAllowedExtensions.to_string(),
-			vec![],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::AddExtension.to_string(),
-			vec![],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::RemoveExtension.to_string(),
-			vec![],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::GetCharsMinCount.to_string(),
-			vec![],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::SetCharsMinCount.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::CharsCount.to_string(),
-					u8::cl_type()
-				),
-				Parameter::new(
-					&AdministrationArgs::Extension.to_string(),
-					CLType::Option(Box::new(String::cl_type()))
-				)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::GetListingLimit.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractKind.to_string(),
-					ContractKind::cl_type()
-				)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&AdministrationEndpoints::SetListingLimit.to_string(),
-			vec![
-				Parameter::new(
-					&AdministrationArgs::ContractKind.to_string(),
-					ContractKind::cl_type()
-				),
-				Parameter::new(
-					&AdministrationArgs::CharsCount.to_string(),
-					u32::cl_type()
-				)
-			],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&CommonEndpoints::SetAuthorities.to_string(),
-			vec![Parameter::new(&CommonArgs::Authorities.to_string(), CLType::Any)],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&CommonEndpoints::AddAuthority.to_string(),
-			vec![Parameter::new(&CommonArgs::Authority.to_string(), CLType::Key)],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&CommonEndpoints::RemoveAuthority.to_string(),
-			vec![Parameter::new(&CommonArgs::Authority.to_string(), CLType::Key)],
-			CLType::Unit,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	entrypoints.add_entry_point(
-		create_entrypoint(
-			&CommonEndpoints::GetAuthorities.to_string(),
-			vec![],
-			CLType::Any,
-			EntryPointAccess::Public,
-			EntryPointType::Contract
-		)
-	);
-
-	let named_keys = NamedKeys::new();
-
-	setup_contract_info(entrypoints, named_keys)
+	init()
 }

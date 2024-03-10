@@ -1,0 +1,15 @@
+pub mod save_domain_name;
+pub mod save_subdomain_name;
+pub mod remove_domain_name;
+pub mod remove_subdomain_name;
+pub mod set_domain_ownership;
+pub mod set_domain_expiration;
+pub mod set_domain_resolver;
+pub mod set_subdomain_resolver;
+pub mod get_domain_list_for_owner;
+pub mod get_domain_list;
+pub mod get_subdomain_list;
+pub mod get_totals;
+pub mod get_domain;
+pub mod get_subdomain;
+pub mod init;

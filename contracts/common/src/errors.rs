@@ -18,6 +18,7 @@ pub enum CommonError {
 	MissingContractHash = 13,
 	FailedToConvertToAccountHash = 14,
 	NoAdministrationContractHashStored = 15,
+	MissingAdministrationContractHash = 16,
 }
 
 impl From<CommonError> for ApiError {

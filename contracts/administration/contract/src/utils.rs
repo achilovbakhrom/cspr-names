@@ -3,12 +3,18 @@ use casper_contract::{
 	contract_api::runtime,
 	unwrap_or_revert::UnwrapOrRevert,
 };
+use casper_types::ContractHash;
 use common_lib::{
 	constants::common_keys::AdministrationArgs,
+	enums::caller_verification_type::CallerVerificationType,
 	errors::AdministrationErrors,
+	utils::registry::get_verified_caller,
 };
 
-use crate::types::TResult;
+use crate::{
+	db::contract_authorities::{ ContractAuthorities, ContractAuthoritiesStore },
+	types::TResult,
+};
 
 pub fn get_extension_arg() -> TResult<String> {
 	let arg_extension: Option<String> = runtime::get_named_arg(

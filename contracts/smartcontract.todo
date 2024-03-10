@@ -2,36 +2,257 @@
   "todotree": {
     "tree": [
       {
-        "key": 1687013643767,
+        "key": 1710048847158,
         "children": [],
         "todo": {
-          "content": "make code cleaner",
-          "id": 1687013643767,
+          "content": "create a new domain name",
+          "id": 1710048847158,
           "level": "default",
           "done": false,
-          "start": 1687013643767
+          "start": 1710048847158
         }
       },
       {
-        "key": 1687013679647,
+        "key": 1710048854775,
         "children": [],
         "todo": {
-          "content": "Registry contract finalize",
-          "id": 1687013679647,
+          "content": "create a new subdomain name",
+          "id": 1710048854775,
           "level": "default",
           "done": false,
-          "start": 1687013679647
+          "start": 1710048854775
         }
       },
       {
-        "key": 1687013689030,
+        "key": 1710048860694,
         "children": [],
         "todo": {
-          "content": "Replace CEP-78 contract",
-          "id": 1687013689030,
+          "content": "remove subdomain name",
+          "id": 1710048860694,
           "level": "default",
           "done": false,
-          "start": 1687013689030
+          "start": 1710048860694
+        }
+      },
+      {
+        "key": 1710048868159,
+        "children": [],
+        "todo": {
+          "content": "set resolver address for domain",
+          "id": 1710048868159,
+          "level": "default",
+          "done": false,
+          "start": 1710048868159
+        }
+      },
+      {
+        "key": 1710048877359,
+        "children": [],
+        "todo": {
+          "content": "set resolver address for subdomain",
+          "id": 1710048877359,
+          "level": "default",
+          "done": false,
+          "start": 1710048877359
+        }
+      },
+      {
+        "key": 1710048933228,
+        "children": [],
+        "todo": {
+          "content": "extend",
+          "id": 1710048933228,
+          "level": "default",
+          "done": false,
+          "start": 1710048933228
+        }
+      },
+      {
+        "key": 1710048975048,
+        "children": [],
+        "todo": {
+          "content": "get domain list",
+          "id": 1710048975048,
+          "level": "default",
+          "done": false,
+          "start": 1710048975048
+        }
+      },
+      {
+        "key": 1710048987332,
+        "children": [],
+        "todo": {
+          "content": "get subdomains for domain name",
+          "id": 1710048987332,
+          "level": "default",
+          "done": false,
+          "start": 1710048987332
+        }
+      },
+      {
+        "key": 1710048995546,
+        "children": [],
+        "todo": {
+          "content": "resolve domain",
+          "id": 1710048995546,
+          "level": "default",
+          "done": false,
+          "start": 1710048995546
+        }
+      },
+      {
+        "key": 1710048993648,
+        "children": [],
+        "todo": {
+          "content": "resolver subdomain",
+          "id": 1710048993648,
+          "level": "default",
+          "done": false,
+          "start": 1710048993648
+        }
+      },
+      {
+        "key": 1710049036434,
+        "children": [],
+        "todo": {
+          "content": "list for selling",
+          "id": 1710049036434,
+          "level": "default",
+          "done": false,
+          "start": 1710049036434
+        }
+      },
+      {
+        "key": 1710049042950,
+        "children": [],
+        "todo": {
+          "content": "unlist",
+          "id": 1710049042950,
+          "level": "default",
+          "done": false,
+          "start": 1710049042950
+        }
+      },
+      {
+        "key": 1710049045584,
+        "children": [],
+        "todo": {
+          "content": "buy",
+          "id": 1710049045584,
+          "level": "default",
+          "done": false,
+          "start": 1710049045584
+        }
+      },
+      {
+        "key": 1710049048634,
+        "children": [],
+        "todo": {
+          "content": "mint",
+          "id": 1710049048634,
+          "level": "default",
+          "done": false,
+          "start": 1710049048634
+        }
+      },
+      {
+        "key": 1710049051851,
+        "children": [],
+        "todo": {
+          "content": "transfer",
+          "id": 1710049051851,
+          "level": "default",
+          "done": false,
+          "start": 1710049051851
+        }
+      },
+      {
+        "key": 1710049054268,
+        "children": [],
+        "todo": {
+          "content": "burn",
+          "id": 1710049054268,
+          "level": "default",
+          "done": false,
+          "start": 1710049054268
+        }
+      },
+      {
+        "key": 1710049058418,
+        "children": [],
+        "todo": {
+          "content": "set allowed extensions",
+          "id": 1710049058418,
+          "level": "default",
+          "done": true,
+          "start": 1710049058418,
+          "focus": false,
+          "end": 1710050123353
+        }
+      },
+      {
+        "key": 1710049078572,
+        "children": [],
+        "todo": {
+          "content": "set min chars length",
+          "id": 1710049078572,
+          "level": "default",
+          "done": true,
+          "start": 1710049078572,
+          "focus": false,
+          "end": 1710050121869
+        }
+      },
+      {
+        "key": 1710049229278,
+        "children": [],
+        "todo": {
+          "content": "authority list",
+          "id": 1710049229278,
+          "level": "default",
+          "done": true,
+          "start": 1710049229278,
+          "focus": false,
+          "end": 1710050116289
+        }
+      },
+      {
+        "key": 1710049239077,
+        "children": [],
+        "todo": {
+          "content": "contract authorities",
+          "id": 1710049239077,
+          "level": "default",
+          "done": true,
+          "start": 1710049239077,
+          "focus": false,
+          "end": 1710050106368
+        }
+      },
+      {
+        "key": 1710049260245,
+        "children": [],
+        "todo": {
+          "content": "set listing limit",
+          "id": 1710049260245,
+          "level": "default",
+          "done": true,
+          "start": 1710049260245,
+          "focus": false,
+          "end": 1710050073569
+        }
+      },
+      {
+        "key": 1710049266150,
+        "children": [],
+        "todo": {
+          "content": "set contract list",
+          "id": 1710049266150,
+          "level": "default",
+          "done": true,
+          "start": 1710049266150,
+          "focus": false,
+          "end": 1710050019064
         }
       }
     ],
@@ -41,12 +262,14 @@
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
     "virtual": false,
+    "timelines": [],
     "showLine": true,
     "playFontSize": 24,
     "title": "smartcontract",
     "autoSort": false,
     "showEndTime": false,
+    "simpleMode": false,
     "lang": "en",
-    "version": "1687013696032"
+    "version": "1710050123397"
   }
 }

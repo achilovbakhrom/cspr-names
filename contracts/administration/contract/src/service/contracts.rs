@@ -3,14 +3,21 @@ use casper_contract::{
 	contract_api::runtime,
 	unwrap_or_revert::UnwrapOrRevert,
 };
-use casper_types::Key;
+use casper_types::{ ContractHash, Key };
 
 use common_lib::{
-	enums::contracts_enum::ContractKind,
 	constants::common_keys::AdministrationArgs,
 	db::store::Store,
-	errors::AdministrationErrors,
+	enums::{
+		caller_verification_type::CallerVerificationType,
+		contracts_enum::ContractKind,
+	},
+	errors::{ AdministrationErrors, CommonError },
 	models::registry_pointer::CompoundContract,
+	utils::{
+		authority::ensure_caller_has_permission,
+		registry::get_verified_caller,
+	},
 };
 
 use crate::{
@@ -20,9 +27,10 @@ use crate::{
 
 use crate::utils::get_extension_arg;
 
+/// This service is closed, only authorized calls are passed (including contracts)
 /// Parameters:
 /// - contract_kind - required
-/// - extension - optional for simple contracts, otherwise is required
+/// - extension - optional for simple contracts, otherwise it is required
 
 pub fn get_contract() -> TResult<(Key, Option<u32>)> {
 	let kind: ContractKind = runtime::get_named_arg(
@@ -59,6 +67,7 @@ pub fn get_contract() -> TResult<(Key, Option<u32>)> {
 	}
 }
 
+/// This service is closed, only authorized calls are passed
 /// Parameters:
 /// - contract_kind: required
 /// - key - required
@@ -83,12 +92,14 @@ pub fn add_contract() -> TResult<()> {
 	Ok(())
 }
 
+/// This service is closed, only authorized calls are passed (including contracts)
 /// Parameters:
 /// - contract_kind: required
 /// - key - required
 /// - extension - optional for simple contracts, otherwise is required
 
 pub fn increment_contract() -> TResult<()> {
+	ensure_caller_has_permission().unwrap();
 	let kind: ContractKind = runtime::get_named_arg(
 		&AdministrationArgs::ContractKind.to_string()
 	);
@@ -102,12 +113,14 @@ pub fn increment_contract() -> TResult<()> {
 	Ok(())
 }
 
+/// This service is closed, only authorized calls are passed (including contracts)
 /// Parameters:
 /// - contract_kind: required
 /// - key - required
 /// - extension - optional for simple contracts, otherwise is required
 
 pub fn decrement_contract() -> TResult<()> {
+	ensure_caller_has_permission().unwrap();
 	let kind: ContractKind = runtime::get_named_arg(
 		&AdministrationArgs::ContractKind.to_string()
 	);

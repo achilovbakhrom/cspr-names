@@ -6,4 +6,3 @@ pub mod owner_domain_list;
 pub mod state;
 pub mod subdomain_list;
 pub mod subdomain_entity;
-

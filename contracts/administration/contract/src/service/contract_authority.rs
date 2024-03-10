@@ -1,7 +1,14 @@
 use alloc::{ vec::Vec, string::ToString };
-use casper_contract::contract_api::runtime;
+use casper_contract::{
+	contract_api::runtime,
+	unwrap_or_revert::UnwrapOrRevert,
+};
 use casper_types::{ Key, ContractHash };
-use common_lib::constants::common_keys::AdministrationArgs;
+use common_lib::{
+	constants::common_keys::AdministrationArgs,
+	errors::CommonError,
+	utils::authority::ensure_caller_has_permission,
+};
 
 use crate::{
 	types::TResult,
@@ -29,6 +36,18 @@ pub fn add_contract_authority() -> TResult<()> {
 	);
 	let store = ContractAuthoritiesStore::instance();
 	store.add_contract_authority(contract_hash, contract_authority);
+	Ok(())
+}
+
+pub fn remove_contract_authority() -> TResult<()> {
+	let contract_hash: ContractHash = runtime::get_named_arg(
+		&AdministrationArgs::ContractHash.to_string()
+	);
+	let contract_authority: Key = runtime::get_named_arg(
+		&AdministrationArgs::ContractAuthority.to_string()
+	);
+	let store = ContractAuthoritiesStore::instance();
+	store.remove_contract_authority(contract_hash, contract_authority);
 	Ok(())
 }
 

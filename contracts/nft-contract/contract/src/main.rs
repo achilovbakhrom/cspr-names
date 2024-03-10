@@ -25,6 +25,7 @@ use casper_types::{
 	Key,
 	Parameter,
 };
+use common_lib::enums::controller_roles::ControllerRoles;
 use common_lib::utils::contract::{ create_entrypoint, setup_contract_info };
 
 use casper_types::contracts::NamedKeys;
@@ -44,32 +45,38 @@ use common_lib::controllers::authorities;
 
 #[no_mangle]
 pub extern "C" fn mint() {
-	controller(nft_service::mint)
+	controller(nft_service::mint, vec![ControllerRoles::OnlyAuthorizedContracts])
 }
 
 #[no_mangle]
 pub extern "C" fn transfer() {
-	controller(nft_service::transfer)
+	controller(
+		nft_service::transfer,
+		vec![ControllerRoles::OnlyAuthorizedContracts]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn burn() {
-	controller(nft_service::burn)
+	controller(nft_service::burn, vec![ControllerRoles::OnlyAuthorizedContracts])
 }
 
 #[no_mangle]
 pub extern "C" fn list() {
-	controller(nft_service::list)
+	controller(nft_service::list, vec![ControllerRoles::OnlyAuthorizedContracts])
 }
 
 #[no_mangle]
 pub extern "C" fn un_list() {
-	controller(nft_service::un_list)
+	controller(
+		nft_service::un_list,
+		vec![ControllerRoles::OnlyAuthorizedContracts]
+	)
 }
 
 #[no_mangle]
 pub extern "C" fn buy() {
-	controller(nft_service::buy)
+	controller(nft_service::buy, vec![ControllerRoles::OnlyAuthorizedContracts])
 }
 
 /**

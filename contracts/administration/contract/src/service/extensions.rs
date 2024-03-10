@@ -13,9 +13,7 @@ use common_lib::{
 use crate::{ types::TResult, db::allowed_extensions::AllowedExtensions };
 
 pub fn set_allowed_extensions() -> TResult<()> {
-	ensure_caller_has_permission().unwrap_or_revert_with(
-		AdministrationErrors::InvalidCaller
-	);
+	ensure_caller_has_permission().unwrap();
 	let extensions: Vec<String> = runtime::get_named_arg(
 		&AdministrationArgs::AllowedExtensions.to_string()
 	);
@@ -26,17 +24,12 @@ pub fn set_allowed_extensions() -> TResult<()> {
 }
 
 pub fn get_allowed_extensions() -> TResult<Vec<String>> {
-	ensure_caller_has_permission().unwrap_or_revert_with(
-		AdministrationErrors::InvalidCaller
-	);
 	let store = Store::instance();
 	Ok(store.get_allowed_extensions())
 }
 
 pub fn add_extension() -> TResult<()> {
-	ensure_caller_has_permission().unwrap_or_revert_with(
-		AdministrationErrors::InvalidCaller
-	);
+	ensure_caller_has_permission().unwrap();
 	let extension: String = runtime::get_named_arg(
 		&AdministrationArgs::AllowedExtension.to_string()
 	);
@@ -46,9 +39,7 @@ pub fn add_extension() -> TResult<()> {
 }
 
 pub fn remove_extension() -> TResult<()> {
-	ensure_caller_has_permission().unwrap_or_revert_with(
-		AdministrationErrors::InvalidCaller
-	);
+	ensure_caller_has_permission().unwrap();
 	let extension: String = runtime::get_named_arg(
 		&AdministrationArgs::AllowedExtension.to_string()
 	);

@@ -452,6 +452,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "database"
+version = "0.1.0"
+dependencies = [
+ "casper-contract",
+ "casper-types",
+ "common-lib",
+]
+
+[[package]]
 name = "datasize"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -883,6 +892,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "main"
+version = "0.1.0"
+dependencies = [
+ "base16",
+ "casper-contract",
+ "casper-types",
+ "common-lib",
+ "serde",
+ "serde-json-wasm 0.5.1",
+]
+
+[[package]]
 name = "mangle_named_keys"
 version = "1.5.0"
 dependencies = [
@@ -1170,6 +1191,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 
 [[package]]
+name = "price-oracle"
+version = "0.1.0"
+dependencies = [
+ "casper-contract",
+ "casper-types",
+ "common-lib",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "0.4.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1369,6 +1399,15 @@ name = "regex-syntax"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
+
+[[package]]
+name = "registry-contract"
+version = "0.1.0"
+dependencies = [
+ "casper-contract",
+ "casper-types",
+ "common-lib",
+]
 
 [[package]]
 name = "rustc-demangle"

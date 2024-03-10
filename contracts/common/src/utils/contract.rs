@@ -1,20 +1,33 @@
-use alloc::string::ToString;
-use casper_contract::contract_api::{ storage, runtime };
+use alloc::{ string::ToString, vec::Vec };
+use casper_contract::{
+	contract_api::{ runtime, storage },
+	unwrap_or_revert::UnwrapOrRevert,
+};
 use casper_types::{
-	EntryPoint,
-	contracts::{ Parameters, NamedKeys },
+	contracts::{ NamedKeys, Parameters },
+	runtime_args,
 	CLType,
+	ContractHash,
+	EntryPoint,
 	EntryPointAccess,
 	EntryPointType,
 	EntryPoints,
-	ContractHash,
+	Key,
 };
 
-use crate::constants::common_keys::{
-	KEY_CONTRACT_PACKAGE_NAME,
-	KEY_CONTRACT_ACCESS,
-	CommonKeys,
+use crate::{
+	constants::common_keys::{
+		AdministrationArgs,
+		AdministrationEndpoints,
+		CommonKeys,
+		KEY_CONTRACT_ACCESS,
+		KEY_CONTRACT_PACKAGE_NAME,
+	},
+	enums::caller_verification_type::CallerVerificationType,
+	errors::CommonError,
 };
+
+use super::{ maintainer::is_caller_maintainer, registry::get_verified_caller };
 
 pub fn create_entrypoint(
 	key: &str,
@@ -25,16 +38,6 @@ pub fn create_entrypoint(
 ) -> EntryPoint {
 	EntryPoint::new(key, params, ret, access, entry_point_type)
 }
-
-// pub fn create_named_keys(values: Vec<(String, URef)>) -> NamedKeys {
-// 	let mut keys = NamedKeys::new();
-
-// 	values.iter().for_each(|(key, value)| {
-// 		keys.insert(key, value);
-// 	});
-
-// 	keys
-// }
 
 pub fn create_contract(
 	entrypoints: EntryPoints,
@@ -70,4 +73,54 @@ pub fn setup_contract_info(
 		&CommonKeys::ContractVersion.to_string(),
 		contract_version_uref.into()
 	);
+}
+
+pub fn get_current_contract_hash() -> ContractHash {
+	runtime
+		::get_key(&CommonKeys::ContractHash.to_string())
+		.unwrap_or_revert_with(CommonError::MissingContractHash)
+		.into()
+}
+
+pub fn get_administration_contract_hash() -> ContractHash {
+	runtime
+		::get_key(&CommonKeys::AdministrationContract.to_string())
+		.unwrap_or_revert_with(CommonError::MissingAdministrationContractHash)
+		.into()
+}
+
+pub fn ensure_caller_has_permission_external(is_contract: Option<bool>) {
+	if !is_caller_maintainer() {
+		let administration_contract_hash: ContractHash = runtime
+			::get_key(&CommonKeys::AdministrationContract.to_string())
+			.unwrap_or_revert_with(CommonError::MissingAdministrationContractHash)
+			.into();
+
+		let current_hash = get_current_contract_hash();
+
+		let authorities: Vec<Key> = runtime::call_contract(
+			administration_contract_hash,
+			&AdministrationEndpoints::GetContractAuthorityList.to_string(),
+			runtime_args! {
+			AdministrationArgs::ContractHash => current_hash
+		}
+		);
+
+		let mut ver_type = CallerVerificationType::All;
+
+		if let Some(v) = is_contract {
+			ver_type = if v {
+				CallerVerificationType::OnlyContractHash
+			} else {
+				CallerVerificationType::OnlyAccountHash
+			};
+		}
+
+		let caller = get_verified_caller(ver_type).unwrap();
+
+		authorities
+			.iter()
+			.find(|key| *key == &caller)
+			.unwrap_or_revert_with(CommonError::InvalidCaller);
+	}
 }

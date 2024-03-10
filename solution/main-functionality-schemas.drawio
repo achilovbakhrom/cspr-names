@@ -1,0 +1,408 @@
+<mxfile host="app.diagrams.net" modified="2024-03-08T18:15:36.227Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="8P-aKJas7dG9s5ana-6c" version="21.7.1" type="device" pages="2">
+  <diagram name="Page-1" id="ZDlx_BOCfqC-OgIvJQGe">
+    <mxGraphModel dx="1911" dy="1209" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IrMaHQru-9l19xx9z9nq-1" value="Administration" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-3" value="Registry" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-4" value="Database 1" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-5" target="IrMaHQru-9l19xx9z9nq-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-5" target="IrMaHQru-9l19xx9z9nq-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-5" target="IrMaHQru-9l19xx9z9nq-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-5" target="IrMaHQru-9l19xx9z9nq-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-5" value="NFT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-6" value="NFT Core 1" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="IrMaHQru-9l19xx9z9nq-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="430" as="sourcePoint" />
+            <mxPoint x="240" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="630" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="240" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="260" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-7" target="IrMaHQru-9l19xx9z9nq-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-7" value="Main" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-8" value="Price Oracle" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-12" value="Database 2" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-13" value="Database N" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-14" value="..." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="630" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-20" value="NFT Core 2" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-21" value="....." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-22" value="NFT Core N" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-27" target="IrMaHQru-9l19xx9z9nq-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-27" value="Create a new domain name&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="990" y="80" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-28" target="IrMaHQru-9l19xx9z9nq-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-28" value="Check extension" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="965" y="200" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-29" target="IrMaHQru-9l19xx9z9nq-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-126" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-29" target="IrMaHQru-9l19xx9z9nq-125">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-29" value="Validate domain name" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="965" y="390" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-30" value="only maintainer can create a name with any length of chars" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="280" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-35" target="IrMaHQru-9l19xx9z9nq-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-35" value="Add name to database" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="967.5" y="680" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-36" target="IrMaHQru-9l19xx9z9nq-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-36" target="IrMaHQru-9l19xx9z9nq-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-36" value="Check Db for existance" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="967.5" y="300" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-37" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="140" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-41" target="IrMaHQru-9l19xx9z9nq-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-41" value="Mint NFT" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="967.5" y="780" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-43" target="IrMaHQru-9l19xx9z9nq-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-43" value="Bind name to pair (Database and NFT Contract Hash) and save it in Registry Contract&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="967.5" y="880" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-45" value="Make records to wallet (via session code)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="967.5" y="980" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-47" target="IrMaHQru-9l19xx9z9nq-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-47" value="Resolve Domain name" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="80" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-48" target="IrMaHQru-9l19xx9z9nq-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-48" value="Get domain name and return it" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1915" y="190" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-50" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="2220" y="80" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-53" target="IrMaHQru-9l19xx9z9nq-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-53" value="Set resolver address for domain" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2695" y="80" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-55" target="IrMaHQru-9l19xx9z9nq-64">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-55" value="Validate domain name" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2670" y="170" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-61">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2795" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-61" value="Set resolver address for the domain" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2672.5" y="470" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-64">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3055" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-64" target="IrMaHQru-9l19xx9z9nq-82">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-64" value="Check Db for existance" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2672.5" y="270" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-65" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="2965" y="140" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-70" value="Update resolver address for domain on client side (via session code)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2675" y="570" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-72" target="IrMaHQru-9l19xx9z9nq-74">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-72" value="Register subdomain name" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3565" y="80" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-92" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-74" target="IrMaHQru-9l19xx9z9nq-91">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-74" value="Validate subdomain name" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3540" y="200" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-76">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3665" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-76" value="Add subdomain" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3542.5" y="780" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-89" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-79" target="IrMaHQru-9l19xx9z9nq-88">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-79" value="Check caller is owner of the parent" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3542.5" y="380" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-80" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="3835" y="140" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-81" value="Update subdomain list on user side (session code)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3545" y="880" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-82" target="IrMaHQru-9l19xx9z9nq-61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-82" value="User should be owner of the domain" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2670" y="370" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-132" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-88" target="IrMaHQru-9l19xx9z9nq-130">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-88" value="Check subdomain&#39;s existance in parents subdomain list" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3542.5" y="490" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-91" target="IrMaHQru-9l19xx9z9nq-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-91" target="IrMaHQru-9l19xx9z9nq-80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-91" value="Check parent exists in db" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3542.5" y="290" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-95" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-96" target="IrMaHQru-9l19xx9z9nq-98">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-96" value="Remove subdomain name" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4435" y="85" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-98" target="IrMaHQru-9l19xx9z9nq-109">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-98" value="Validate subdomain name" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4410" y="205" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-99" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-100">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4535" y="695" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-100" value="Remove subdomain" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4412.5" y="595" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-101" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-102" target="IrMaHQru-9l19xx9z9nq-106">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-102" value="Check caller is owner of the parent" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4412.5" y="385" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-103" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="4705" y="145" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-104" value="Update subdomain list on user side (session code)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4415" y="695" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-105" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-106" target="IrMaHQru-9l19xx9z9nq-100">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-106" value="Check subdomain&#39;s existance in parents subdomain list" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4412.5" y="495" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-109" target="IrMaHQru-9l19xx9z9nq-102">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-108" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-109" target="IrMaHQru-9l19xx9z9nq-103">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-109" value="Check parent exists in db" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4412.5" y="295" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-110" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-111" target="IrMaHQru-9l19xx9z9nq-113">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-111" value="Set Resolver address for subdomain name" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5295" y="75" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-112" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-113" target="IrMaHQru-9l19xx9z9nq-124">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-113" value="Validate subdomain name" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5270" y="195" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-114" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-115">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="5395" y="685" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-115" value="Set address for subdomain name" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5272.5" y="585" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-116" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-117" target="IrMaHQru-9l19xx9z9nq-121">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-117" value="Check caller is owner of the parent" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5272.5" y="385" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-118" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="5565" y="135" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-119" value="Update subdomain list on user side (session code)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5275" y="685" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-121" target="IrMaHQru-9l19xx9z9nq-115">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-121" value="Check subdomain&#39;s existance in parents subdomain list" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5272.5" y="485" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-122" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-124" target="IrMaHQru-9l19xx9z9nq-117">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-124" target="IrMaHQru-9l19xx9z9nq-118">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-124" value="Check parent exists in db" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="5272.5" y="285" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-128" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-125" target="IrMaHQru-9l19xx9z9nq-127">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-125" value="Check Price" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="965" y="480" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-129" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-127" target="IrMaHQru-9l19xx9z9nq-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-127" value="Payment" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="965" y="570" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-133" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-130" target="IrMaHQru-9l19xx9z9nq-131">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-130" value="Check price" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3542.5" y="580" width="245" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-134" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="IrMaHQru-9l19xx9z9nq-131" target="IrMaHQru-9l19xx9z9nq-76">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IrMaHQru-9l19xx9z9nq-131" value="Payment" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3542.5" y="680" width="245" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="wpFcfgs2akiFiaWTF3bQ" name="Page-2">
+    <mxGraphModel dx="-458" dy="786" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="atYvmu2nh70AtzJU_PDY-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="atYvmu2nh70AtzJU_PDY-2" target="atYvmu2nh70AtzJU_PDY-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="atYvmu2nh70AtzJU_PDY-2" value="Resolve Domain name" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="80" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="atYvmu2nh70AtzJU_PDY-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=90;entryDy=120;entryPerimeter=0;" edge="1" parent="1" source="atYvmu2nh70AtzJU_PDY-4" target="atYvmu2nh70AtzJU_PDY-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="atYvmu2nh70AtzJU_PDY-4" value="Get domain name and return it" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1915" y="190" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="atYvmu2nh70AtzJU_PDY-5" value="Also consider 3 months of grace period" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="2220" y="80" width="180" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

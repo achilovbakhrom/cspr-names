@@ -9,14 +9,14 @@ pub const PUBLIC_ALLOWED_NAME_COUNT: usize = 3;
 
 pub struct NamesValidator {
 	allowed_names: Vec<String>,
-	caller_has_access: bool,
+	is_maintainer: bool,
 }
 
 impl NamesValidator {
-	pub fn instance(allowed_names: Vec<String>, caller_has_access: bool) -> Self {
+	pub fn instance(allowed_names: Vec<String>, is_maintainer: bool) -> Self {
 		Self {
 			allowed_names,
-			caller_has_access,
+			is_maintainer,
 		}
 	}
 
@@ -37,7 +37,7 @@ impl NamesValidator {
 		}
 
 		let caller = runtime::get_caller();
-		if model.name.len() <= 3 && !self.caller_has_access {
+		if model.name.len() <= 3 && !self.is_maintainer {
 			return Err(MainContractErrors::InvalidCreator);
 		}
 
